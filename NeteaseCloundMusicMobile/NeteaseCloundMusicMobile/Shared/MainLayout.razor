@@ -1,17 +1,58 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
+<div>
+    <div class="@B.BackgroundPrimary @B.P2">
+        <Level>
+            <LevelLeft>
+                <LevelItem>
+                    <Icon IconClass="fa fa-bars"></Icon>
+                </LevelItem>
+                <LevelItem>
+                    <Level>
+                        <LevelItem>
+                            <Image Size="@Size.Square32">
+                                <img src="/asset/Icon.png" />
+                            </Image>
+                        </LevelItem>
+                        <LevelItem>
+                            <Title>网易云音乐</Title>
+                        </LevelItem>
+                    </Level>
+
+                </LevelItem>
+            </LevelLeft>
+            <LevelItem>
+                <div class="flex-grow-1">
+
+                    <Column>
+                        <Field HasAddons="true" IsExpanded="true">
+                            <Control IsExpanded="true">
+                                <Input placeholder="搜索音乐、歌手、歌词、用户" TValue="string" />
+                            </Control>
+                            <Control>
+                                <Button>
+                                    <Icon IconClass="fa fa-search"></Icon>
+                                </Button>
+                            </Control>
+                        </Field>
+                    </Column>
+
+                </div>
+
+
+
+            </LevelItem>
+            <LevelRight>
+                <LevelItem>
+                    <NavLink>注册</NavLink>
+                </LevelItem>
+                <LevelItem >
+                    <NavLink>登录</NavLink>
+                </LevelItem>
+                <LevelItem><NavLink  >联系作者</NavLink></LevelItem>
+                <LevelItem><NavLink>查看源代码</NavLink></LevelItem>
+            </LevelRight>
+        </Level>
     </div>
-
-    <div class="main">
-        <div class="top-row px-4">
-            <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
-        </div>
-
-        <div class="content px-4">
-            @Body
-        </div>
-    </div>
+    @Body
 </div>
