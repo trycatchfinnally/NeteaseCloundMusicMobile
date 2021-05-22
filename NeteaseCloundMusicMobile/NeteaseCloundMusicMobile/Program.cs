@@ -31,8 +31,8 @@ namespace NeteaseCloundMusicMobile
             {
 
                 var httpClient = new HttpClient { BaseAddress = new Uri("http://home.tangkh.top:63310") };
-                httpClient.DefaultRequestHeaders.Add("Access-Control-Allow-Origin", "*");
-                httpClient.DefaultRequestHeaders.Add("Access-Control-Allow-Methods", "*");
+              
+
                 return httpClient;
             });
 

@@ -1,58 +1,62 @@
 @inherits LayoutComponentBase
 
 <div>
-    <div class="@B.BackgroundPrimary @B.P2">
-        <Level>
-            <LevelLeft>
-                <LevelItem>
-                    <Icon IconClass="fa fa-bars"></Icon>
-                </LevelItem>
-                <LevelItem>
-                    <Level>
-                        <LevelItem>
-                            <Image Size="@Size.Square32">
-                                <img src="/asset/Icon.png" />
-                            </Image>
-                        </LevelItem>
-                        <LevelItem>
-                            <Title>网易云音乐</Title>
-                        </LevelItem>
-                    </Level>
-
-                </LevelItem>
-            </LevelLeft>
-            <LevelItem>
-                <div class="flex-grow-1">
-
-                    <Column>
-                        <Field HasAddons="true" IsExpanded="true">
-                            <Control IsExpanded="true">
-                                <Input placeholder="搜索音乐、歌手、歌词、用户" TValue="string" />
-                            </Control>
-                            <Control>
-                                <Button>
-                                    <Icon IconClass="fa fa-search"></Icon>
-                                </Button>
-                            </Control>
-                        </Field>
+    <div class="@B.P2 @B.BackgroundDark @B.TextWhite"  >
+        <Columns IsMobile="true" IsVcentered="true" Gap="@Gap.Gap1">
+            <BulmaRazor.Components.Column IsNarrow="true">
+                <Icon IconClass="fa fa-bars"></Icon>
+            </BulmaRazor.Components.Column>
+            <BulmaRazor.Components.Column IsNarrow="true">
+                <Columns Gap="@Gap.Gap1" IsVcentered="true" class="@B.HiddenMobile">
+                    <Column IsNarrow="true">
+                        <Image Size="@Size.Square32">
+                            <img src="/asset/Icon.png" />
+                        </Image>
                     </Column>
+                    <Column>  <Title class="@B.TextWhiteBis">网易云音乐</Title></Column>
+                </Columns>
+            </BulmaRazor.Components.Column>
+            <BulmaRazor.Components.Column>
+                <Field HasAddons="true" IsExpanded="true">
+                    <Control IsExpanded="true">
+                        <Input placeholder="搜索音乐、歌手、歌词、用户" TValue="string" />
+                    </Control>
+                    <Control>
+                        <Button>
+                            <Icon IconClass="fa fa-search"></Icon>
+                        </Button>
+                    </Control>
+                </Field>
+            </BulmaRazor.Components.Column>
+            <BulmaRazor.Components.Column IsNarrow="true">
+                <Columns IsMobile="true" IsVcentered="true" Gap="@Gap.Gap1">
+                    <Column>
+                        <Columns IsMobile="true" Gap="@Gap.Gap1">
+                            <Column> <a>注册</a></Column>
+                            <Column>   <a>登录</a></Column>
 
-                </div>
+                        </Columns>
+                    </Column>
+                    <Column class="@B.HiddenMobile">
+                        <Columns IsMobile="true" Gap="@Gap.Gap1">
+                            <Column> <a href="mailto:t1246539858@outlook.com">建议</a></Column>
+                            <Column>   <a>反馈</a></Column>
+
+                        </Columns>
+                    </Column>
+                </Columns>
+
+            </BulmaRazor.Components.Column>
+        </Columns>
 
 
-
-            </LevelItem>
-            <LevelRight>
-                <LevelItem>
-                    <NavLink>注册</NavLink>
-                </LevelItem>
-                <LevelItem >
-                    <NavLink>登录</NavLink>
-                </LevelItem>
-                <LevelItem><NavLink  >联系作者</NavLink></LevelItem>
-                <LevelItem><NavLink>查看源代码</NavLink></LevelItem>
-            </LevelRight>
-        </Level>
     </div>
     @Body
+    <div class="@B.P2">
+        <Footer>
+            <Content class="@B.TextCentered">
+                <strong>网易云音乐网页版</strong>使用Blazor WebAssemly开发，欢迎使用
+            </Content>
+        </Footer>
+    </div>
 </div>

@@ -16,7 +16,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
     public interface IHttpRequestService
     {
         Task<T> MakePostRequestAsync<T>(string url, object data = null, bool noCache = true);
-
+        Task<string> MakePostRequestAsync(string url, object data = null, bool noCache = true);
     }
     class HttpRequestService : IHttpRequestService
     {
@@ -26,29 +26,38 @@ namespace NeteaseCloundMusicMobile.Client.Services
         {
             this._httpClient = httpClient;
         }
-        private async Task<T> RequestImplAsync<T>(string url)
+
+        public async Task<T> MakePostRequestAsync<T>(string url, object data = null, bool noCache = true)
         {
-            var httpClientRequestMessage = new HttpRequestMessage
-            {
-                Method = HttpMethod.Post,
-                RequestUri = new Uri(url),
-            };
-            httpClientRequestMessage.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
-            var temp = await this._httpClient.SendAsync(httpClientRequestMessage);
-            var json = await temp.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<T>(json);
+
+            return  Newtonsoft.Json.JsonConvert .DeserializeObject<T>(await MakePostRequestAsync(url, data, noCache));
+
         }
-        public Task<T> MakePostRequestAsync<T>(string url, object data = null, bool noCache = true)
+
+        public async Task<string> MakePostRequestAsync(string url, object data = null, bool noCache = true)
         {
             var query = Enumerable.Range(0, Convert.ToInt32(noCache))
-                .Select(_ => KeyValuePair.Create("t", (DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds.ToString()))
-                   .Concat(
-               data?.GetType().GetProperties().Select(x => KeyValuePair.Create(x.Name, x.GetValue(data)?.ToString())) ?? Array.Empty<KeyValuePair<string, string>>())
-                   .ToArray();
-            if (query.Length == 0) return RequestImplAsync<T>(url);
-            var temp = string.Join("&", query.Select(x => $"{x.Key}={x.Value}"));
-            return RequestImplAsync<T>(url.Contains("?") ? $"&{temp}" : $"?{temp}");
+              .Select(_ => KeyValuePair.Create("t", (DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds.ToString()))
+                 .Concat(
+             data?.GetType().GetProperties().Select(x => KeyValuePair.Create(x.Name, x.GetValue(data)?.ToString())) ?? Array.Empty<KeyValuePair<string, string>>())
+                 .ToArray();
 
+            var queryString = string.Join("&", query.Select(x => $"{x.Key}={x.Value}"));
+            url = string.Concat(url, url.Contains("?") ? $"&{queryString}" : $"?{queryString}");
+            url = string.Concat(url, "&cookie=MUSIC_U=d5a4510625d1c8c3c571abdf9bae5a1b47e551ef2c37b3bcef99ffefe6bf9ecb0931c3a9fbfe3df2; __csrf=d2cecf80d31e9984f739105e82fa8817; NMTID=00OrZ7xwAJhZ8Vb30aDmthhX4AcU1cAAAF5k6U8tw");
+            var httpClientRequestMessage = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri(url, UriKind.Relative),
+            };
+            httpClientRequestMessage.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
+            httpClientRequestMessage.SetBrowserRequestMode(BrowserRequestMode.Cors);
+            httpClientRequestMessage.Headers.TryAddWithoutValidation("Content-Type", "application/json; charset=utf-8");
+            //httpClientRequestMessage.Headers.TryAddWithoutValidation("X-Requested-With", "HttpClient");
+            var temp = await this._httpClient.SendAsync(httpClientRequestMessage);
+            var json = await temp.Content.ReadAsStringAsync();
+            
+            return json;
         }
     }
 }

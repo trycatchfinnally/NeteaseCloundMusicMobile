@@ -1,0 +1,24 @@
+<Box>
+
+
+    <div>
+        <div style="background:url(@PicUrl);" class="card-back">
+            <div class="@B.PR2   @B.TextWhite @B.BackgroundGrey">
+                <Level IsMobile="true">
+                    <LevelLeft></LevelLeft>
+                    <LevelRight>
+                        <IconText>
+                            <Icon IconClass="fa fa-headphones"></Icon>
+                            <span>@Count.ToCountString()</span>
+                        </IconText>
+
+                    </LevelRight>
+                </Level>
+            </div>
+        </div>
+        <div class="@B.PT1 @B.PR2"  style="width:200px; ">
+            <div class="@B.TextLeft    @B.TextDark @B.TextWeightBold    overflow-hidden text-nowrap text-overflow-ellipsis" >@FooterTitle</div>
+            <div class="@B.TextLeft text-nowrap overflow-hidden text-overflow-ellipsis"  >@FooterDescription</div>
+        </div>
+    </div>
+</Box>

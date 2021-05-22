@@ -1,4 +1,4 @@
-﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -48,3 +48,25 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+.circle-button {
+    font-size: 2em;
+    border-radius: 50%;
+    border-color: red;
+    border-width: 1.5px;
+    border-style: solid;
+    width: 2em;
+    height: 2em;
+}
+
+    .circle-button svg {
+        height: 1em;
+        width: 1em;
+    }
+.text-overflow-ellipsis {
+    text-overflow: ellipsis
+}
+.card-back {
+    background-size: cover;
+    width: 200px;
+    height: 200px;
+}
