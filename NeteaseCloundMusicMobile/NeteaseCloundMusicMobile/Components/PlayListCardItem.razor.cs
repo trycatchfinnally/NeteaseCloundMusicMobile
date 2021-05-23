@@ -15,6 +15,8 @@ namespace NeteaseCloundMusicMobile.Client.Components
 
         public long Count { get; set; }
         [Parameter]
+        public string CountIconClass { get; set; }
+        [Parameter]
 
         public string FooterTitle { get; set; }
         [Parameter]

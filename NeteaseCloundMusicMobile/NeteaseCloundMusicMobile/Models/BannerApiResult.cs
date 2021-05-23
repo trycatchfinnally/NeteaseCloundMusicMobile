@@ -18,7 +18,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// <summary>
         /// 
         /// </summary>
-        public int targetId { get; set; }
+        public long targetId { get; set; }
         /// <summary>
         /// 
         /// </summary>

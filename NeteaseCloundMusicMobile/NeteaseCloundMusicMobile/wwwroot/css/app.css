@@ -67,6 +67,8 @@ a, .btn-link {
 }
 .card-back {
     background-size: cover;
-    width: 200px;
-    height: 200px;
+    position: relative;
+    width: 100%;
+    min-height: 200px;
+    display: flex;
 }

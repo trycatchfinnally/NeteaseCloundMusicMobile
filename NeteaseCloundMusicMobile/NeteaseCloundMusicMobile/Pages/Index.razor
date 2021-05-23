@@ -93,12 +93,13 @@
     <Columns class="@B.M4" IsMobile="true" IsMultiline="true">
         @foreach (var item in _recommendPlaylist)
         {
-            <Column>
-                <NeteaseCloundMusicMobile.Client.Components.PlayListCardItem PicUrl="@item.picUrl"
+            <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2 @B.MB3">
+                <NeteaseCloundMusicMobile.Client.Components.PlayListCardItem PicUrl="@item.picUrl" CountIconClass="fa fa-headphones"
                                                                              Count="@item.playcount" FooterTitle="@item.name" FooterDescription="@item.copywriter">
 
                 </NeteaseCloundMusicMobile.Client.Components.PlayListCardItem>
-            </Column>
+            </div>
+
         }
     </Columns>
 }
@@ -186,14 +187,18 @@
             <Button IsLight="true" Color="Color.Ghost" @onclick="()=>MoreClick(4)">更多&lt;</Button>
         </LevelRight>
     </Level>
-    <Columns IsMobile="true">
+    <Columns IsMobile="true" IsMultiline="true">
         @foreach (var item in _mvFirstApiResultItems)
         {
-            <Column Size="Size.OneQuarter">
-                <NeteaseCloundMusicMobile.Client.Components.PlayListCardItem Count="@item.playCount" PicUrl="@item.cover" FooterTitle="@item.name" FooterDescription="@item.artistName">
+            <div  class="col-xs-6 col-sm-6 col-md-3 col-lg-3 @B.MB3">
+                <NeteaseCloundMusicMobile.Client.Components.PlayListCardItem Count="@item.playCount" 
+                                                                             PicUrl="@item.cover"
+                                                                             FooterTitle="@item.name" 
+                                                                             FooterDescription="@item.artistName"
+                                                                             CountIconClass="fa fa-video-camera">
 
                 </NeteaseCloundMusicMobile.Client.Components.PlayListCardItem>
-            </Column>
+            </div>
         }
     </Columns>
 }
@@ -231,3 +236,4 @@
         }
     </Columns>
 }
+

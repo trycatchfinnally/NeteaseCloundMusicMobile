@@ -1,24 +1,27 @@
-<Box>
+<Card>
+    <CardImage class="@Size.Full">
+        <Image>
+            
+            <div style="background-image:url(@PicUrl)" class="card-back ">
+                <div class="@B.PR2   @B.TextWhite  w-100">
+                    <Level IsMobile="true">
+                        <LevelLeft></LevelLeft>
+                        <LevelRight>
+                            <IconText>
+                                <Icon IconClass="@CountIconClass"></Icon>
+                                <span>@Count.ToCountString()</span>
+                            </IconText>
 
-
-    <div>
-        <div style="background:url(@PicUrl);" class="card-back">
-            <div class="@B.PR2   @B.TextWhite @B.BackgroundGrey">
-                <Level IsMobile="true">
-                    <LevelLeft></LevelLeft>
-                    <LevelRight>
-                        <IconText>
-                            <Icon IconClass="fa fa-headphones"></Icon>
-                            <span>@Count.ToCountString()</span>
-                        </IconText>
-
-                    </LevelRight>
-                </Level>
+                        </LevelRight>
+                    </Level>
+                </div>
             </div>
+        </Image>
+    </CardImage>
+    <CardFooter  >
+        <div class="@B.PT1 @B.PR2 w-100"  >
+            <div class="@B.TextLeft    @B.TextDark @B.TextWeightBold    overflow-hidden text-nowrap text-overflow-ellipsis">@FooterTitle</div>
+            <div class="@B.TextLeft text-nowrap overflow-hidden text-overflow-ellipsis">@FooterDescription</div>
         </div>
-        <div class="@B.PT1 @B.PR2"  style="width:200px; ">
-            <div class="@B.TextLeft    @B.TextDark @B.TextWeightBold    overflow-hidden text-nowrap text-overflow-ellipsis" >@FooterTitle</div>
-            <div class="@B.TextLeft text-nowrap overflow-hidden text-overflow-ellipsis"  >@FooterDescription</div>
-        </div>
-    </div>
-</Box>
+    </CardFooter>
+</Card>

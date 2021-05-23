@@ -1,5 +1,7 @@
 using BulmaRazor.Components;
 
+using Microsoft.AspNetCore.Components;
+
 using NeteaseCloundMusicMobile.Client.Models;
 
 using System;
@@ -24,6 +26,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
           
 
         };
+       
         private bool _pageLoading = true;
         private IReadOnlyList <Banner> _displayBanners;
         private IReadOnlyList<RecommendPlaylist> _recommendPlaylist;
@@ -73,8 +76,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         }
 
         private void MoreClick(int type)
-        {
-
+        {  
         }
         protected override async Task OnInitializedAsync()
         {
