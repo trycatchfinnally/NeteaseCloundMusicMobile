@@ -72,3 +72,7 @@ a, .btn-link {
     min-height: 200px;
     display: flex;
 }
+.hover-list-item:hover {
+    cursor: pointer;
+    background: #bcbcbd;
+}

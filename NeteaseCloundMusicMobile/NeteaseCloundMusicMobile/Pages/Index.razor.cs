@@ -1,6 +1,7 @@
 using BulmaRazor.Components;
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 using NeteaseCloundMusicMobile.Client.Models;
 
@@ -34,6 +35,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         private IReadOnlyList<NewSongApiResultItem> _newSongApiResultItems;
         private IReadOnlyList<MvFirstApiResultItem> _mvFirstApiResultItems;
         private IReadOnlyList<DjProgramApiResultItem> _djProgramApiResultItems;
+ 
         private async Task FetchCarouseAsync()
         {
             var bannerModel = await HttpRequestService.MakePostRequestAsync< BannerApiResult>("/banner", new { type = 0 },false);
@@ -76,7 +78,8 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         }
 
         private void MoreClick(int type)
-        {  
+        {
+           
         }
         protected override async Task OnInitializedAsync()
         {

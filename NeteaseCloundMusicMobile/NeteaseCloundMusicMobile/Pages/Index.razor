@@ -93,7 +93,7 @@
     <Columns class="@B.M4" IsMobile="true" IsMultiline="true">
         @foreach (var item in _recommendPlaylist)
         {
-            <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2 @B.MB3">
+            <div class=" col-xs-4 col-sm-4 col-md-3 col-lg-2 @B.MB3">
                 <NeteaseCloundMusicMobile.Client.Components.PlayListCardItem PicUrl="@item.picUrl" CountIconClass="fa fa-headphones"
                                                                              Count="@item.playcount" FooterTitle="@item.name" FooterDescription="@item.copywriter">
 
@@ -157,19 +157,21 @@
         @foreach (var item in _newSongApiResultItems.Take(12))
         {
             <Column Size="Size.Half">
-                <Columns IsMobile="true">
-                    <Column IsNarrow="true">
-                        <Image Size="Size.Square48">
-                            <img src="@item.album.picUrl" />
-                        </Image>
-                    </Column>
-                    <Column>
-                        <div>
-                            <span class="text-nowrap overflow-hidden text-overflow-ellipsis ">@item.name</span>
-                        </div>
+                <div class="hover-list-item">
+                    <Columns IsMobile="true">
+                        <Column IsNarrow="true">
+                            <Image Size="Size.Square48">
+                                <img src="@item.album.picUrl" />
+                            </Image>
+                        </Column>
+                        <Column>
+                            <div>
+                                <span class="text-nowrap overflow-hidden text-overflow-ellipsis ">@item.name</span>
+                            </div>
 
-                    </Column>
-                </Columns>
+                        </Column>
+                    </Columns>
+                </div>
             </Column>
         }
     </Columns>
@@ -209,7 +211,7 @@
             <IconText>
                 <Icon IconClass="fa fa-link"></Icon>
             </IconText>
-            <span>最新MV</span>
+            <span>主播电台</span>
         </LevelLeft>
         <LevelRight>
             <Button IsLight="true" Color="Color.Ghost" @onclick="()=>MoreClick(5)">更多&lt;</Button>
@@ -219,19 +221,21 @@
         @foreach (var item in _djProgramApiResultItems)
         {
             <Column Size="Size.Half">
-                <Columns IsMobile="true">
-                    <Column IsNarrow="true">
-                        <Image Size="Size.Square48">
-                            <img src="@item.picUrl" />
-                        </Image>
-                    </Column>
-                    <Column class="w-75">
+                <div class="hover-list-item">
+                    <Columns IsMobile="true">
+                        <Column IsNarrow="true">
+                            <Image Size="Size.Square48">
+                                <img src="@item.picUrl" />
+                            </Image>
+                        </Column>
+                        <Column class="w-75">
 
-                        <div class=" @B.TextWeightBold  text-nowrap overflow-hidden text-overflow-ellipsis ">@item.name</div>
+                            <div class=" @B.TextWeightBold  text-nowrap overflow-hidden text-overflow-ellipsis ">@item.name</div>
 
-                        <div class=" font-italic text-nowrap overflow-hidden text-overflow-ellipsis">@item.copywriter</div>
-                    </Column>
-                </Columns>
+                            <div class=" font-italic text-nowrap overflow-hidden text-overflow-ellipsis">@item.copywriter</div>
+                        </Column>
+                    </Columns>
+                </div>
             </Column>
         }
     </Columns>

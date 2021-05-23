@@ -5,5 +5,11 @@
   </PropertyGroup>
   <PropertyGroup>
     <ActiveDebugProfile>NeteaseCloundMusicMobile</ActiveDebugProfile>
+    <ShowAllFiles>false</ShowAllFiles>
   </PropertyGroup>
+  <ItemGroup>
+    <TypeScriptCompile Update="wwwroot\js\audioPlayer.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+  </ItemGroup>
 </Project>
