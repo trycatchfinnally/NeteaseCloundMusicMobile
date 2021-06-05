@@ -81,6 +81,12 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         {
            
         }
+
+
+        public   Task PlayAsync(Models.NewSongApiResultItem item)
+        {
+            return this.AudioPlayService.PlayAsync(new SimplePlayableItem { Id = item.id, Title = item.name });
+        }
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();

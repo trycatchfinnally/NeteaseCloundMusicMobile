@@ -68,7 +68,6 @@ var AudioPlayer = /** @class */ (function () {
             return;
         this._audioElement.play();
         console.log('开始播放' + this._audioElement.src);
-        this._audioElement.volume = 0.6;
     };
     AudioPlayer.prototype.pause = function () {
         this._audioElement.pause();

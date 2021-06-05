@@ -13,5 +13,9 @@ namespace NeteaseCloundMusicMobile.Client.Pages
     {
         [Inject]
         protected IHttpRequestService HttpRequestService { get; set; }
+
+
+        [Inject]
+        protected AudioPlayService AudioPlayService { get; set; }
     }
 }

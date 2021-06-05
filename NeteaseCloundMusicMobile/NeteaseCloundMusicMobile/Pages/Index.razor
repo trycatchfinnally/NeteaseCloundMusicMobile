@@ -156,16 +156,16 @@
     <Columns IsMobile="true" IsMultiline="true">
         @foreach (var item in _newSongApiResultItems.Take(12))
         {
-            <Column Size="Size.Half">
+            <Column Size="Size.Half" >
                 <div class="hover-list-item">
-                    <Columns IsMobile="true">
+                    <Columns IsMobile="true" @onclick="()=>PlayAsync(item)">
                         <Column IsNarrow="true">
                             <Image Size="Size.Square48">
                                 <img src="@item.album.picUrl" />
                             </Image>
                         </Column>
                         <Column>
-                            <div>
+                            <div >
                                 <span class="text-nowrap overflow-hidden text-overflow-ellipsis ">@item.name</span>
                             </div>
 

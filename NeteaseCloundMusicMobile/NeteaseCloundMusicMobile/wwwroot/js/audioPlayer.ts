@@ -47,7 +47,7 @@ class AudioPlayer {
     private initComponent() {
         this._audioElement = document.querySelector("#mainAudio");
         this._audioElement.src = '';
-
+       
     }
 
     public play(src: string) {
@@ -55,7 +55,7 @@ class AudioPlayer {
         if (this._audioElement.src == null) return;
         this._audioElement.play();
         console.log('开始播放' + this._audioElement.src);
-        this._audioElement.volume = 0.6;
+       
     }
     public pause() {
         this._audioElement.pause();

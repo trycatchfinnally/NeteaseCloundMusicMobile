@@ -37,6 +37,7 @@ namespace NeteaseCloundMusicMobile
             });
 
             services.AddScoped<IHttpRequestService, HttpRequestService>();
+            services.AddScoped<AudioPlayService>();
             services.AddBulmaRazor();
             services.AddLogging();
             services.AddBlazoredLocalStorage();
