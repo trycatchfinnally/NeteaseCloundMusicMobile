@@ -1,0 +1,95 @@
+﻿@inherits Shared.RazorComponentBase
+@implements IDisposable
+<div class="fixed-bottom @B.BackgroundDark ">
+    <Columns   IsVcentered="true" class="@B.M4">
+        <Column IsNarrowTablet="true">
+            <Columns IsMobile="true" IsVcentered="true" class="@B.MR4">
+                <Column Size="Size.OneThird" class="@B.TextCentered">
+                    <Button IsRounded="true" class="circle-button">
+                        <Icon IconClass="fa fa-step-backward"></Icon>
+                    </Button>
+                </Column>
+                <Column Size="Size.OneThird" class="@B.TextCentered">
+                    <Button IsRounded class="circle-button " @onclick="OnPlayOrResumeClickAsync">
+
+                        <Icon IconClass="@(AudioPlayService.Paused?"fa fa-play":"fa fa-pause")"></Icon>
+                    </Button>
+                </Column>
+                <Column Size="Size.OneThird" class="@B.TextCentered">
+                    <Button IsRounded class="circle-button">
+                        <Icon IconClass="fa fa-step-forward"></Icon>
+                    </Button>
+                </Column>
+            </Columns>
+        </Column>
+        <Column >
+            <Columns Gap="@Gap.Gap0" IsVcentered="true" IsMobile="true">
+                <Column IsNarrow="true" class="@B.Join(B.PR4)">
+                    <div>这是假的</div>
+                </Column>
+                <Column class="@B.PR4">
+                    <div class="@B.TextWhite text-nowrap overflow-hidden text-overflow-ellipsis">@AudioPlayService.CurrentPlayableItem?.Title</div>
+                    <Columns IsGapless="true"  >
+                        <Slider IsSmall="true" Value="@AudioPlayService.Position.TotalSeconds" class="@B.Join(B.MT0,B.MR2,B.MB2)"
+                                IsCircle="true"
+                                TValue="double"
+                                ValueChanged="x=>AudioPlayService.Position=TimeSpan.FromSeconds(x)"
+                                max="@AudioPlayService.Duration.TotalSeconds"></Slider>
+                        <div class="@B.Join(B.HiddenMobile) " >
+                            @(AudioPlayService.Position.ToString(@"hh\:mm\:ss") +"/"+AudioPlayService.Duration.ToString(@"hh\:mm\:ss"))
+                        </div>
+                    </Columns>
+
+                </Column>
+
+                <Column IsNarrow="true" class="@B.Join(B.MR2,B.ML2,B.HiddenMobile)">
+                    <Columns IsVcentered="true" IsGapless="true" class="font-weight-light light-icons">
+                        <Column>
+                            <a>
+                                <Icon IconClass="iconfont icon-list-01"></Icon>
+                            </a>
+                        </Column>
+                        <Column>
+                            <a>
+                                <Icon IconClass="iconfont icon-folder-add"></Icon>
+                            </a>
+                        </Column>
+                        <Column>
+                            <a>
+                                <Icon IconClass="iconfont icon-random"></Icon>
+                            </a>
+                        </Column>
+                        <Column>
+                            <a @onclick="()=> AudioPlayService.Muted= !AudioPlayService.Muted">
+                                @if (AudioPlayService.Muted)
+                                {
+                                    <Icon IconClass="iconfont icon-shengyinjingyin"></Icon>
+
+                                }
+                                else if (AudioPlayService.Volumn <= 20)
+                                {
+                                    <Icon IconClass="iconfont icon-shengyinwu"></Icon>
+
+                                }
+
+                                else
+                                {
+                                    <Icon IconClass="iconfont icon-shengyinkai"></Icon>
+
+                                }
+
+                            </a>
+                        </Column>
+                    </Columns>
+                </Column>
+                <Column IsNarrow="true" class="@B.Join(B.M4,B.HiddenMobile)">
+                    <Slider TValue="double" IsSmall="true" Value="@AudioPlayService.Volumn" IsCircle="true"
+                            data-tooltip="@AudioPlayService.Volumn.ToString("F0")"
+                            class="@B.TooltipArrow"
+                            ValueChanged="x=>AudioPlayService.Volumn=x"
+                            max="100"></Slider>
+                </Column>
+            </Columns>
+        </Column>
+    </Columns>
+</div>

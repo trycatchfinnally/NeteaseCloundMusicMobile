@@ -18,7 +18,7 @@ var AudioPlayer = /** @class */ (function () {
         ///总的时长，以秒为单位
         get: function () {
             if (this._audioElement.duration == null ||
-                this._audioElement.duration == 0)
+                this._audioElement.duration == 0 || isNaN(this._audioElement.duration))
                 return 100;
             return this._audioElement.duration;
         },
@@ -62,12 +62,14 @@ var AudioPlayer = /** @class */ (function () {
         this._audioElement.src = '';
     };
     AudioPlayer.prototype.play = function (src) {
-        if (src != null)
+        if (src != null && src.length > 0) {
             this._audioElement.src = src;
-        if (this._audioElement.src == null)
+            this.currentTime = 0;
+        }
+        if (this._audioElement.src == null || this._audioElement.src.length == 0)
             return;
-        this._audioElement.play();
         console.log('开始播放' + this._audioElement.src);
+        return this._audioElement.play();
     };
     AudioPlayer.prototype.pause = function () {
         this._audioElement.pause();

@@ -1,5 +1,5 @@
 @page "/"
-@inherits RazorPageBase
+@inherits RazorComponentBase
 
 <Pageloader IsActive="_pageLoading"></Pageloader>
 
@@ -9,7 +9,7 @@
         background-size: 6000px
 ">
         <Container>
-            <Carousel style="overflow: hidden" Options="_carouselOptions">
+            <Carousel   Options="_carouselOptions" class="overflow-hidden">
                 @foreach (var item in _displayBanners)
                 {
 
@@ -26,48 +26,65 @@
 }
 
 <Columns IsMobile="true" class="@B.M4">
-    <Column>
-        <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
-            <Column IsNarrow="true">
-                <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter circle-button ">
-                    <i>
-                        <svg id="icon-shouyinji-xian" viewBox="0 0 1024 1024"><path d="M906.8 287c-11.9-11.8-28.1-19.1-46-19.1H247.3l90.7-90.7c7.9-7.9 7.9-20.6 0-28.5-7.9-7.9-20.6-7.9-28.5 0L190.3 267.9h-27.1c-17.9 0-34.2 7.3-45.9 19-11.8 11.8-19.1 28-19.1 45.9v454.8c0 17.8 7.3 34.1 19.1 45.8l0.1 0.1c11.8 11.8 28 19 45.8 19h37.3c-0.4 2.8-0.7 5.6-0.7 8.4 0 11.2 9.1 20.2 20.2 20.2s20.2-9 20.2-20.2c0-2 0.7-3.9 1.9-5.4l0.5-0.5c1.5-1.5 3.6-2.4 5.8-2.5h527.2c2.3 0 4.3 1 5.8 2.4h0.1c1.5 1.5 2.4 3.6 2.4 5.9 0 11.2 9 20.2 20.2 20.2 11.1 0 20.2-9 20.2-20.2 0-2.8-0.3-5.7-0.8-8.4h37.3c17.9 0 34.2-7.3 46-19 11.8-11.8 19-28 19-45.9V332.9c0-17.9-7.2-34.1-19-45.9z m-21.3 500.7c0 6.8-2.8 12.9-7.2 17.4-4.5 4.5-10.6 7.2-17.4 7.2H163.2c-6.8 0-13-2.8-17.4-7.2l-0.1-0.1c-4.4-4.4-7.2-10.6-7.2-17.4V332.9c0-6.8 2.8-12.9 7.3-17.4 4.4-4.5 10.6-7.3 17.4-7.3H860.8c6.8 0 13 2.8 17.5 7.2 4.4 4.5 7.2 10.6 7.2 17.5v454.8z" fill="#d81e06"></path><path d="M817.4 705.2c11.1 0 20.1 9 20.1 20.1 0 11.1-9 20.1-20.1 20.1l-187.7-0.1c-11.1 0-20.1-9-20.1-20.1 0-11.1 9-20.1 20.1-20.1l187.7 0.1zM817.4 643c11.1 0 20.1 9 20.1 20.1 0 11.1-9 20.1-20.1 20.1l-187.7-0.1c-11.1 0-20.1-9-20.1-20.1 0-11.1 9-20.1 20.1-20.1l187.7 0.1zM817.4 580.8c11.1 0 20.1 9 20.1 20.1 0 11.1-9 20.1-20.1 20.1l-187.7-0.1c-11.1 0-20.1-9-20.1-20.1 0-11.1 9-20.1 20.1-20.1l187.7 0.1zM817.4 348.3H207.1c-11.1 0-20.2 9.1-20.2 20.2v122.1c0 11.1 9.1 20.2 20.2 20.2h401.1c1.4 0.3 2.9 0.5 4.4 0.5 1.5 0 3-0.2 4.5-0.5h200.3c11.1 0 20.1-9 20.1-20.2V368.5c0.1-11.2-9-20.2-20.1-20.2zM528.9 470.4h-33.2v-28.1c0-11.1-9-20.1-20.1-20.1-11.1 0-20.1 9-20.1 20.1v28.1H350.1v-28.1c0-11.1-9-20.1-20.1-20.1-11.1 0-20.1 9-20.1 20.1v28.1h-82.7v-81.7h301.6v81.7z m268.3 0h-83.1v-28.1c0-11.1-9-20.1-20.1-20.1-11.1 0-20.1 9-20.1 20.1v28.1H569.2v-81.7h228v81.7zM379.2 583.5c-20.4-20.4-48.5-33-79.7-33-31.1 0-59.2 12.6-79.6 32.9-20.4 20.4-33 48.5-33 79.7 0 31.1 12.6 59.2 32.9 79.6 20.4 20.4 48.5 33 79.7 33.1 31.1 0 59.2-12.6 79.6-32.9 20.4-20.4 33-48.5 33-79.7 0-31.2-12.6-59.3-32.9-79.7z m-28.5 130.7c-13.1 13.1-31.2 21.2-51.2 21.2-20 0-38.1-8.1-51.1-21.2-13.1-13.1-21.2-31.2-21.2-51.2 0-20 8.1-38.1 21.2-51.1 13.1-13.1 31.2-21.2 51.2-21.2 20 0 38.1 8.2 51.1 21.2 13.1 13.1 21.2 31.2 21.2 51.2 0 19.9-8.1 38-21.2 51.1z" fill="#d81e06"></path></svg>
-                    </i>
-                </div>
-            </Column>
+    <Column Size="@Size.OneThird">
+        <Columns IsMobile="true" IsGapless="true">
             <Column>
-                <div class="@B.TextLeftTablet @B.TextCenteredMobile @B.TextDark @B.TextWeightBold">私人FM</div>
-                <div class="@B.HiddenMobile">享受你的音乐时光</div>
+                <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
+                    <Column IsNarrow="true">
+                        <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter  circle-button text-2em">
+                            <div>
+                                <Icon IconClass="iconfont icon-shouyinji-xian large-fontsize"></Icon>
+                            </div>
+                        </div>
+                    </Column>
+                    <Column>
+                        <div class="@B.TextLeftTablet @B.TextCenteredMobile @B.TextDark @B.TextWeightBold">私人FM</div>
+                        <div class="@B.HiddenMobile">享受你的音乐时光</div>
+                    </Column>
+                </Columns>
+            </Column>
+            <Column IsNarrow="true">
+                <Divider IsVertical="true" class="h-100"></Divider>
             </Column>
         </Columns>
+      
     </Column>
-    <Divider IsVertical="true"></Divider>
-    <Column>
-        <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
-            <Column IsNarrow="true">
-                <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter circle-button ">
-                    <div>@DateTime.Today.Day</div>
-                </div>
-            </Column>
-            <Column>
-                <div class="@B.TextLeftTablet @B.TextCenteredMobile @B.TextDark @B.TextWeightBold">每日推荐</div>
-                <div class="@B.HiddenMobile">根据你的口味生成</div>
-            </Column>
-        </Columns>
-    </Column>
-    <Divider IsVertical="true"></Divider>
+   
+    <Column Size="@Size.OneThird" >
+        <Columns IsMobile="true" IsGapless="true">
 
-    <Column>
+            <Column>
+
+                <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
+                    <Column IsNarrow="true">
+                        <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter circle-button text-2em">
+                            <div>@DateTime.Today.Day</div>
+                        </div>
+                    </Column>
+                    <Column>
+                        <div class="@B.TextLeftTablet @B.TextCenteredMobile @B.TextDark @B.TextWeightBold ">每日推荐</div>
+                        <div class="@B.HiddenMobile">根据你的口味生成</div>
+                    </Column>
+                </Columns>
+            </Column>
+            <Column IsNarrow="true">
+                <Divider IsVertical="true" class="h-100"></Divider>
+
+            </Column>
+        </Columns>
+    </Column>
+ 
+    <Column Size="@Size.OneThird">
         <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
             <Column IsNarrow="true">
-                <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter circle-button ">
-                    <i>
-                        <svg id="icon-paihangbang" viewBox="0 0 1024 1024"><path d="M819.564056 450.802844a20.723765 20.723765 0 1 1 0-41.447531 115.321658 115.321658 0 0 0 117.27213-112.639758 115.077849 115.077849 0 0 0-117.27213-112.639759 20.723765 20.723765 0 1 1 0-41.44753 156.769188 156.769188 0 0 1 158.71966 154.087289 156.769188 156.769188 0 0 1-158.71966 154.087289z m-615.13011 0A156.769188 156.769188 0 0 1 45.714286 296.471746a156.769188 156.769188 0 0 1 158.71966-154.087289 20.723765 20.723765 0 1 1 0 41.44753 115.077849 115.077849 0 0 0-117.27213 112.639759 115.321658 115.321658 0 0 0 117.27213 112.639758 20.723765 20.723765 0 0 1 20.723765 20.723765 20.967574 20.967574 0 0 1-20.723765 20.967575z" fill="#d81e06"></path><path d="M722.528073 905.262822a20.723765 20.723765 0 0 1-20.723765-20.723765v-4.144753a53.881789 53.881789 0 0 0-8.533315-36.327541 39.497058 39.497058 0 0 0-29.013271-7.801888 100.693118 100.693118 0 0 1-100.693117-100.2055v-9.75236a138.483513 138.483513 0 0 1 74.361745-121.904501 281.843206 281.843206 0 0 0 154.087289-246.003282V63.146531a21.699001 21.699001 0 0 0-21.699001-21.699001H250.270038a21.699001 21.699001 0 0 0-21.699001 21.699001V358.399232a286.231768 286.231768 0 0 0 152.624435 249.660417 139.458749 139.458749 0 0 1 75.58079 121.904501v5.363798a100.2055 100.2055 0 0 1-99.961691 100.2055h-1.706663a53.881789 53.881789 0 0 0-35.352305 11.946641 48.7618 48.7618 0 0 0-12.434259 36.327541 20.723765 20.723765 0 0 1-41.44753 0 88.258858 88.258858 0 0 1 25.843754-67.047475 94.110275 94.110275 0 0 1 65.584621-22.674238 58.757969 58.757969 0 0 0 58.026543-58.757969V731.427004A97.523601 97.523601 0 0 0 362.665987 644.874809 327.679298 327.679298 0 0 1 187.123507 358.399232V63.146531A63.146531 63.146531 0 0 1 250.270038 0h520.0446a63.146531 63.146531 0 0 1 63.146531 63.146531V358.399232a323.534545 323.534545 0 0 1-176.030099 282.574633 97.523601 97.523601 0 0 0-50.956081 85.33315v9.75236a58.757969 58.757969 0 0 0 58.757969 58.757969 77.043644 77.043644 0 0 1 58.75797 19.992339 89.965522 89.965522 0 0 1 20.723765 66.316048v3.413326a20.967574 20.967574 0 0 1-20.967574 20.723765z" fill="#d81e06"></path><path d="M437.027733 511.998903a41.44753 41.44753 0 0 1-40.716103-48.7618l10.239978-59.733206-43.885621-43.641811a41.691339 41.691339 0 0 1 24.380901-70.948419l59.977014-8.533315 27.062799-54.613217a41.691339 41.691339 0 0 1 73.142701 0l27.062799 54.613217 59.977014 8.533315a41.691339 41.691339 0 0 1 24.3809 70.948419l-44.617047 42.422766 10.239978 60.952251a41.44753 41.44753 0 0 1-60.220823 43.88562l-53.637981-28.281844-53.881789 28.281844a41.935148 41.935148 0 0 1-19.50472 4.87618z m73.1427-74.605555a41.935148 41.935148 0 0 1 19.260911 4.87618l53.637981 28.281845-10.239978-59.733206a41.935148 41.935148 0 0 1 11.946641-36.815159l43.398002-42.422766-59.977014-8.777124a41.691339 41.691339 0 0 1-31.451362-22.674237L510.170433 243.809001 484.570488 298.909836a41.691339 41.691339 0 0 1-31.207552 22.674237l-60.220823 8.777124L435.808688 372.783963a41.935148 41.935148 0 0 1 11.946641 36.815159l-10.483787 59.733206 53.881789-28.281845a41.935148 41.935148 0 0 1 19.50472-4.87618z m297.203173-292.570801H226.132947a21.211383 21.211383 0 0 1-20.723765-21.211383 20.967574 20.967574 0 0 1 20.723765-21.211383h581.484468a20.967574 20.967574 0 0 1 20.723765 20.967574 21.211383 21.211383 0 0 1-20.723765 21.211383zM579.168381 707.046104h-146.285401a21.211383 21.211383 0 0 1-20.723765-21.211383 20.967574 20.967574 0 0 1 20.723765-20.967574h146.285401a20.967574 20.967574 0 0 1 20.723765 20.967574 21.211383 21.211383 0 0 1-20.723765 21.211383z m217.477629 316.951702H223.938666A41.691339 41.691339 0 0 1 191.999687 1009.613075a40.716103 40.716103 0 0 1-9.752361-32.914216 3.169517 3.169517 0 0 1 0-1.462854l14.628541-69.973183a41.691339 41.691339 0 0 1 41.691339-34.864687h543.206455a41.935148 41.935148 0 0 1 41.203721 34.864687l14.62854 69.973183a41.691339 41.691339 0 0 1-41.203721 48.761801zM223.938666 982.550275H796.64601l-14.62854-69.241756a1.706663 1.706663 0 0 0 0-1.219045H238.567206a2.681899 2.681899 0 0 1 0 1.219045z" fill="#d81e06"></path></svg>
-                    </i>
+                <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter circle-button text-2em">
+                    <div>
+                        <Icon IconClass="iconfont icon-paihangbang large-fontsize"></Icon>
+                    </div>
                 </div>
             </Column>
             <Column>
-                <div class="@B.TextLeftTablet @B.TextCenteredMobile @B.TextDark @B.TextWeightBold">排行榜</div>
+                <div class="@B.TextLeftTablet @B.TextCenteredMobile @B.TextDark @B.TextWeightBold  ">排行榜</div>
                 <div class="@B.HiddenMobile">最热音乐榜</div>
             </Column>
         </Columns>
@@ -118,7 +135,7 @@
             <Button IsLight="true" Color="Color.Ghost" @onclick="()=>MoreClick(2)">更多&lt;</Button>
         </LevelRight>
     </Level>
-    <Columns IsMobile="true">
+    <Columns  >
         @foreach (var item in _privateContentItems.Take(3))
         {
             <Column Size="Size.OneThird">

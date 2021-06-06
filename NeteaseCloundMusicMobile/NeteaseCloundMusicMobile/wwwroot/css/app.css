@@ -49,19 +49,17 @@ a, .btn-link {
         top: 0.5rem;
     }
 .circle-button {
-    font-size: 2em;
+   /* font-size: 2em !important;*/
     border-radius: 50%;
     border-color: red;
     border-width: 1.5px;
     border-style: solid;
     width: 2em;
     height: 2em;
+    cursor:pointer
 }
 
-    .circle-button svg {
-        height: 1em;
-        width: 1em;
-    }
+   
 .text-overflow-ellipsis {
     text-overflow: ellipsis
 }

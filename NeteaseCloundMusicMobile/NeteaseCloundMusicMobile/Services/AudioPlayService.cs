@@ -5,6 +5,7 @@ using NeteaseCloundMusicMobile.Client.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace NeteaseCloundMusicMobile.Client.Services
@@ -13,8 +14,8 @@ namespace NeteaseCloundMusicMobile.Client.Services
     {
         private readonly IJSInProcessRuntime _jSRuntime;
         private readonly IHttpRequestService _httpRequestService;
-       
-
+        private bool _postionChangedStart = false;
+        public event EventHandler<string> AudioStateChanged;
 
         public PlayableItemBase CurrentPlayableItem { get; private set; }
 
@@ -43,7 +44,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
             }
             set
             {
-                this.SetPropertyFromJavascript("muted", value);
+                this.SetPropertyFromJavascript("muted", Convert.ToInt32(value));
             }
         }
 
@@ -55,6 +56,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
             get
             {
                 return TimeSpan.FromSeconds(GetPropertyFromJavaScript<double>("duration"));
+
             }
         }
 
@@ -70,6 +72,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
             set
             {
                 this.SetPropertyFromJavascript("currentTime", value.TotalSeconds);
+
             }
         }
         /// <summary>
@@ -81,7 +84,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
             this._jSRuntime = jSRuntime as IJSInProcessRuntime;
             this._httpRequestService = httpRequestService;
         }
-       
+
 
         public async Task PlayAsync(PlayableItemBase item)
         {
@@ -91,7 +94,14 @@ namespace NeteaseCloundMusicMobile.Client.Services
                 await this.CurrentPlayableItem.EnsureUrlAsync(_httpRequestService);
 
             }
-            this._jSRuntime.InvokeVoid("audioPlayer.play", item?.Url);
+            if (this.CurrentPlayableItem == null) return;
+            await this._jSRuntime.InvokeVoidAsync("audioPlayer.play", item?.Url ?? string.Empty);
+            InvokeEvent();
+            if (!this._postionChangedStart)
+            {
+                this._postionChangedStart = true;
+                _ = this.InvokePositionChangedAsync();
+            }
         }
         /// <summary>
         /// 暂停播放
@@ -99,18 +109,37 @@ namespace NeteaseCloundMusicMobile.Client.Services
         /// <returns></returns>
         public void Pause()
         {
-            this._jSRuntime.InvokeVoid("audioPlayer.pause()");
+            this._jSRuntime.InvokeVoid("audioPlayer.pause");
+            InvokeEvent();
+
 
         }
         private T GetPropertyFromJavaScript<T>(string propName)
         {
-            return this._jSRuntime.Invoke<T>($"audioPlayer.{propName}");
+            return this._jSRuntime.Invoke<T>("eval", $"audioPlayer.{propName}");
         }
 
-        private void SetPropertyFromJavascript(string propName, object value)
+        private void SetPropertyFromJavascript(string propName, object value, [CallerMemberName] string names = null)
         {
-            this._jSRuntime.InvokeVoid($"audioPlayer.{propName}={value}");
+            this._jSRuntime.InvokeVoid("eval", $"audioPlayer.{propName}={value}");
+            InvokeEvent(names);
+        }
 
+        private void InvokeEvent([CallerMemberName] string names = null)
+        {
+            
+            AudioStateChanged?.Invoke(this, names);
+        }
+
+
+        private async Task InvokePositionChangedAsync()
+        {
+            while (true)
+            {
+                await Task.Delay(500);
+                if (this.Paused) continue;
+                this.InvokeEvent(nameof(Position));
+            }
         }
     }
 }

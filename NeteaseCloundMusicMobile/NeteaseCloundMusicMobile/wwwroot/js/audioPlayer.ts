@@ -14,7 +14,7 @@ class AudioPlayer {
     public get duration(): number {
         if (
             this._audioElement.duration == null ||
-            this._audioElement.duration == 0
+            this._audioElement.duration == 0 || isNaN(this._audioElement.duration)
         )
             return 100;
         return this._audioElement.duration;
@@ -47,15 +47,20 @@ class AudioPlayer {
     private initComponent() {
         this._audioElement = document.querySelector("#mainAudio");
         this._audioElement.src = '';
-       
+
     }
 
     public play(src: string) {
-        if (src != null) this._audioElement.src = src;
-        if (this._audioElement.src == null) return;
-        this._audioElement.play();
+
+        if (src != null && src.length > 0) {
+            this._audioElement.src = src;
+            this.currentTime = 0;
+        }
+        if (this._audioElement.src == null || this._audioElement.src.length == 0) return;
         console.log('开始播放' + this._audioElement.src);
-       
+        return this._audioElement.play();
+
+
     }
     public pause() {
         this._audioElement.pause();

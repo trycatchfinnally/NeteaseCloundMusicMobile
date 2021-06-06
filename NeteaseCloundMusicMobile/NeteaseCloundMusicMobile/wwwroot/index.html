@@ -7,8 +7,9 @@
     <title>NeteaseCloundMusicMobile</title>
     <base href="/" />
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="//at.alicdn.com/t/font_1368309_w449ecl8dzl.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
-    <link href="NeteaseCloundMusicMobile.styles.css" rel="stylesheet" />
+    <link href="NeteaseCloundMusicMobile.Client.styles.css" rel="stylesheet" />
     <link href="_content/BulmaRazor/bulma.min.css" rel="stylesheet" />
     <link href="_content/BulmaRazor/bulmarazor.min.css" rel="stylesheet" />
     <script src="_content/BulmaRazor/bulmarazor.min.js"></script>
@@ -16,9 +17,7 @@
 </head>
 
 <body>
-    <div class="hide">
-        <audio id="mainAudio"></audio>
-    </div>
+    <audio id="mainAudio" src=""></audio>
     <div id="app">Loading...</div>
 
     <div id="blazor-error-ui">
@@ -27,7 +26,7 @@
         <a class="dismiss">🗙</a>
     </div>
 
-    <script src="_framework/blazor.webassembly.js" ></script>
+    <script src="_framework/blazor.webassembly.js"></script>
     <script src="js/audioPlayer.js"></script>
 </body>
 

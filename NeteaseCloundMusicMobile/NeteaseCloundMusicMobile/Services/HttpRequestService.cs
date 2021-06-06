@@ -43,11 +43,11 @@ namespace NeteaseCloundMusicMobile.Client.Services
                  .ToArray();
 
             var queryString = string.Join("&", query.Select(x => $"{x.Key}={x.Value}"));
-            url = string.Concat(url, url.Contains("?") ? $"&{queryString}" : $"?{queryString}");
-            url = string.Concat(url, "&cookie=MUSIC_U=d5a4510625d1c8c3c571abdf9bae5a1b47e551ef2c37b3bcef99ffefe6bf9ecb0931c3a9fbfe3df2; __csrf=d2cecf80d31e9984f739105e82fa8817; NMTID=00OrZ7xwAJhZ8Vb30aDmthhX4AcU1cAAAF5k6U8tw");
+            url = string.Concat("/api",url, url.Contains("?") ? $"&{queryString}" : $"?{queryString}");
+            //url = string.Concat(url, "&cookie=MUSIC_U=d5a4510625d1c8c3c571abdf9bae5a1b47e551ef2c37b3bcef99ffefe6bf9ecb0931c3a9fbfe3df2; __csrf=d2cecf80d31e9984f739105e82fa8817; NMTID=00OrZ7xwAJhZ8Vb30aDmthhX4AcU1cAAAF5k6U8tw");
             var httpClientRequestMessage = new HttpRequestMessage
             {
-                Method = HttpMethod.Get,
+                Method = HttpMethod.Post,
                 RequestUri = new Uri(url, UriKind.Relative),
             };
             httpClientRequestMessage.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);

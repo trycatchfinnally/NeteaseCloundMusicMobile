@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NeteaseCloundMusicMobile.Client.Pages
+namespace NeteaseCloundMusicMobile.Client.Shared
 {
-    public abstract class RazorPageBase:ComponentBase
+    public abstract class RazorComponentBase:ComponentBase
     {
         [Inject]
         protected IHttpRequestService HttpRequestService { get; set; }
