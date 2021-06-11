@@ -52,7 +52,7 @@ a, .btn-link {
    /* font-size: 2em !important;*/
     border-radius: 50%;
     border-color: red;
-    border-width: 1.5px;
+    border-width: thin;
     border-style: solid;
     width: 2em;
     height: 2em;
@@ -74,3 +74,4 @@ a, .btn-link {
     cursor: pointer;
     background: #bcbcbd;
 }
+ 

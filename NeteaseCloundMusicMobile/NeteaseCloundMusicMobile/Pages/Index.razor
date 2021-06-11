@@ -31,14 +31,14 @@
             <Column>
                 <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
                     <Column IsNarrow="true">
-                        <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter  circle-button text-2em">
+                        <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter @B.JustifyContentCenter circle-button text-2em">
                             <div>
                                 <Icon IconClass="iconfont icon-shouyinji-xian large-fontsize"></Icon>
                             </div>
                         </div>
                     </Column>
                     <Column>
-                        <div class="@B.TextLeftTablet @B.TextCenteredMobile @B.TextDark @B.TextWeightBold">私人FM</div>
+                        <div class="@B.TextLeftTablet @B.TextCenteredMobile @B.TextDark @B.TextWeightBold ">私人FM</div>
                         <div class="@B.HiddenMobile">享受你的音乐时光</div>
                     </Column>
                 </Columns>
@@ -57,7 +57,7 @@
 
                 <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
                     <Column IsNarrow="true">
-                        <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter circle-button text-2em">
+                        <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter @B.JustifyContentCenter circle-button text-2em">
                             <div>@DateTime.Today.Day</div>
                         </div>
                     </Column>
@@ -77,7 +77,7 @@
     <Column Size="@Size.OneThird">
         <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
             <Column IsNarrow="true">
-                <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter circle-button text-2em">
+                <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter @B.JustifyContentCenter circle-button text-2em">
                     <div>
                         <Icon IconClass="iconfont icon-paihangbang large-fontsize"></Icon>
                     </div>
@@ -170,7 +170,7 @@
             <Button IsLight="true" Color="Color.Ghost" @onclick="()=>MoreClick(3)">更多&lt;</Button>
         </LevelRight>
     </Level>
-    <Columns IsMobile="true" IsMultiline="true">
+    <Columns   IsMultiline="true">
         @foreach (var item in _newSongApiResultItems.Take(12))
         {
             <Column Size="Size.Half" >
@@ -183,7 +183,16 @@
                         </Column>
                         <Column>
                             <div >
-                                <span class="text-nowrap overflow-hidden text-overflow-ellipsis ">@item.name</span>
+                                <div class="text-nowrap overflow-hidden text-overflow-ellipsis ">@item.name</div>
+                               @if (item.artists?.Count > 0)
+                               {
+                                   <div class="@B.Flex  ">
+                                       @foreach (var artist in item.artists)
+                                       {
+                                           <div class="@B.PR2">@artist.name</div>
+                                       }
+                                   </div>
+                               }
                             </div>
 
                         </Column>
@@ -234,7 +243,7 @@
             <Button IsLight="true" Color="Color.Ghost" @onclick="()=>MoreClick(5)">更多&lt;</Button>
         </LevelRight>
     </Level>
-    <Columns IsMobile="true" IsMultiline="true">
+    <Columns   IsMultiline="true">
         @foreach (var item in _djProgramApiResultItems)
         {
             <Column Size="Size.Half">

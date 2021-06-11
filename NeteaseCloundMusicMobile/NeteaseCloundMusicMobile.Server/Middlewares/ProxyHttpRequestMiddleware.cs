@@ -43,7 +43,7 @@ namespace NeteaseCloundMusicMobile.Server.Middlewares
                             )
                         {
                             var streamContent = new StreamContent(httpContext.Request.Body);
-                            var path = string.Concat("http://", service.Address, ":", service.ServicePort, httpContext.Request.Path.ToString(), httpContext.Request.QueryString);
+                            var path = string.Concat("http://", service.ServiceAddress, ":", service.ServicePort, httpContext.Request.Path.ToString(), httpContext.Request.QueryString);
                             var response = await httpClient.PostAsync(path, streamContent);
                             var buffer = await response.Content.ReadAsByteArrayAsync();
                             httpContext.Response.StatusCode = (int)HttpStatusCode.OK;

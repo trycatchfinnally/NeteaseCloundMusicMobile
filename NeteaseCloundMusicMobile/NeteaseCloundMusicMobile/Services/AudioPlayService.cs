@@ -91,7 +91,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
             if (item != null)
             {
                 this.CurrentPlayableItem = item;
-                await this.CurrentPlayableItem.EnsureUrlAsync(_httpRequestService);
+                
 
             }
             if (this.CurrentPlayableItem == null) return;

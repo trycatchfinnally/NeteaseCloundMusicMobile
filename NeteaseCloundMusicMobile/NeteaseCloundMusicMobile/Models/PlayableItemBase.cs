@@ -16,42 +16,24 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// 对应项目的id
         /// </summary>
         public long Id { get; set; }
-        /// <summary>
-        /// 表示图片地址
-        /// </summary>
-        public string PicUrl { get; private set; }
+       
         /// <summary>
         /// 表示名称
         /// </summary>
         public string Title { get; set; }
-        /// <summary>
-        /// 表示歌手名
-        /// </summary>
-        public string ArtistName { get; private set; }
+
+
+
+        public Album Album { get; set; }
+        public IReadOnlyList<Artist> Artists { get; set; }
+       
         /// <summary>
         /// 表示播放链接
         /// </summary>
-        public string Url { get; private set; }
+        public string Url { get;   set; }
 
-        public async Task EnsureUrlAsync(IHttpRequestService httpRequestService, bool forceRefresh = false)
-        {
-            if (forceRefresh || string.IsNullOrEmpty(Url))
-            {
-                (Url, PicUrl, ArtistName) = await FetchFromApiAsync(httpRequestService);
-            }
-        }
-        protected abstract ValueTask<(string url, string picUrl, string artistName)> FetchFromApiAsync(IHttpRequestService httpRequestService);
-        public override bool Equals(object obj)
-        {
-            if (obj == null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (this.GetType() != obj.GetType()) return false;
-            return (obj as PlayableItemBase).Id == Id;
-        }
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        
+       
     }
 
 
