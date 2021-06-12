@@ -68,3 +68,10 @@
         padding-right: 1.5rem !important;
     }
 }
+.login-modal-root ::deep .modal-content {
+    max-width: 360px;
+    height: 580px
+}
+.login-modal-root ::deep .modal  {
+    z-index:1031
+}

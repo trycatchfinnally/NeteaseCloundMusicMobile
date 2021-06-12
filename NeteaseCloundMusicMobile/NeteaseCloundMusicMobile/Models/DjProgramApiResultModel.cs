@@ -262,10 +262,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// 
         /// </summary>
         public string expertTags { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string experts { get; set; }
+        
         /// <summary>
         /// 
         /// </summary>

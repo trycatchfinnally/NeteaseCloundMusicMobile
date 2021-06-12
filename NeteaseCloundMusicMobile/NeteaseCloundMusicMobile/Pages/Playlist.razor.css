@@ -1,0 +1,18 @@
+﻿.count-desc{
+    font-size:.8em
+}
+.playlist-tags{
+    color:cornflowerblue;
+    
+}
+    .playlist-tags:not(:last-child)::after {
+        content: ' / ';
+        color:black
+    }
+
+
+.index{
+    width:1.5em;
+}
+
+ 

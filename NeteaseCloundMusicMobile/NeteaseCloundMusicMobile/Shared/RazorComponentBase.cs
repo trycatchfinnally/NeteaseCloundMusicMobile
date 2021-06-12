@@ -21,16 +21,21 @@ namespace NeteaseCloundMusicMobile.Client.Shared
         [Inject]
         protected ToastService ToastMessageService { get; set; }
 
-
+        [Inject]
+        protected NavigationManager NavigationManager { get; set; }
 
         /// <summary>
         /// 在一系列值中选取第一个不为空的字符串
         /// </summary>
         /// <param name="lists"></param>
         /// <returns></returns>
-        public string Nvl(params string[] lists)
+        protected string Nvl(params string[] lists)
         {
             return lists.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x));
+        }
+        protected void NotFound()
+        {
+            this.NavigationManager.NavigateTo("/404");
         }
     }
 }

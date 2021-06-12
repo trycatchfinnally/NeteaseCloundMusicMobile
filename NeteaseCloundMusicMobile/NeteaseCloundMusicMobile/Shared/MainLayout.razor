@@ -1,7 +1,10 @@
 @inherits LayoutComponentBase
-
+@inject Services.IHttpRequestService HttpRequestService
+@inject AuthenticationStateProvider ApiAuthenticationStateProvider
+@inject ToastService ToastService
+@using Microsoft.AspNetCore.Components.Authorization
 <div>
-    <div class="@B.P2 @B.BackgroundDark @B.TextWhite"  >
+    <div class="@B.P2 @B.BackgroundDark @B.TextWhite">
         <Columns IsMobile="true" IsVcentered="true" Gap="@Gap.Gap1">
             <BulmaRazor.Components.Column IsNarrow="true">
                 <Icon IconClass="fa fa-bars"></Icon>
@@ -13,7 +16,11 @@
                             <img src="/asset/Icon.png" />
                         </Image>
                     </Column>
-                    <Column>  <Title class="@B.TextWhiteBis">网易云音乐</Title></Column>
+                    <Column>
+                        <a href="/">
+                            <Title class="@B.TextWhiteBis">网易云音乐</Title>
+                        </a>
+                    </Column>
                 </Columns>
             </BulmaRazor.Components.Column>
             <BulmaRazor.Components.Column>
@@ -30,12 +37,36 @@
             </BulmaRazor.Components.Column>
             <BulmaRazor.Components.Column IsNarrow="true">
                 <Columns IsMobile="true" IsVcentered="true" Gap="@Gap.Gap1">
-                    <Column>
-                        <Columns IsMobile="true" Gap="@Gap.Gap1">
-                            <Column> <a>注册</a></Column>
-                            <Column>   <a>登录</a></Column>
+                    <Column IsNarrow="true">
 
-                        </Columns>
+                        <AuthorizeView>
+
+                            <Authorized>
+                                <CascadingValue Value="@context" Name="AuthenticationState">
+                                   <Columns IsMobile="true" Gap="@Gap.Gap1" class="@B.AlignItemsCenter">
+                                       <Column>
+                                           <Image Size="Size.Square32">
+                                               <img class="@B.Join(B.Rounded,B.TooltipBottom)" 
+                                                    data-tooltip="@context.User.FindFirst(System.Security.Claims.ClaimTypes.Name).Value" 
+                                                    src="@context.User.FindFirst(System.Security.Claims.ClaimTypes.Uri).Value" />
+                                           </Image>
+                                       </Column>
+                                       <Column>
+                                           <a @onclick="LoginOutAsync">退出</a>
+                                       </Column>
+                                   </Columns>
+                                </CascadingValue>
+                            </Authorized>
+                            <NotAuthorized>
+                                <Columns IsMobile="true" Gap="@Gap.Gap1">
+
+                                    <Column> <a>注册</a></Column>
+                                    <Column>   <a @onclick="()=>_loginModalShow=true">登录</a></Column>
+                                </Columns>
+                            </NotAuthorized>
+
+                        </AuthorizeView>
+
                     </Column>
                     <Column class="@B.HiddenMobile">
                         <Columns IsMobile="true" Gap="@Gap.Gap1">
@@ -60,4 +91,56 @@
         </Footer>
     </div>
     <NeteaseCloundMusicMobile.Client.Components.BottomControlPart></NeteaseCloundMusicMobile.Client.Components.BottomControlPart>
+</div>
+<div class="login-modal-root">
+    <Modal   IsActive="_loginModalShow" ShowClose="false">
+        <div class="@B.P4">
+            <Level>
+                <LevelLeft><div></div></LevelLeft>
+                <LevelRight>
+                    <Button IsLight="true" Color="Color.Ghost" @onclick="()=>_loginModalShow=false">
+                        <Icon IconClass="fa fa-times"></Icon>
+                    </Button>
+                </LevelRight>
+            </Level>
+            <div>
+                <Image Ratio="Ratio.Ratio2by1">
+                    <img src="/asset/login_phone.scale-200.png" />
+                </Image>
+            </div>
+            <EditForm   Model="_loginForm" OnValidSubmit="LoginAsync">
+                <DataAnnotationsValidator />
+                
+                <Field>
+                    <Control HasIconsLeft="true">
+                        <Input placeholder="请输入手机号" @bind-Value="_loginForm.Phone" />
+                        <Icon IsLeft="true" IconClass="fa fa-mobile"></Icon>
+                    </Control>
+                  <Help>
+                      <ValidationMessage For="()=>_loginForm.Phone"></ValidationMessage>
+                  </Help>
+                </Field>
+                <Field>
+                    <Control HasIconsLeft="true">
+                        <Input placeholder="请输入密码" @bind-Value="_loginForm.PassWord" type="password" />
+                        <Icon IsLeft="true" IconClass="fa fa-lock"></Icon>
+                    </Control>
+                    <Help>
+                        <ValidationMessage For="()=>_loginForm.PassWord"></ValidationMessage>
+                    </Help>
+                </Field>
+                <Field>
+                    <div class="@B.Flex @B.AlignContentCenter @B.AlignItemsCenter">
+                        <Button Color="Color.Danger" type="submit" class="@B.FlexGrow1">登录</Button>
+                    </div>
+                </Field>
+                <Field>
+                    <div class="@B.Flex @B.AlignContentCenter @B.AlignItemsCenter">
+                        <Button Color="Color.Link" IsLight="true" IsOutlined="true" class="@B.FlexGrow1">注册</Button>
+                    </div>
+                </Field>
+            </EditForm>
+        </div>
+
+    </Modal>
 </div>

@@ -38,7 +38,7 @@
                                 ValueChanged="x=>AudioPlayService.Position=TimeSpan.FromSeconds(x)"
                                 max="@AudioPlayService.Duration.TotalSeconds"></Slider>
                         <div class="@B.Join(B.HiddenMobile) ">
-                            @(AudioPlayService.Position.ToString(@"hh\:mm\:ss") +"/"+AudioPlayService.Duration.ToString(@"hh\:mm\:ss"))
+                            @(AudioPlayService.Position.ToString(@"mm\:ss") +"/"+AudioPlayService.Duration.ToString(@"mm\:ss"))
                         </div>
                     </Columns>
 

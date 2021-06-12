@@ -103,7 +103,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                 Album = item.album,
                 Url = songUrl
             };
-            Console.WriteLine(JsonConvert.SerializeObject(temp));
+            //Console.WriteLine(JsonConvert.SerializeObject(temp));
             await this.AudioPlayService.PlayAsync(temp);
         }
         protected override async Task OnInitializedAsync()

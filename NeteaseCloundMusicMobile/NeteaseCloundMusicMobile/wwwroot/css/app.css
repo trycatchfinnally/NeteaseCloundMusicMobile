@@ -75,3 +75,16 @@ a, .btn-link {
     background: #bcbcbd;
 }
  
+.cursor-pointer{
+    cursor:pointer
+}
+
+.el-link{
+    color:#7a7a7a !important
+}
+.el-link:hover{
+    color:black !important
+}
+.mv-link{
+    font-size:1.5em
+}

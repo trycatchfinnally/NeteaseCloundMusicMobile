@@ -1,0 +1,141 @@
+﻿@page "/playlist/{Id:long}"
+@inherits RazorComponentBase
+@if (_playlist != null)
+{
+    <div class="@B.M4">
+        <Columns>
+            <Column IsNarrow="true" class="@B.HiddenMobile">
+                <img src="@_playlist.coverImgUrl" style="height:12em" />
+            </Column>
+            <Column>
+                <div>
+                    <Level class="@B.MB2" IsMobile="true">
+                        <LevelLeft>
+                            <Tag IsLight Color="Color.Danger">歌单</Tag>
+                        </LevelLeft>
+                        <LevelItem class="@B.Join(B.JustifyContentLeft,B.PR2,"text-nowrap","overflow-hidden","text-overflow-ellipsis")">
+                            <Subtitle>@_playlist.name</Subtitle>
+                        </LevelItem>
+                        <LevelRight>
+                            <div class="@B.Join(B.Flex,B.TextRight,B.TextGrey,B.HiddenMobile) count-desc  ">
+                                <div>
+                                    <div>歌曲数</div>
+                                    <div>@_playlist.trackCount.ToCountString()</div>
+                                </div>
+                                <Divider IsVertical="true" class="@B.Join(B.MR2,B.ML2)"></Divider>
+                                <div>
+                                    <div>播放数</div>
+                                    <div>@_playlist.playCount.ToCountString()</div>
+                                </div>
+                            </div>
+                        </LevelRight>
+                    </Level>
+                    <div class="@B.Join(B.MB2,B.Flex,B.AlignItemsCenter,B.TextGrey) count-desc">
+
+                        <a class="@B.Join(B.Flex,B.AlignItemsCenter)" href="/user/@_playlist.creator.userId">
+                            <Image Size="Size.Square32">
+                                <img class="@B.Rounded" src="@_playlist.creator.avatarUrl" />
+                            </Image>
+                            <div class="@B.PL2">@_playlist.creator.nickname</div>
+                        </a>
+                        <div class="@B.ML4">
+                            @(_playlist.createTime.ToDateTime().ToString("d"))创建
+                        </div>
+                    </div>
+                    <div class="@B.Join(B.MB2,B.Flex,B.AlignItemsCenter)  ">
+                        <Button class="@B.Join(B.MR4)" IsSmall="true" Color="Color.Danger"    @onclick="PlayAll">
+                            <Icon IconClass="fa fa-play-circle-o"></Icon>
+                            <span>播放全部</span>
+                        </Button>
+                        <Button class="@B.Join(B.MR4)" IsSmall="true">
+                            <Icon IconClass="iconfont icon-folder-add"></Icon>
+                            <span>收藏(@(_playlist.subscribedCount.ToCountString()))</span>
+                        </Button>
+                        <Button class="@B.Join(B.MR4)" IsSmall="true">
+                            <Icon IconClass="fa fa-share-square-o"></Icon>
+                            <span>分享(@(_playlist.shareCount.ToCountString()))</span>
+                        </Button>
+                    </div>
+                    <div class="@B.Join(B.MB2,B.Flex,B.AlignItemsCenter) count-desc ">
+                        <div>标签：</div>
+                        @foreach (var item in _playlist.tags as IReadOnlyList<string> ?? Array.Empty<string>())
+                        {
+                            <div class="playlist-tags cursor-pointer">@item</div>
+                        }
+                    </div>
+                    <div class="@B.Join(B.MB2,B.Flex) count-desc ">
+                        <div>
+                            <div class="text-wrap">
+                                简介：@_playlist.description
+                            </div>
+                        </div>
+                        <a>
+                            <Icon IconClass="fa fa-chevron-down"></Icon>
+                        </a>
+
+                    </div>
+                </div>
+            </Column>
+        </Columns>
+
+        <div class="@B.MT6">
+            <Tabs>
+                <TabItem Label="歌曲列表">
+                    <div class="count-desc">
+                        @for (int i = 0; i < _playlist.tracks.Count; i++)
+                        {
+                            var track = _playlist.tracks[i];
+                            <div class="@B.Join(B.Flex,B.P2, "hover-list-item","cursor-pointer") ">
+                                <div class="index">
+                                    @(1+i)
+                                </div>
+                                <div class="el-link @B.MR2">
+
+                                    <Icon IconClass="fa fa-heart-o"></Icon>
+
+                                </div>
+                                <div class="@B.Flex @B.FlexGrow1">
+
+
+                                    <div class="col-xs-12 col-md-5 col-sm-4 @B.Flex @B.AlignItemsCenter">
+                                        <div>@track.name</div>
+                                        @if (track.h?.br >= 320000)
+                                        {
+                                            <Tag IsLight="true" Color="Color.Danger" class="@B.M1">SQ</Tag>
+                                        }
+                                        @if (track.mv > 0)
+                                        {
+                                            <a href="/mv/@track.mv" class="mv-link">
+                                                <Icon IconClass="fa fa-youtube-play" Color="Color.Danger"></Icon>
+                                            </a>
+                                        }
+                                    </div>
+                                    <div class="@B.Join(B.Flex,B.AlignItemsCenter,B.TextLeft,B.HiddenMobile) col-md-7 col-sm-8">
+                                        <div class="w-50">
+                                            @foreach (var item in track.ar)
+                                            {
+                                                <a class="el-link playlist-tags" href="/artist/@item.id">@item.name</a>
+                                            }
+                                        </div>
+                                        <div class="w-50 overflow-hidden text-nowrap text-overflow-ellipsis">
+                                            <a class="el-link" href="/album/@track.al.id">@track.al.name</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    @TimeSpan.FromMilliseconds(track.dt).ToString(@"mm\:ss")
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+
+                </TabItem>
+                <TabItem Label="@($"评论（{_playlist.commentCount.ToCountString()}）")"></TabItem>
+                <TabItem Label="收藏者"></TabItem>
+            </Tabs>
+        </div>
+    </div>
+}
+
+<Loading IsActive="_playlist==null"></Loading>
