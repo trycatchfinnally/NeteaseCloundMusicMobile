@@ -234,7 +234,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// <summary>
         /// 
         /// </summary>
-        public string originSongSimpleData { get; set; }
+        //public string originSongSimpleData { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -246,7 +246,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// <summary>
         /// 
         /// </summary>
-        public string noCopyrightRcmd { get; set; }
+        //public string noCopyrightRcmd { get; set; }
         /// <summary>
         /// 
         /// </summary>

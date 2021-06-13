@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="@B.Join(B.MB2,B.Flex,B.AlignItemsCenter)  ">
-                        <Button class="@B.Join(B.MR4)" IsSmall="true" Color="Color.Danger"    @onclick="PlayAll">
+                        <Button class="@B.Join(B.MR4)" IsSmall="true" Color="Color.Danger" @onclick="PlayAllAsync">
                             <Icon IconClass="fa fa-play-circle-o"></Icon>
                             <span>播放全部</span>
                         </Button>
@@ -79,13 +79,21 @@
         </Columns>
 
         <div class="@B.MT6">
+            <div class="float-right">
+                <Control HasIconsRight>
+                    <Input IsRounded="true" IsSmall="true" placeholder="搜索歌单歌曲"  @bind-Value="_searchKeyWord" @onkeyup="OnSearchBoxKeyDownAsync" />
+                    <Icon IsRight IsSmall IconClass="fa fa-search"></Icon>
+                </Control>
+
+            </div>
             <Tabs>
                 <TabItem Label="歌曲列表">
                     <div class="count-desc">
-                        @for (int i = 0; i < _playlist.tracks.Count; i++)
+
+                        @for (int i = 0; i < _displayTracks.Count; i++)
                         {
-                            var track = _playlist.tracks[i];
-                            <div class="@B.Join(B.Flex,B.P2, "hover-list-item","cursor-pointer") ">
+                            var track = _displayTracks[i];
+                            <div class="@B.Join(B.Flex,B.P2,B.AlignItemsCenter, "hover-list-item","cursor-pointer") " @onclick="()=>PlayAsync(track)" @onclick:stopPropagation>
                                 <div class="index">
                                     @(1+i)
                                 </div>
@@ -133,7 +141,9 @@
                 </TabItem>
                 <TabItem Label="@($"评论（{_playlist.commentCount.ToCountString()}）")"></TabItem>
                 <TabItem Label="收藏者"></TabItem>
+
             </Tabs>
+
         </div>
     </div>
 }

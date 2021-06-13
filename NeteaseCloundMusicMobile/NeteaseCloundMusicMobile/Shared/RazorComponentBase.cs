@@ -17,7 +17,7 @@ namespace NeteaseCloundMusicMobile.Client.Shared
 
 
         [Inject]
-        protected AudioPlayService AudioPlayService { get; set; }
+        protected PlayControlFlowService PlayControlFlowService { get; set; }
         [Inject]
         protected ToastService ToastMessageService { get; set; }
 

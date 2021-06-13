@@ -39,6 +39,8 @@ namespace NeteaseCloundMusicMobile
 
             services.AddScoped<IHttpRequestService, HttpRequestService>();
             services.AddScoped<AudioPlayService>();
+            services.AddScoped<PlayControlFlowService>();
+
             services.AddAuthorizationCore();
             services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
 

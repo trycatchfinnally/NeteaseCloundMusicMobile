@@ -5,20 +5,28 @@
         <Column IsNarrowTablet="true">
             <Columns IsMobile="true" IsVcentered="true" class="@B.MR4">
                 <Column Size="Size.OneThird" class="@B.TextCentered">
-                    <Button IsRounded="true" class="circle-button">
-                        <Icon IconClass="fa fa-step-backward"></Icon>
-                    </Button>
+                    <div @onclick="PlayControlFlowService.PrevAsync" @onclick:stopPropagation>
+                        <Button IsRounded="true" class="circle-button">
+                            <Icon IconClass="fa fa-step-backward"></Icon>
+                        </Button>
+                    </div>
                 </Column>
                 <Column Size="Size.OneThird" class="@B.TextCentered">
-                    <Button IsRounded class="circle-button " @onclick="OnPlayOrResumeClickAsync">
+                    <div @onclick="OnPlayOrResumeClickAsync" @onclick:stopPropagation>
 
-                        <Icon IconClass="@(AudioPlayService.Paused?"fa fa-play":"fa fa-pause")"></Icon>
-                    </Button>
+
+                        <Button IsRounded class="circle-button ">
+
+                            <Icon IconClass="@(AudioPlayService.Paused?"fa fa-play":"fa fa-pause")"></Icon>
+                        </Button>
+                    </div>
                 </Column>
                 <Column Size="Size.OneThird" class="@B.TextCentered">
-                    <Button IsRounded class="circle-button">
-                        <Icon IconClass="fa fa-step-forward"></Icon>
-                    </Button>
+                    <div @onclick="PlayControlFlowService.NextAsync" @onclick:stopPropagation>
+                        <Button IsRounded class="circle-button">
+                            <Icon IconClass="fa fa-step-forward"></Icon>
+                        </Button>
+                    </div>
                 </Column>
             </Columns>
         </Column>
@@ -57,8 +65,9 @@
                             </a>
                         </Column>
                         <Column>
-                            <a>
-                                <Icon IconClass="iconfont icon-random"></Icon>
+                            <a data-tooltip="@PlayControlFlowService.PlayMode.Name" class="@B.TooltipArrow"
+                               @onclick="PlayControlFlowService.ChangePlayModel" @onclick:stopPropagation>
+                                <Icon IconClass="@PlayControlFlowService.PlayMode.IconClass"></Icon>
                             </a>
                         </Column>
                         <Column>

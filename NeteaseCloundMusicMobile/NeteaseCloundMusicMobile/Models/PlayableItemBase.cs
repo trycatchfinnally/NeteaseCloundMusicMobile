@@ -16,7 +16,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// 对应项目的id
         /// </summary>
         public long Id { get; set; }
-       
+
         /// <summary>
         /// 表示名称
         /// </summary>
@@ -26,14 +26,30 @@ namespace NeteaseCloundMusicMobile.Client.Models
 
         public Album Album { get; set; }
         public IReadOnlyList<Artist> Artists { get; set; }
-       
+
         /// <summary>
         /// 表示播放链接
         /// </summary>
-        public string Url { get;   set; }
+        public string Url { get; set; }
+        /// <summary>
+        /// 获取对应的地址
+        /// </summary>
+        /// <returns></returns>
+        public abstract Task<bool> EnsureUrlAsync(IHttpRequestService httpRequestService);
 
-        
-       
+        public override bool Equals(object obj)
+        {
+            var item = obj as PlayableItemBase;
+            if (item == null) return false;
+            if (this.Id != item.Id) return false;
+            if (this.GetType() != item.GetType()) return false;
+          
+            return true;
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
 

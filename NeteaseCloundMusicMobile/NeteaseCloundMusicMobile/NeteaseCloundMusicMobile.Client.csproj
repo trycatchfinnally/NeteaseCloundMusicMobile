@@ -42,4 +42,8 @@
     <TypeScriptSourceRoot>C:\Users\T1246\source\repos\neteaseclound-music-mobile\NeteaseCloundMusicMobile\NeteaseCloundMusicMobile\wwwroot\js</TypeScriptSourceRoot>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants></DefineConstants>
+  </PropertyGroup>
+
 </Project>

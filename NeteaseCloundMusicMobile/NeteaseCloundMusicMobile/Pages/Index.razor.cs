@@ -86,14 +86,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 
         public async Task PlayAsync(Models.NewSongApiResultItem item)
         {
-            var item1 = await HttpRequestService.MakePostRequestAsync<GetSongUrlResultModel>("/song/url", new { id = item.id },
-                false);
-            var songUrl = item1.data?.FirstOrDefault()?.url;
-            if (string.IsNullOrEmpty(songUrl))
-            {
-                await this.ToastMessageService.ErrorAsync("当前歌曲暂无版权");
-                return;
-            }
+           
 
             var temp = new SimplePlayableItem
             {
@@ -101,10 +94,10 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                 Title = item.name,
                 Artists = item.artists,
                 Album = item.album,
-                Url = songUrl
+               
             };
-            //Console.WriteLine(JsonConvert.SerializeObject(temp));
-            await this.AudioPlayService.PlayAsync(temp);
+           
+            await this.PlayControlFlowService.Add2PlaySequenceAsync(temp);
         }
         protected override async Task OnInitializedAsync()
         {

@@ -68,7 +68,6 @@ var AudioPlayer = /** @class */ (function () {
         }
         if (this._audioElement.src == null || this._audioElement.src.length == 0)
             return;
-        console.log('开始播放' + this._audioElement.src);
         return this._audioElement.play();
     };
     AudioPlayer.prototype.pause = function () {

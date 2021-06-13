@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Components;
+using NeteaseCloundMusicMobile.Client.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +10,8 @@ namespace NeteaseCloundMusicMobile.Client.Components
     public partial class BottomControlPart
     {
 
-
+        [Inject]
+        private AudioPlayService AudioPlayService { get; set; }
 
         protected override Task OnParametersSetAsync()
         {
