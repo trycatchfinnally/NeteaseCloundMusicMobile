@@ -111,10 +111,14 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// 
         /// </summary>
         public long authenticationTypes { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string avatarDetail { get; set; }
+
+
+        /*
+         "userType": 4,
+"identityLevel": 1,
+"identityIconUrl": "https://p5.music.126.net/obj/wo3DlcOGw6DClTvDisK1/4874132307/4499/f228/d867/da64b9725e125943ad4e14e4c72d0884.png"
+         */
+        //public string avatarDetail { get; set; }
         /// <summary>
         /// 
         /// </summary>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using BulmaRazor.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using NeteaseCloundMusicMobile.Client.Models;
 using System;
@@ -15,7 +16,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 
 
         private string _searchKeyWord;
-
+        private DataTable<TracksItem> _dtPlaylist;
 
         private IReadOnlyList<TracksItem> _displayTracks = Array.Empty<TracksItem>();
 
@@ -67,6 +68,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 
         private void OnSearchBoxKeyDownAsync(KeyboardEventArgs eventArgs)
         {
+            
             if (string.Equals(eventArgs.Key, "Enter", StringComparison.OrdinalIgnoreCase))
             {
                 if (this._searchKeyWord?.Length > 0)
@@ -80,6 +82,12 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         {
             return this.PlayControlFlowService.Add2PlaySequenceAsync(StandardAdapter(item), clearCollection: false);
 
+        }
+        private Task PlaySelectedAsync()
+        {
+            var rows = this._dtPlaylist.GetCheckedItems();
+            if (rows.Count == 0) return ToastMessageService.ErrorAsync("请先选择项").AsTask();
+            return this.PlayControlFlowService.AddRange2PlaySequenceAsync(rows.Select(StandardAdapter),clearCollection:true);
         }
         private SimplePlayableItem StandardAdapter(TracksItem x)
         {

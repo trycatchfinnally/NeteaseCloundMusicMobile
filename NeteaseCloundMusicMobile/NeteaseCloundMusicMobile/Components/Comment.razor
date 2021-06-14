@@ -1,0 +1,147 @@
+﻿@inherits RazorComponentBase
+
+@if (_hotCommentApiResult != null && _newCommentData != null)
+{
+    <div class="@B.Join(B.M4)">
+        <div class="@B.Join( B.P2,"background-ccc")">
+            <Textarea placeholder="说点儿什么" maxlength="140"></Textarea>
+            <div class="@B.Join(B.Flex, B.AlignItemsCenter, B.MT2)">
+                <div class="el-link">
+                    <Icon IconClass="fa fa-smile-o"></Icon>
+                </div>
+                <div class="el-link">
+                    <Icon IconClass="fa fa-at"></Icon>
+                </div>
+                <div class="@B.FlexGrow1"></div>
+                <div>
+                    <Button IsSmall="true">评论</Button>
+                </div>
+            </div>
+        </div>
+
+        <div class="@B.MT4">
+            <div class="@B.MT6 @B.MB6">精彩评论</div>
+            @foreach (var item in _hotCommentApiResult.hotComments)
+            {
+                @ReplyRenderFragment(item)
+            }
+            <div>
+                <Pagination TotalCount="(int)_hotCommentApiResult.total"
+                            IsRight="true"
+                            PageIndex="_hotCommentQuery.PageIndex"
+                            PageSize="_hotCommentQuery.limit"
+                            OnPageChange="HotNext"></Pagination>
+            </div>
+        </div>
+        <div class="@B.MT4">
+          
+            <div class="@B.MT6 @B.MB6 @B.Flex @B.AlignItemsCenter">
+                <div>最新评论(@(_newCommentData.totalCount.ToCountString()))</div>
+
+                <div class="@B.FlexGrow1"></div>
+                <div class="@B.HiddenMobile">
+                    <Radios TValue="long" Value="@_newCommentQuery.sortType" ValueChanged="OnSortTypeChangedAsync">
+                        @foreach (var sortType in _newCommentData.sortTypeList)
+                        {
+                            <Radio Value="@sortType.sortType">@sortType.sortTypeName</Radio>
+                        }
+                    </Radios>
+                </div>
+
+            </div>
+            @foreach (var item in _newCommentData.comments)
+            {
+                @ReplyRenderFragment(item)
+            }
+            <div>
+                <Pagination TotalCount="(int)_newCommentData.totalCount"
+                            IsRight="true"
+                            PageIndex="_newCommentQuery.pageNo"
+                            PageSize="_newCommentQuery.pageSize"
+                            OnPageChange="NewNext"></Pagination>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <Hero Color="Color.Danger" IsFullHeight IsFullHeightWithNavbar>
+        <HeroBody>
+
+            <div>暂无内容</div>
+        </HeroBody>
+    </Hero>
+}
+
+
+
+@code{
+    private RenderFragment<Models.CommentsItem> ReplyRenderFragment = item => __builder =>
+    {
+    <Media>
+        <MediaLeft>
+            <a href="/user/@item.user.userId">
+                <Image Size="Size.Square32">
+                    <img src="@item.user.avatarUrl" class="@B.Rounded" />
+                </Image>
+            </a>
+        </MediaLeft>
+        <MediaContent>
+            <div>
+                <p>
+                    <a href="/user/@item.user.userId">
+                        <strong>@item.user.nickname</strong>
+                    </a>
+                    <br />
+                    @item.content
+
+                </p>
+            </div>
+            @if (item.beReplied?.Count > 0)
+                {
+                <ul class="background-ccc @B.MT2 @B.MB2 @B.P2">
+                    @foreach (var beRepliedItem in item.beReplied)
+                        {
+                        <li>
+                            <a href="/user/@beRepliedItem.user.userId">@string.Concat("@", beRepliedItem.user.nickname)</a>
+                            <span>:@beRepliedItem.content</span>
+                        </li>
+                        }
+                </ul>
+                }
+            <div class="count-desc">
+                @MapCreateTime(item.time)
+            </div>
+        </MediaContent>
+        <MediaRight>
+            <div class="count-desc text-nowrap overflow-hidden @B.HiddenMobile">
+                <Columns IsMobile="true">
+                    <Column IsNarrow="true">
+                        <a class="el-link">
+                            <Icon IconClass="fa fa-thumbs-o-up"></Icon>
+                            @if (item.likedCount > 0)
+                                {
+                                <span>(@(item.likedCount.ToCountString()))</span>
+                                }
+                        </a>
+                    </Column>
+                    <Divider IsVertical="true" class="@B.Join(B.MR2,B.ML2)"></Divider>
+                    <Column>
+                        <a class="el-link">
+                            分享
+
+                        </a>
+                    </Column>
+                    <Divider IsVertical="true" class="@B.Join(B.MR2,B.ML2)"></Divider>
+                    <Column>
+                        <a class="el-link">
+                            回复
+
+                        </a>
+                    </Column>
+                </Columns>
+            </div>
+        </MediaRight>
+    </Media>
+    };
+}
