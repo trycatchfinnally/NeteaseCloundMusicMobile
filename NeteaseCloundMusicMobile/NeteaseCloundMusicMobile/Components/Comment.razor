@@ -36,19 +36,22 @@
         <div class="@B.MT4">
           
             <div class="@B.MT6 @B.MB6 @B.Flex @B.AlignItemsCenter">
+                
+              
                 <div>最新评论(@(_newCommentData.totalCount.ToCountString()))</div>
 
                 <div class="@B.FlexGrow1"></div>
                 <div class="@B.HiddenMobile">
-                    <Radios TValue="long" Value="@_newCommentQuery.sortType" ValueChanged="OnSortTypeChangedAsync">
+                    <Radios TValue="long?" Value="@_newCommentQuery.sortType" ValueChanged="OnSortTypeChangedAsync">
                         @foreach (var sortType in _newCommentData.sortTypeList)
                         {
-                            <Radio Value="@sortType.sortType">@sortType.sortTypeName</Radio>
+                            <Radio Value="@(sortType.sortType==99?(long?)null:sortType.sortType)"   >@sortType.sortTypeName</Radio>
                         }
                     </Radios>
                 </div>
 
             </div>
+            <LoadingContainer IsActive="_newCommentQuery.Loading" ></LoadingContainer>
             @foreach (var item in _newCommentData.comments)
             {
                 @ReplyRenderFragment(item)
@@ -57,7 +60,7 @@
                 <Pagination TotalCount="(int)_newCommentData.totalCount"
                             IsRight="true"
                             PageIndex="_newCommentQuery.pageNo"
-                            PageSize="_newCommentQuery.pageSize"
+                            PageSize="_newCommentQuery.pageSize" 
                             OnPageChange="NewNext"></Pagination>
             </div>
         </div>

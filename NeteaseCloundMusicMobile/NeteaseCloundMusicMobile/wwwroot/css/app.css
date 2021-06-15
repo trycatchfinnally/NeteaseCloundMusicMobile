@@ -91,3 +91,7 @@ a, .btn-link {
 .count-desc {
     font-size: .8em
 }
+.artists-a:not(:last-child)::after {
+    content: ' / ';
+    color: black
+}

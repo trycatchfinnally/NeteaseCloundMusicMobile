@@ -38,15 +38,33 @@
                     </Image>
                 </Column>
                 <Column class="@B.PR4">
-                    <div class="@B.TextWhite text-nowrap overflow-hidden text-overflow-ellipsis">@AudioPlayService.CurrentPlayableItem?.Title</div>
+                    @if (AudioPlayService.CurrentPlayableItem != null)
+                    {
+
+
+                        <div class="@B.TextWhite text-nowrap overflow-hidden text-overflow-ellipsis">
+
+                            @(AudioPlayService.CurrentPlayableItem.Title)
+                            @if (AudioPlayService.CurrentPlayableItem.Artists?.Count > 0)
+                            {
+                                <span>-</span>
+                               @foreach (var item in AudioPlayService.CurrentPlayableItem.Artists)
+                               {
+                                   <span class="artists-a">
+                                       <a class="el-link @B.TextWhite" href="/artist/@item.id">@item.name</a>
+                                   </span>
+                               }
+                            }
+                        </div>
+                    }
                     <Columns IsGapless="true">
-                        <Slider IsSmall="true" Value="@AudioPlayService.Position.TotalSeconds" class="@B.Join(B.MT0,B.MR2,B.MB2)"
+                        <Slider IsSmall="true" Value="@AudioPlayService.Position.TotalSeconds" class="@B.Join(B.MT0, B.MR2, B.MB2)"
                                 IsCircle="true"
                                 TValue="double"
-                                ValueChanged="x=>AudioPlayService.Position=TimeSpan.FromSeconds(x)"
+                                ValueChanged="x => AudioPlayService.Position = TimeSpan.FromSeconds(x)"
                                 max="@AudioPlayService.Duration.TotalSeconds"></Slider>
                         <div class="@B.Join(B.HiddenMobile) ">
-                            @(AudioPlayService.Position.ToString(@"mm\:ss") +"/"+AudioPlayService.Duration.ToString(@"mm\:ss"))
+                            @(AudioPlayService.Position.ToString(@"mm\:ss") + "/" + AudioPlayService.Duration.ToString(@"mm\:ss"))
                         </div>
                     </Columns>
 

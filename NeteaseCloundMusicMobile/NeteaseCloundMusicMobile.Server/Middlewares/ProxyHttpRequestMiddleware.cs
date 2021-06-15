@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Primitives;
 
 namespace NeteaseCloundMusicMobile.Server.Middlewares
 {
@@ -47,11 +48,13 @@ namespace NeteaseCloundMusicMobile.Server.Middlewares
                             var response = await httpClient.PostAsync(path, streamContent);
                             var buffer = await response.Content.ReadAsByteArrayAsync();
                             httpContext.Response.StatusCode = (int)HttpStatusCode.OK;
-                            httpContext.Response.ContentType = response.Content.Headers.ContentType.ToString();
+                            httpContext.Response.ContentType ="application/json";
                             foreach (var item in response.Headers)
                             {
-                                httpContext.Response.Headers.Add(item.Key, new Microsoft.Extensions.Primitives.StringValues(string.Join(";", item.Value)));
+                                httpContext.Response.Headers.Add(item.Key, new StringValues(item.Value.ToArray()));
+                                //  httpContext.Response.Headers.Add(item.Key, new Microsoft.Extensions.Primitives.StringValues(string.Join(";", item.Value)));
                             }
+
                             await httpContext.Response.BodyWriter.WriteAsync(buffer);
                             return;
                         }

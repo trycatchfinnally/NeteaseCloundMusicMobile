@@ -18,7 +18,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
             public int type { get; set; }
             public int pageNo { get; set; } = 1;
             public int pageSize { get; set; } = 30;
-            public long sortType { get; set; } = 99;
+            public long? sortType { get; set; } 
             public string cursor { get; set; }
 
 
@@ -81,14 +81,14 @@ namespace NeteaseCloundMusicMobile.Client.Components
             if (dt.Date == dtNow.Date) return dt.ToString("hh:mm");
             return dt.ToString("G");
         }
-        private async void NewNext(int pageIndex)
+        private Task NewNext(int pageIndex)
         {
 
             this._newCommentQuery.pageNo = pageIndex;
             this._newCommentQuery.cursor = this._newCommentData.cursor;
-            await HotCommentLoadingAsync();
+            return NewCommentLoadingAsync();
         }
-        private async void HotNext(int pageIndex)
+        private async Task HotNext(int pageIndex)
         {
 
             this._hotCommentQuery.PageIndex = pageIndex;
@@ -97,23 +97,23 @@ namespace NeteaseCloundMusicMobile.Client.Components
 
         }
 
-        private Task OnSortTypeChangedAsync(long sortType)
+        private Task OnSortTypeChangedAsync(long? sortType)
         {
             this._newCommentQuery.sortType = sortType;
             this._newCommentQuery.pageNo = 1;
             this._newCommentQuery.cursor = string.Empty;
-            return HotCommentLoadingAsync();
+            return NewCommentLoadingAsync();
 
         }
 
 
-        private async Task HotCommentLoadingAsync()
+        private async Task NewCommentLoadingAsync()
         {
             this._newCommentQuery.Loading = true;
             this._newCommentData = await HttpRequestService.MakePostRequestAsync<NewCommentApiResultModel>("/comment/new", _newCommentQuery).ContinueWith(x => x.Result.data);
             this._newCommentQuery.Loading = false;
 
-            StateHasChanged();
+
         }
     }
 }
