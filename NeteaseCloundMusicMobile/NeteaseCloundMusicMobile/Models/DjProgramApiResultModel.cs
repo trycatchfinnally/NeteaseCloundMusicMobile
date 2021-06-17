@@ -258,9 +258,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// 
         /// </summary>
         public string mutual { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
+        
         //public string expertTags { get; set; }
         
         /// <summary>
