@@ -1,23 +1,25 @@
 ﻿@inherits RazorComponentBase
 
-@if (_hotCommentApiResult != null && _newCommentData != null)
-{
-    <div class="@B.Join(B.M4)">
-        <div class="@B.Join( B.P2,"background-ccc")">
-            <Textarea placeholder="说点儿什么" maxlength="140"></Textarea>
-            <div class="@B.Join(B.Flex, B.AlignItemsCenter, B.MT2)">
-                <div class="el-link">
-                    <Icon IconClass="fa fa-smile-o"></Icon>
-                </div>
-                <div class="el-link">
-                    <Icon IconClass="fa fa-at"></Icon>
-                </div>
-                <div class="@B.FlexGrow1"></div>
-                <div>
-                    <Button IsSmall="true">评论</Button>
-                </div>
+
+<div class="@B.Join(B.M4)">
+    <div class="@B.Join( B.P2,"background-ccc")">
+        <Textarea placeholder="说点儿什么" maxlength="140"></Textarea>
+        <div class="@B.Join(B.Flex, B.AlignItemsCenter, B.MT2)">
+            <div class="el-link">
+                <Icon IconClass="fa fa-smile-o"></Icon>
+            </div>
+            <div class="el-link">
+                <Icon IconClass="fa fa-at"></Icon>
+            </div>
+            <div class="@B.FlexGrow1"></div>
+            <div>
+                <Button IsSmall="true">评论</Button>
             </div>
         </div>
+    </div>
+    @if (_hotCommentApiResult != null)
+    {
+
 
         <div class="@B.MT4">
             <div class="@B.MT6 @B.MB6">精彩评论</div>
@@ -33,11 +35,25 @@
                             OnPageChange="HotNext"></Pagination>
             </div>
         </div>
+    }
+    else
+    {
+        <Hero Color="Color.Danger" IsFullHeight IsFullHeightWithNavbar>
+            <HeroBody>
+
+                <div>暂无内容</div>
+            </HeroBody>
+        </Hero>
+    }
+    @if (_newCommentData != null)
+    {
+
+
         <div class="@B.MT4">
-          
+
             <div class="@B.MT6 @B.MB6 @B.Flex @B.AlignItemsCenter">
-                
-              
+
+
                 <div>最新评论(@(_newCommentData.totalCount.ToCountString()))</div>
 
                 <div class="@B.FlexGrow1"></div>
@@ -45,13 +61,13 @@
                     <Radios TValue="long?" Value="@_newCommentQuery.sortType" ValueChanged="OnSortTypeChangedAsync">
                         @foreach (var sortType in _newCommentData.sortTypeList)
                         {
-                            <Radio Value="@(sortType.sortType==99?(long?)null:sortType.sortType)"   >@sortType.sortTypeName</Radio>
+                            <Radio Value="@(sortType.sortType==99?(long?)null:sortType.sortType)">@sortType.sortTypeName</Radio>
                         }
                     </Radios>
                 </div>
 
             </div>
-            <LoadingContainer IsActive="_newCommentQuery.Loading" ></LoadingContainer>
+            <LoadingContainer IsActive="_newCommentQuery.Loading"></LoadingContainer>
             @foreach (var item in _newCommentData.comments)
             {
                 @ReplyRenderFragment(item)
@@ -60,21 +76,23 @@
                 <Pagination TotalCount="(int)_newCommentData.totalCount"
                             IsRight="true"
                             PageIndex="_newCommentQuery.pageNo"
-                            PageSize="_newCommentQuery.pageSize" 
+                            PageSize="_newCommentQuery.pageSize"
                             OnPageChange="NewNext"></Pagination>
             </div>
         </div>
-    </div>
-}
-else
-{
-    <Hero Color="Color.Danger" IsFullHeight IsFullHeightWithNavbar>
-        <HeroBody>
+    }
+    else
+    {
+        <Hero Color="Color.Danger" IsFullHeight IsFullHeightWithNavbar>
+            <HeroBody>
 
-            <div>暂无内容</div>
-        </HeroBody>
-    </Hero>
-}
+                <div>暂无内容</div>
+            </HeroBody>
+        </Hero>
+    }
+</div>
+
+
 
 
 
