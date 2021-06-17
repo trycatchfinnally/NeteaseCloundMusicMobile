@@ -2,3 +2,4 @@
 obj
 bin
 /NeteaseCloundMusicMobile/NeteaseCloundMusicMobile.Server/Properties/PublishProfiles
+*.user
