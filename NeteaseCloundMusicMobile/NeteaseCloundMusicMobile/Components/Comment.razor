@@ -138,8 +138,8 @@
             <div class="count-desc text-nowrap overflow-hidden @B.HiddenMobile">
                 <Columns IsMobile="true">
                     <Column IsNarrow="true">
-                        <a class="el-link">
-                            <Icon IconClass="fa fa-thumbs-o-up"></Icon>
+                        <a class="el-link " style="@(item.liked?"color:red":string.Empty)" onclick="@(EventCallback.Factory.Create(string.Empty, ()=>LikeOrNotAsync(item)))">
+                            <Icon IconClass="@(item.liked?"fa fa-thumbs-up":"fa fa-thumbs-o-up")"></Icon>
                             @if (item.likedCount > 0)
                                 {
                                 <span>(@(item.likedCount.ToCountString()))</span>

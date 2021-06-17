@@ -114,6 +114,15 @@ namespace NeteaseCloundMusicMobile.Client.Components
             this._newCommentQuery.Loading = false;
 
 
+
+        }
+
+
+        private static Task LikeOrNotAsync(CommentsItem item)
+        {
+            item.liked = !item.liked;
+            Console.WriteLine(24);
+            return Task.CompletedTask;
         }
     }
 }

@@ -176,7 +176,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// <summary>
         /// 
         /// </summary>
-        public string liked { get; set; }
+        public bool liked { get; set; }
     }
 
     public class HotCommentApiResultModel:ApiResultModelRootBase
