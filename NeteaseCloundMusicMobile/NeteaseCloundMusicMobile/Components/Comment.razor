@@ -25,7 +25,7 @@
             <div class="@B.MT6 @B.MB6">精彩评论</div>
             @foreach (var item in _hotCommentApiResult.hotComments)
             {
-                @ReplyRenderFragment(item)
+                @ReplyRenderFragment(new ReplyRenderFragmentParameter { Item = item, LikeOrNotEventCallBack = EventCallback.Factory.Create<MouseEventArgs>(this, (e) => LikeOrNotAsync(item)) })
             }
             <div>
                 <Pagination TotalCount="(int)_hotCommentApiResult.total"
@@ -70,7 +70,7 @@
             <LoadingContainer IsActive="_newCommentQuery.Loading"></LoadingContainer>
             @foreach (var item in _newCommentData.comments)
             {
-                @ReplyRenderFragment(item)
+                @ReplyRenderFragment(new ReplyRenderFragmentParameter { Item = item, LikeOrNotEventCallBack =EventCallback.Factory.Create<MouseEventArgs>(this, (e)=> LikeOrNotAsync(item)) })
             }
             <div>
                 <Pagination TotalCount="(int)_newCommentData.totalCount"
@@ -97,31 +97,32 @@
 
 
 @code{
-    private RenderFragment<Models.CommentsItem> ReplyRenderFragment = item => __builder =>
+
+    private RenderFragment<ReplyRenderFragmentParameter> ReplyRenderFragment = parameter => __builder =>
     {
     <Media>
         <MediaLeft>
-            <a href="/user/@item.user.userId">
+            <a href="/user/@parameter.Item.user.userId">
                 <Image Size="Size.Square32">
-                    <img src="@item.user.avatarUrl" class="@B.Rounded" />
+                    <img src="@parameter.Item.user.avatarUrl" class="@B.Rounded" />
                 </Image>
             </a>
         </MediaLeft>
         <MediaContent>
             <div>
                 <p>
-                    <a href="/user/@item.user.userId">
-                        <strong>@item.user.nickname</strong>
+                    <a href="/user/@parameter.Item.user.userId">
+                        <strong>@parameter.Item.user.nickname</strong>
                     </a>
                     <br />
-                    @item.content
+                    @parameter.Item.content
 
                 </p>
             </div>
-            @if (item.beReplied?.Count > 0)
+            @if (parameter.Item.beReplied?.Count > 0)
                 {
                 <ul class="background-ccc @B.MT2 @B.MB2 @B.P2">
-                    @foreach (var beRepliedItem in item.beReplied)
+                    @foreach (var beRepliedItem in parameter.Item.beReplied)
                         {
                         <li>
                             <a href="/user/@beRepliedItem.user.userId">@string.Concat("@", beRepliedItem.user.nickname)</a>
@@ -131,18 +132,18 @@
                 </ul>
                 }
             <div class="count-desc">
-                @MapCreateTime(item.time)
+                @MapCreateTime(parameter.Item.time)
             </div>
         </MediaContent>
         <MediaRight>
             <div class="count-desc text-nowrap overflow-hidden @B.HiddenMobile">
                 <Columns IsMobile="true">
                     <Column IsNarrow="true">
-                        <a class="el-link " style="@(item.liked?"color:red":string.Empty)" onclick="@(EventCallback.Factory.Create(string.Empty, ()=>LikeOrNotAsync(item)))">
-                            <Icon IconClass="@(item.liked?"fa fa-thumbs-up":"fa fa-thumbs-o-up")"></Icon>
-                            @if (item.likedCount > 0)
+                        <a class="el-link " style="@(parameter.Item.liked?"color:red":string.Empty)" onclick="@parameter.LikeOrNotEventCallBack">
+                            <Icon IconClass="@(parameter.Item.liked?"fa fa-thumbs-up":"fa fa-thumbs-o-up")"></Icon>
+                            @if (parameter.Item.likedCount > 0)
                                 {
-                                <span>(@(item.likedCount.ToCountString()))</span>
+                                <span>(@(parameter.Item.likedCount.ToCountString()))</span>
                                 }
                         </a>
                     </Column>

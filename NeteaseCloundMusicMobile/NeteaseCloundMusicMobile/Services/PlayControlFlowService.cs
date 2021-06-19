@@ -120,6 +120,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
         /// 表示当前播放项
         /// </summary>
         public PlayableItemBase CurrentPlayableItem => this._audioPlayService.CurrentPlayableItem;
+        public AudioPlayService AudioPlayService => this._audioPlayService;
         /// <summary>
         /// 用来表示当前的播放列表
         /// </summary>

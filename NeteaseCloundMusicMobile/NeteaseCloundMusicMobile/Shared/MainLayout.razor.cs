@@ -1,8 +1,10 @@
 ﻿using BulmaRazor.Components;
+using NeteaseCloundMusicMobile.Client.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace NeteaseCloundMusicMobile.Client.Shared
@@ -11,14 +13,17 @@ namespace NeteaseCloundMusicMobile.Client.Shared
     {
         private class LoginForm
         {
-            [Required(ErrorMessage ="手机号码为必填项")]
+            [Required(ErrorMessage = "手机号码为必填项")]
             public string Phone { get; set; }
-            [Required(ErrorMessage ="密码为必填项")]
+            [Required(ErrorMessage = "密码为必填项")]
             public string PassWord { get; set; }
         }
-        
+
         private bool _loginModalShow = false;
         private LoginForm _loginForm = new LoginForm();
+
+
+       
 
         private async Task LoginAsync()
         {
@@ -45,5 +50,6 @@ namespace NeteaseCloundMusicMobile.Client.Shared
             var provider = ApiAuthenticationStateProvider as Authentication.ApiAuthenticationStateProvider;
             await Task.WhenAll(HttpRequestService.MakePostRequestAsync("/logout"), provider.MarkUserAsLoggedOutAsync().AsTask());
         }
+      
     }
 }

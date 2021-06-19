@@ -34,7 +34,9 @@
             <Columns Gap="@Gap.Gap0" IsVcentered="true" IsMobile="true">
                 <Column IsNarrow="true" class="@B.Join(B.PR4)">
                     <Image Size="Size.Square48" IsFullwidth="true">
-                        <img src="@Nvl(AudioPlayService.CurrentPlayableItem?.Album?.picUrl,AudioPlayService.CurrentPlayableItem?.Album?.blurPicUrl,"asset/Vinyl_music_128px.png")" />
+                        <a @onclick="PlayAlbumClick">
+                            <img src="@Nvl(AudioPlayService.CurrentPlayableItem?.Album?.picUrl,AudioPlayService.CurrentPlayableItem?.Album?.blurPicUrl,"asset/Vinyl_music_128px.png")" />
+                        </a>
                     </Image>
                 </Column>
                 <Column class="@B.PR4">

@@ -1,4 +1,5 @@
 @inherits LayoutComponentBase
+ 
 @inject Services.IHttpRequestService HttpRequestService
 @inject AuthenticationStateProvider ApiAuthenticationStateProvider
 @inject ToastService ToastService
@@ -45,18 +46,18 @@
 
                             <Authorized>
                                 <CascadingValue Value="@context" Name="AuthenticationState">
-                                   <Columns IsMobile="true" Gap="@Gap.Gap1" class="@B.AlignItemsCenter">
-                                       <Column>
-                                           <Image Size="Size.Square32">
-                                               <img class="@B.Join(B.Rounded,B.TooltipBottom)" 
-                                                    data-tooltip="@context.User.FindFirst(System.Security.Claims.ClaimTypes.Name).Value" 
-                                                    src="@context.User.FindFirst(System.Security.Claims.ClaimTypes.Uri).Value" />
-                                           </Image>
-                                       </Column>
-                                       <Column>
-                                           <a @onclick="LoginOutAsync">退出</a>
-                                       </Column>
-                                   </Columns>
+                                    <Columns IsMobile="true" Gap="@Gap.Gap1" class="@B.AlignItemsCenter">
+                                        <Column>
+                                            <Image Size="Size.Square32">
+                                                <img class="@B.Join(B.Rounded,B.TooltipBottom)"
+                                                     data-tooltip="@context.User.FindFirst(System.Security.Claims.ClaimTypes.Name).Value"
+                                                     src="@context.User.FindFirst(System.Security.Claims.ClaimTypes.Uri).Value" />
+                                            </Image>
+                                        </Column>
+                                        <Column>
+                                            <a @onclick="LoginOutAsync">退出</a>
+                                        </Column>
+                                    </Columns>
                                 </CascadingValue>
                             </Authorized>
                             <NotAuthorized>
@@ -84,7 +85,9 @@
 
 
     </div>
-    @Body
+    
+        @Body
+ 
     <div class="@B.P2">
         <Footer>
             <Content class="@B.TextCentered">
@@ -95,7 +98,7 @@
     <NeteaseCloundMusicMobile.Client.Components.BottomControlPart></NeteaseCloundMusicMobile.Client.Components.BottomControlPart>
 </div>
 <div class="login-modal-root">
-    <Modal   IsActive="_loginModalShow" ShowClose="false">
+    <Modal IsActive="_loginModalShow" ShowClose="false">
         <div class="@B.P4">
             <Level>
                 <LevelLeft><div></div></LevelLeft>
@@ -110,17 +113,17 @@
                     <img src="/asset/login_phone.scale-200.png" />
                 </Image>
             </div>
-            <EditForm   Model="_loginForm" OnValidSubmit="LoginAsync">
+            <EditForm Model="_loginForm" OnValidSubmit="LoginAsync">
                 <DataAnnotationsValidator />
-                
+
                 <Field>
                     <Control HasIconsLeft="true">
                         <Input placeholder="请输入手机号" @bind-Value="_loginForm.Phone" />
                         <Icon IsLeft="true" IconClass="fa fa-mobile"></Icon>
                     </Control>
-                  <Help>
-                      <ValidationMessage For="()=>_loginForm.Phone"></ValidationMessage>
-                  </Help>
+                    <Help>
+                        <ValidationMessage For="()=>_loginForm.Phone"></ValidationMessage>
+                    </Help>
                 </Field>
                 <Field>
                     <Control HasIconsLeft="true">
@@ -148,4 +151,4 @@
 </div>
 
 
-<Backtop  Bottom="200"></Backtop>
+<Backtop Bottom="200"></Backtop>

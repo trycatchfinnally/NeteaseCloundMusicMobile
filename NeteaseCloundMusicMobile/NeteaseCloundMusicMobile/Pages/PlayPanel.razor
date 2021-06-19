@@ -1,0 +1,69 @@
+﻿@page "/playpanel"
+@inherits Shared.RazorComponentBase
+<div class="@B.M4">
+    <Columns>
+        <Column IsNarrow="true">
+            <div>
+                <div class="top-album-show">
+                    <img class="img-rotate" src="/asset/player_needle.scale-200.png"
+                         style="transform:@(PlayControlFlowService.AudioPlayService.Paused?" rotateZ(-45deg)":" rotateZ(-0deg)")" />
+                    <div class="pic-back @B.Join(B.MT6 ,B.MR2,B.ML2,B.MB4,B.P6) ">
+                        <Image Ratio="Ratio.Ratio1by1">
+
+
+                            <img class="w-100 h-100 @B.Rounded"
+                                 src="@Nvl(PlayControlFlowService. AudioPlayService.CurrentPlayableItem?.Album?.picUrl,PlayControlFlowService.AudioPlayService.CurrentPlayableItem?.Album?.blurPicUrl,"asset/Vinyl_music_128px.png")" />
+                        </Image>
+                    </div>
+                </div>
+                <div class="@B.Join(B.Flex,B.AlignItemsCenter,B.FlexWrapNowrap)">
+                    <div class="@B.Join(B.MR4)">
+                        <Button IsSmall="true">
+                            @if (PlayControlFlowService.CurrentPlayableItem.Liked)
+                            {
+                                <div class="color-red">
+                                    <Icon IconClass="fa fa-heart"></Icon>
+
+                                    <span>取消喜欢</span>
+                                </div>
+                            }
+                            else
+                            {
+
+                                <div>
+                                    <Icon IconClass="fa fa-heart-o"></Icon>
+
+                                    <span>喜欢</span>
+                                </div>
+                            }
+
+                        </Button>
+                    </div>
+                    <div class="@B.Join(B.MR4)">
+                        <Button IsSmall="true">
+                            <Icon IconClass="iconfont icon-folder-add"></Icon>
+                            <span>收藏</span>
+                        </Button>
+                    </div>
+                    <div class="@B.Join(B.MR4)">
+                        <Button IsSmall="true">
+                            <Icon IconClass="fa fa-download"></Icon>
+                            <span>下载</span>
+                        </Button>
+                    </div>
+                    <div class="@B.Join(B.MR4)">
+                        <Button IsSmall="true">
+                            <Icon IconClass="fa fa-share-square-o"></Icon>
+                            <span>分享</span>
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        </Column>
+        <Column>
+            <div>
+
+            </div>
+        </Column>
+    </Columns>
+</div>

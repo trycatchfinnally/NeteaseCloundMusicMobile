@@ -10,8 +10,8 @@ namespace NeteaseCloundMusicMobile.Client.Components
     public partial class BottomControlPart
     {
 
-        [Inject]
-        private AudioPlayService AudioPlayService { get; set; }
+
+        private AudioPlayService AudioPlayService => PlayControlFlowService.AudioPlayService;
 
         protected override Task OnParametersSetAsync()
         {
@@ -31,7 +31,11 @@ namespace NeteaseCloundMusicMobile.Client.Components
                     break;
             }
         }
-
+        private void PlayAlbumClick()
+        {
+            if (this.AudioPlayService.CurrentPlayableItem != null)
+                this.NavigationManager.NavigateTo("/playpanel");
+        }
         public async Task OnPlayOrResumeClickAsync()
         {
             if (AudioPlayService.Paused&&!string.IsNullOrWhiteSpace(AudioPlayService.CurrentPlayableItem?.Url)) await AudioPlayService.PlayAsync( null);

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Web;
 using NeteaseCloundMusicMobile.Client.Models;
+using NeteaseCloundMusicMobile.Client.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +13,19 @@ namespace NeteaseCloundMusicMobile.Client.Components
     public partial class Comment
     {
 
+        private class ReplyRenderFragmentParameter
+        {
+            public CommentsItem Item { get; set; }
 
+            public EventCallback<MouseEventArgs> LikeOrNotEventCallBack { get; set; }
+        }
         private class NewCommentQuery
         {
             public long id { get; set; }
             public int type { get; set; }
             public int pageNo { get; set; } = 1;
             public int pageSize { get; set; } = 30;
-            public long? sortType { get; set; } 
+            public long? sortType { get; set; }
             public string cursor { get; set; }
 
 
@@ -53,8 +60,8 @@ namespace NeteaseCloundMusicMobile.Client.Components
         [Parameter]
 
         public string CommentThreadId { get; set; }
-
-
+        [Inject]
+        private LikedProgressService LikedProgressService { get; set; }
 
         protected override async Task OnParametersSetAsync()
         {
@@ -118,11 +125,10 @@ namespace NeteaseCloundMusicMobile.Client.Components
         }
 
 
-        private static Task LikeOrNotAsync(CommentsItem item)
+        private async Task LikeOrNotAsync(CommentsItem item)
         {
-            item.liked = !item.liked;
-            Console.WriteLine(24);
-            return Task.CompletedTask;
+            item.liked = await LikedProgressService.LikedOrNotAsync(item.commentId, !item.liked, CanLikedMediaType.Comment) ? !item.liked : item.liked;
+
         }
     }
 }

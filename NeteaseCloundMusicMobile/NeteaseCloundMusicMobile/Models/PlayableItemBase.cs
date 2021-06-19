@@ -21,8 +21,10 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// 表示名称
         /// </summary>
         public string Title { get; set; }
-
-
+        /// <summary>
+        /// 表示是否喜欢
+        /// </summary>
+        public bool Liked { get; set; }
 
         public Album Album { get; set; }
         public IReadOnlyList<Artist> Artists { get; set; }

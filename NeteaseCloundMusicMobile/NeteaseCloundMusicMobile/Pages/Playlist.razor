@@ -1,6 +1,6 @@
 ﻿@page "/playlist/{Id:long}"
 @inherits RazorComponentBase
- 
+
 @if (_playlist != null)
 {
     <div class="@B.M4">
@@ -91,27 +91,38 @@
                 </Control>
 
             </div>
-            <Tabs >
+            <Tabs>
                 <TabItem Label="歌曲列表">
-                    <div  >
+                    <div>
 
-                        <DataTable @ref="_dtPlaylist" Data="_displayTracks"  TItem="Models.TracksItem"   
+                        <DataTable @ref="_dtPlaylist" Data="_displayTracks" TItem="Models.TracksItem"
                                    IsNarrow="true"
                                    IsHoverable
-                                   IsBordered IsStriped IsFullwidth  >
+                                   IsBordered IsStriped IsFullwidth>
                             <EmptySlot>
                                 <div>暂无内容</div>
                             </EmptySlot>
-                            <ColumnsSlot >
-                                <DataTableColumn IsCheckBox="true" Label="选择" IsIndex="true"></DataTableColumn>
+                            <ColumnsSlot>
+                                <DataTableColumn IsCheckBox="true" Label="选择"></DataTableColumn>
 
                                 <DataTableColumn IsIndex="true" Label="序号" TdClass="@B.HiddenMobile" ThClass="@B.HiddenMobile"></DataTableColumn>
                                 <DataTableColumn Label="操作">
                                     <TdSlot>
-                                        <div class="el-link text-center @B.MR2 @B.Flex @B.AlignItemsCenter">
+                                        @{var track = context as WithLikedTracksItem;}
+                                        <div class="text-center count-desc @B.MR2 @B.Flex @B.AlignItemsCenter" @onclick="()=>LikeOrNotAsync(track)">
 
-                                            <Icon IconClass="fa fa-heart-o"></Icon>
-
+                                            @if (track.Liked)
+                                            {
+                                                <div class="color-red">
+                                                    <Icon IconClass="fa fa-heart"></Icon>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="el-link">
+                                                    <Icon IconClass="fa fa-heart-o"></Icon>
+                                                </div>
+                                            }
                                         </div>
                                     </TdSlot>
                                 </DataTableColumn>
@@ -136,13 +147,13 @@
                                         </div>
                                     </TdSlot>
                                 </DataTableColumn>
-                                <DataTableColumn Label="歌手"  TdClass="@B.HiddenMobile" ThClass="@B.HiddenMobile">
+                                <DataTableColumn Label="歌手" TdClass="@B.HiddenMobile" ThClass="@B.HiddenMobile">
 
                                     <TdSlot>
                                         @{var track = context as Models.TracksItem;}
 
                                         <div class="@B.Flex @B.AlignItemsCenter count-desc">
-                                            @foreach (var item in track.ar)
+                                            @foreach (var item in track.ar.Take(5))
                                             {
                                                 <a class="el-link playlist-tags" href="/artist/@item.id">@item.name</a>
                                             }

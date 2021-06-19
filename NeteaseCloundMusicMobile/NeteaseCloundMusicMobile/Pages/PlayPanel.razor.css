@@ -1,0 +1,27 @@
+﻿.top-album-show .img-rotate {
+    position: absolute;
+    transform-origin: 10% 15%;
+    width: 10em;
+    z-index: 99;
+    margin-left: 4em;
+    top: 4em;
+}
+
+.top-album-show .pic-back {
+    background-image: url(/asset/player_disk_cover.scale-200.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    transform: rotate(0deg);
+    animation: rot 5s linear infinite;
+    width: 18em;
+}
+
+@keyframes rot {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

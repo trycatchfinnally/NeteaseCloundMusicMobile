@@ -37,5 +37,10 @@ namespace NeteaseCloundMusicMobile.Client.Shared
         {
             this.NavigationManager.NavigateTo("/404");
         }
+        protected static T ToDto<T>(object source)
+        {
+            var json = System.Text.Json.JsonSerializer.Serialize(source);
+            return System.Text.Json.JsonSerializer.Deserialize<T>(json);
+        }
     }
 }

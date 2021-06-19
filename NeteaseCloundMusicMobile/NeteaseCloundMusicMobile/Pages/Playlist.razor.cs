@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using NeteaseCloundMusicMobile.Client.Models;
+using NeteaseCloundMusicMobile.Client.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,11 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 {
     public partial class Playlist
     {
+        private class WithLikedTracksItem : TracksItem
+        {
+            public bool Liked { get; set; }
 
+        }
         private Models.Playlist _playlist;
 
 
@@ -22,6 +27,8 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 
         [Parameter]
         public long Id { get; set; }
+        [Inject]
+        private LikedProgressService LikedProgressService { get; set; }
         protected override async Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
@@ -58,6 +65,13 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             }
             finally
             {
+                var likedIds = await this.LikedProgressService.EnsureLikedMusicIdsAsync();
+                var query = ToDto<List<WithLikedTracksItem>>(this._playlist.tracks);
+                foreach (var item in query)
+                {
+                    item.Liked = likedIds.Contains(item.id);
+                }
+                this._playlist.tracks = query.Select(x => x as TracksItem).ToList();
                 this._displayTracks = this._playlist.tracks;
             }
         }
@@ -68,7 +82,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 
         private void OnSearchBoxKeyDownAsync(KeyboardEventArgs eventArgs)
         {
-            
+
             if (string.Equals(eventArgs.Key, "Enter", StringComparison.OrdinalIgnoreCase))
             {
                 if (this._searchKeyWord?.Length > 0)
@@ -87,7 +101,11 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         {
             var rows = this._dtPlaylist.GetCheckedItems();
             if (rows.Count == 0) return ToastMessageService.ErrorAsync("请先选择项").AsTask();
-            return this.PlayControlFlowService.AddRange2PlaySequenceAsync(rows.Select(StandardAdapter),clearCollection:true);
+            return this.PlayControlFlowService.AddRange2PlaySequenceAsync(rows.Select(StandardAdapter), clearCollection: true);
+        }
+        private async Task LikeOrNotAsync(WithLikedTracksItem item)
+        {
+            item.Liked = await this.LikedProgressService.LikedOrNotAsync(item.id, !item.Liked, CanLikedMediaType.Music) ? !item.Liked : item.Liked;
         }
         private SimplePlayableItem StandardAdapter(TracksItem x)
         {
@@ -96,6 +114,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 
                 Id = x.id,
                 Title = x.name,
+                Liked=(x as WithLikedTracksItem)?.Liked??false,
                 Album = new Album
                 {
                     id = x.al.id,
@@ -111,5 +130,8 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                 }).ToArray()
             };
         }
+
+
+
     }
 }

@@ -40,7 +40,7 @@ namespace NeteaseCloundMusicMobile
             services.AddScoped<IHttpRequestService, HttpRequestService>();
             services.AddScoped<AudioPlayService>();
             services.AddScoped<PlayControlFlowService>();
-
+            services.AddScoped(typeof(LikedProgressService));
             services.AddAuthorizationCore();
             services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
 
