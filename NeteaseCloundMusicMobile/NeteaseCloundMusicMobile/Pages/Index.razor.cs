@@ -94,6 +94,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                 Title = item.name,
                 Artists = item.artists,
                 Album = item.album,
+                MvId=item.mvid
                
             };
            

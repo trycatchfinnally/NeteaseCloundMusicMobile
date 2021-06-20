@@ -16,6 +16,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// 对应项目的id
         /// </summary>
         public long Id { get; set; }
+        public long MvId { get; set; }
 
         /// <summary>
         /// 表示名称

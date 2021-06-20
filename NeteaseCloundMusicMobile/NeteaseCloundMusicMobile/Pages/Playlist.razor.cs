@@ -114,7 +114,8 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 
                 Id = x.id,
                 Title = x.name,
-                Liked=(x as WithLikedTracksItem)?.Liked??false,
+                MvId=x.mv,
+                Liked=(x as WithLikedTracksItem)?.Liked==true,
                 Album = new Album
                 {
                     id = x.al.id,
@@ -125,7 +126,8 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                 Artists = x.ar.Select(y => new Artist
                 {
                     id = y.id,
-                    name = y.name
+                    name = y.name,
+                    
 
                 }).ToArray()
             };

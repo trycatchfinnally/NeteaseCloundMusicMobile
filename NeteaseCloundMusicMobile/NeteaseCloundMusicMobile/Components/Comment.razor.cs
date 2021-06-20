@@ -49,7 +49,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
                 }
             }
         }
-        private static readonly Dictionary<string, int> m_comment_types = new Dictionary<string, int> { { "PL", 2 } };
+        private static readonly Dictionary<string, int> m_comment_types = new Dictionary<string, int> { { "PL", 2 },{ "SO",0} };
         private HotCommentQuery _hotCommentQuery;
         private NewCommentQuery _newCommentQuery;
 

@@ -57,7 +57,7 @@ class AudioPlayer {
             this.currentTime = 0;
         }
         if (this._audioElement.src == null || this._audioElement.src.length == 0) return;
-       
+
         return this._audioElement.play();
 
 
@@ -66,4 +66,4 @@ class AudioPlayer {
         this._audioElement.pause();
     }
 }
-const audioPlayer = new AudioPlayer();
+(window as any).audioPlayer = new AudioPlayer();

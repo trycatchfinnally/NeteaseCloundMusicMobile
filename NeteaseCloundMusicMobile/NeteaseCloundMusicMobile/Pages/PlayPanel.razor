@@ -1,69 +1,185 @@
 ﻿@page "/playpanel"
 @inherits Shared.RazorComponentBase
-<div class="@B.M4">
-    <Columns>
-        <Column IsNarrow="true">
-            <div>
-                <div class="top-album-show">
-                    <img class="img-rotate" src="/asset/player_needle.scale-200.png"
-                         style="transform:@(PlayControlFlowService.AudioPlayService.Paused?" rotateZ(-45deg)":" rotateZ(-0deg)")" />
-                    <div class="pic-back @B.Join(B.MT6 ,B.MR2,B.ML2,B.MB4,B.P6) ">
-                        <Image Ratio="Ratio.Ratio1by1">
+@implements IDisposable
+@if (CurrentTrack != null)
+{
+    <div class="@B.M4">
+        <Columns>
+            <Column IsNarrow="true">
+                <div>
+                    <div class="top-album-show">
+                        <img class="img-rotate" src="/asset/player_needle.scale-200.png"
+                             style="transform:@(PlayControlFlowService.AudioPlayService.Paused?" rotateZ(-45deg)":" rotateZ(-0deg)")" />
+                        <div class="pic-back @B.Join(B.MT6 ,B.MR2,B.ML2,B.MB4,B.P6) ">
+                            <Image Ratio="Ratio.Ratio1by1">
 
 
-                            <img class="w-100 h-100 @B.Rounded"
-                                 src="@Nvl(PlayControlFlowService. AudioPlayService.CurrentPlayableItem?.Album?.picUrl,PlayControlFlowService.AudioPlayService.CurrentPlayableItem?.Album?.blurPicUrl,"asset/Vinyl_music_128px.png")" />
-                        </Image>
+                                <img class="w-100 h-100 @B.Rounded"
+                                     src="@Nvl(PlayControlFlowService. AudioPlayService.CurrentPlayableItem?.Album?.picUrl,PlayControlFlowService.AudioPlayService.CurrentPlayableItem?.Album?.blurPicUrl,"asset/Vinyl_music_128px.png")" />
+                            </Image>
+                        </div>
+                    </div>
+                    <div class="@B.Join(B.Flex,B.AlignItemsCenter,B.FlexWrapNowrap)">
+                        <div class="@B.Join(B.MR4)" @onclick="LikeOrNotAsync">
+                            <Button IsSmall="true">
+                                @if (PlayControlFlowService.CurrentPlayableItem.Liked)
+                                {
+                                    <div class="color-red">
+                                        <Icon IconClass="fa fa-heart"></Icon>
+
+                                        <span>取消喜欢</span>
+                                    </div>
+                                }
+                                else
+                                {
+
+                                    <div>
+                                        <Icon IconClass="fa fa-heart-o"></Icon>
+
+                                        <span>喜欢</span>
+                                    </div>
+                                }
+
+                            </Button>
+                        </div>
+                        <div class="@B.Join(B.MR4)">
+                            <Button IsSmall="true">
+                                <Icon IconClass="iconfont icon-folder-add"></Icon>
+                                <span>收藏</span>
+                            </Button>
+                        </div>
+                        <div class="@B.Join(B.MR4)">
+                            <Button IsSmall="true">
+                                <Icon IconClass="fa fa-download"></Icon>
+                                <span>下载</span>
+                            </Button>
+                        </div>
+                        <div class="@B.Join(B.MR4)">
+                            <Button IsSmall="true">
+                                <Icon IconClass="fa fa-share-square-o"></Icon>
+                                <span>分享</span>
+                            </Button>
+                        </div>
                     </div>
                 </div>
-                <div class="@B.Join(B.Flex,B.AlignItemsCenter,B.FlexWrapNowrap)">
-                    <div class="@B.Join(B.MR4)">
-                        <Button IsSmall="true">
-                            @if (PlayControlFlowService.CurrentPlayableItem.Liked)
-                            {
-                                <div class="color-red">
-                                    <Icon IconClass="fa fa-heart"></Icon>
+            </Column>
+            <Column>
+                <div>
+                    <div class="@B.Join(B.Flex,B.AlignItemsCenter)">
+                        <p class="@B.Join(B.MR2,B.TextBlack,B.TextWeightBold)">@PlayControlFlowService.AudioPlayService.CurrentPlayableItem.Title</p>
+                        @if (CurrentTrack.MvId > 0)
+                        {<a href="/mv/@CurrentTrack.MvId" class="count-desc">
+                                <Tag IsLight Color="Color.Danger">
 
-                                    <span>取消喜欢</span>
+                                    MV
+
+                                </Tag>
+                            </a>
+                        }
+
+                    </div>
+                    <div class="count-desc @B.Join(B.MT2,B.MB2)">
+                        <Columns IsMobile="true">
+                            <Column>
+                                专辑：<span>
+                                    <a href="/album/@CurrentTrack.Album.id">@CurrentTrack.Album.name</a>
+                                </span>
+                            </Column>
+                            <Column>
+
+                                <div class="@B.Flex @B.AlignItemsCenter count-desc">
+                                    <div>   歌手： </div>
+                                    @foreach (var item in CurrentTrack.Artists.Take(5))
+                                    {
+                                        <a class="el-link artists-a" href="/artist/@item.id">@item.name</a>
+                                    }
                                 </div>
-                            }
-                            else
-                            {
 
+                            </Column>
+
+                        </Columns>
+                    </div>
+                    <div class="w-100  text-overflow-ellipsis   @B.Join(B.MT4)">
+                        <ul class="lrc-panel" @onmouseover="()=>_ulPanelHover=true" @onmouseout="()=>_ulPanelHover=false">
+                            @foreach (var item in _lyricsKeyValuePair)
+                            {
+                                <li data-position="@item.Key.TotalMilliseconds" @onclick="()=>LyricClick(item.Key)" class="cursor-pointer">@item.Value</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </Column>
+        </Columns>
+        <Columns>
+            <Column Size="Size.TwoThirds">
+                <h3>听友评论</h3>
+                <Divider></Divider>
+                <NeteaseCloundMusicMobile.Client.Components.Comment CommentThreadId="@($"R_SO_4_{CurrentTrack.Id}")"></NeteaseCloundMusicMobile.Client.Components.Comment>
+            </Column>
+            <Column Size="Size.OneThird">
+
+                <h3>包含这首歌的歌单</h3>
+                <Divider></Divider>
+                @foreach (var item in _simiPlaylists)
+                {
+                    <div class="hover-list-item @B.M2 @B.P2">
+                        <a href="/playlist/@item.id" class="el-link">
+
+                            <Columns IsMobile="true">
+                                <Column IsNarrow="true">
+                                    <Image Size="Size.Square48">
+                                        <img src="@item.coverImgUrl" />
+                                    </Image>
+                                </Column>
+                                <Column>
+                                    <div>
+                                        <div class="text-nowrap overflow-hidden text-overflow-ellipsis ">@item.name</div>
+                                        <div class="count-desc">播放：@item.playCount.ToCountString()</div>
+                                    </div>
+
+                                </Column>
+                            </Columns>
+
+
+                        </a>
+                    </div>
+                }
+                <h3>相似歌曲</h3>
+                <Divider></Divider>
+                @foreach (var item in _simiSongs)
+                {
+                    <div class="hover-list-item @B.M2 @B.P2">
+                        <Columns IsMobile="true" >
+                            <Column IsNarrow="true">
+                                <div @onclick="()=>PlayAsync(item)">
+                                    <div class="play-symbol  @B.TextWhiteTer">
+                                        <Icon IconClass="fa fa-play-circle-o"></Icon>
+                                    </div>
+                                    <Image Size="Size.Square48">
+                                        <img src="@item.album.picUrl" />
+                                    </Image>
+
+                                </div>
+                            </Column>
+                            <Column>
                                 <div>
-                                    <Icon IconClass="fa fa-heart-o"></Icon>
-
-                                    <span>喜欢</span>
+                                    <div class="text-nowrap overflow-hidden text-overflow-ellipsis ">@item.name</div>
+                                    @if (item.artists?.Count > 0)
+                                    {
+                                        <div class="@B.Flex  ">
+                                            @foreach (var artist in item.artists.Take(3))
+                                            {
+                                                <a class="@B.PR2  el-link" href="/artist/@artist.id">@artist.name</a>
+                                            }
+                                        </div>
+                                    }
                                 </div>
-                            }
 
-                        </Button>
+                            </Column>
+                        </Columns>
                     </div>
-                    <div class="@B.Join(B.MR4)">
-                        <Button IsSmall="true">
-                            <Icon IconClass="iconfont icon-folder-add"></Icon>
-                            <span>收藏</span>
-                        </Button>
-                    </div>
-                    <div class="@B.Join(B.MR4)">
-                        <Button IsSmall="true">
-                            <Icon IconClass="fa fa-download"></Icon>
-                            <span>下载</span>
-                        </Button>
-                    </div>
-                    <div class="@B.Join(B.MR4)">
-                        <Button IsSmall="true">
-                            <Icon IconClass="fa fa-share-square-o"></Icon>
-                            <span>分享</span>
-                        </Button>
-                    </div>
-                </div>
-            </div>
-        </Column>
-        <Column>
-            <div>
-
-            </div>
-        </Column>
-    </Columns>
-</div>
+                }
+            </Column>
+        </Columns>
+    </div>
+}
