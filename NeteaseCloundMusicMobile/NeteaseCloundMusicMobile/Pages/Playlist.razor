@@ -132,8 +132,9 @@
                                         <div class="@B.Flex @B.AlignItemsCenter">
                                             <div class="el-link" @onclick="()=>PlayAsync(track)">
                                                 <Icon IconClass="fa fa-play-circle"></Icon>
+                                                <span>@track.name</span>
                                             </div>
-                                            <div>@track.name</div>
+
                                             @if (track.h?.br >= 320000)
                                             {
                                                 <Tag IsLight="true" Color="Color.Danger" class="@B.M1">SQ</Tag>
@@ -188,7 +189,36 @@
                     <NeteaseCloundMusicMobile.Client.Components.Comment CommentThreadId="@_playlist.commentThreadId"></NeteaseCloundMusicMobile.Client.Components.Comment>
 
                 </TabItem>
-                <TabItem Label="收藏者"></TabItem>
+                <TabItem Label="收藏者">
+                    @if (_subscribers?.total > 0)
+                    {
+                        <div class="@B.Join(B.Flex,B.JustifyContentCenter) w-100">
+
+
+
+                            <div class="@B.Join(B.Flex,B.AlignItemsCenter,B.AlignContentCenter,B.FlexWrapWrap,B.JustifyContentLeft) ">
+                                @foreach (var item in _subscribers.subscribers)
+                                {
+                                    <a class="@B.Join(B.Flex,B.AlignItemsCenter,B.FlexDirectionColumn,  B.TextCentered,B.AlignContentCenter,B.M6) el-link subscriber-nickname" href="/user/@item.userId">
+                                        <Image Size="Size.Square64">
+                                            <img src="@item.avatarUrl" class="@B.Rounded" />
+                                        </Image>
+                                        <p class="@B.MT2 text-nowrap overflow-hidden text-overflow-ellipsis w-100">@item.nickname</p>
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                        <div class="@B.Join(B.Flex,B.JustifyContentCenter)  w-100">
+                            <Pagination TotalCount="_subscribers.total" PageSize="_subScribersQuery.limit"
+                                        OnPageChange="FetchSubscribersAsync"
+                                        HideOnSinglePage="true"></Pagination>
+                        </div>
+                    }
+                    else
+                    {
+                        <NeteaseCloundMusicMobile.Client.Components.Empty></NeteaseCloundMusicMobile.Client.Components.Empty>
+                    }
+                </TabItem>
 
             </Tabs>
 

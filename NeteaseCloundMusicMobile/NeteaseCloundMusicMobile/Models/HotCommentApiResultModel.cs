@@ -96,7 +96,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// <summary>
         /// 
         /// </summary>
-        public string expertTags { get; set; }
+        public string[] expertTags { get; set; }
         /// <summary>
         /// 
         /// </summary>

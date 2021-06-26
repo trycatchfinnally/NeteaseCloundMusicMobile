@@ -9,7 +9,7 @@
         background-size: 6000px
 ">
         <Container>
-            <Carousel   Options="_carouselOptions" class="overflow-hidden">
+            <Carousel Options="_carouselOptions" class="overflow-hidden">
                 @foreach (var item in _displayBanners)
                 {
 
@@ -47,25 +47,26 @@
                 <Divider IsVertical="true" class="h-100"></Divider>
             </Column>
         </Columns>
-      
+
     </Column>
-   
-    <Column Size="@Size.OneThird" >
+
+    <Column Size="@Size.OneThird">
         <Columns IsMobile="true" IsGapless="true">
 
             <Column>
-
-                <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
-                    <Column IsNarrow="true">
-                        <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter @B.JustifyContentCenter circle-button text-2em">
-                            <div>@DateTime.Today.Day</div>
-                        </div>
-                    </Column>
-                    <Column>
-                        <div class="@B.TextLeftTablet @B.TextCenteredMobile @B.TextDark @B.TextWeightBold ">每日推荐</div>
-                        <div class="@B.HiddenMobile">根据你的口味生成</div>
-                    </Column>
-                </Columns>
+                <a class="cursor-pointer"  href="/everydayrecommend">
+                    <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
+                        <Column IsNarrow="true">
+                            <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter @B.JustifyContentCenter circle-button text-2em">
+                                <div>@DateTime.Today.Day</div>
+                            </div>
+                        </Column>
+                        <Column>
+                            <div class="@B.TextLeftTablet @B.TextCenteredMobile @B.TextDark @B.TextWeightBold ">每日推荐</div>
+                            <div class="@B.HiddenMobile">根据你的口味生成</div>
+                        </Column>
+                    </Columns>
+                </a>
             </Column>
             <Column IsNarrow="true">
                 <Divider IsVertical="true" class="h-100"></Divider>
@@ -73,7 +74,7 @@
             </Column>
         </Columns>
     </Column>
- 
+
     <Column Size="@Size.OneThird">
         <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
             <Column IsNarrow="true">
@@ -135,7 +136,7 @@
             <Button IsLight="true" Color="Color.Ghost" @onclick="()=>MoreClick(2)">更多&lt;</Button>
         </LevelRight>
     </Level>
-    <Columns  >
+    <Columns>
         @foreach (var item in _privateContentItems.Take(3))
         {
             <Column Size="Size.OneThird">
@@ -170,10 +171,10 @@
             <Button IsLight="true" Color="Color.Ghost" @onclick="()=>MoreClick(3)">更多&lt;</Button>
         </LevelRight>
     </Level>
-    <Columns   IsMultiline="true">
+    <Columns IsMultiline="true">
         @foreach (var item in _newSongApiResultItems.Take(12))
         {
-            <Column Size="Size.Half" >
+            <Column Size="Size.Half">
                 <div class="hover-list-item">
                     <Columns IsMobile="true" @onclick="()=>PlayAsync(item)">
                         <Column IsNarrow="true">
@@ -182,17 +183,17 @@
                             </Image>
                         </Column>
                         <Column>
-                            <div >
+                            <div>
                                 <div class="text-nowrap overflow-hidden text-overflow-ellipsis ">@item.name</div>
-                               @if (item.artists?.Count > 0)
-                               {
-                                   <div class="@B.Flex  ">
-                                       @foreach (var artist in item.artists)
-                                       {
-                                           <div class="@B.PR2">@artist.name</div>
-                                       }
-                                   </div>
-                               }
+                                @if (item.artists?.Count > 0)
+                                {
+                                    <div class="@B.Flex  ">
+                                        @foreach (var artist in item.artists)
+                                        {
+                                            <div class="@B.PR2">@artist.name</div>
+                                        }
+                                    </div>
+                                }
                             </div>
 
                         </Column>
@@ -218,10 +219,10 @@
     <Columns IsMobile="true" IsMultiline="true">
         @foreach (var item in _mvFirstApiResultItems)
         {
-            <div  class="col-xs-6 col-sm-6 col-md-3 col-lg-3 @B.MB3">
-                <NeteaseCloundMusicMobile.Client.Components.PlayListCardItem Count="@item.playCount" 
+            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 @B.MB3">
+                <NeteaseCloundMusicMobile.Client.Components.PlayListCardItem Count="@item.playCount"
                                                                              PicUrl="@item.cover"
-                                                                             FooterTitle="@item.name" 
+                                                                             FooterTitle="@item.name"
                                                                              FooterDescription="@item.artistName"
                                                                              CountIconClass="fa fa-video-camera">
 
@@ -243,7 +244,7 @@
             <Button IsLight="true" Color="Color.Ghost" @onclick="()=>MoreClick(5)">更多&lt;</Button>
         </LevelRight>
     </Level>
-    <Columns   IsMultiline="true">
+    <Columns IsMultiline="true">
         @foreach (var item in _djProgramApiResultItems)
         {
             <Column Size="Size.Half">

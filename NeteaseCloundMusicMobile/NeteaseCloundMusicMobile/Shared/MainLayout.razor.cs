@@ -23,7 +23,7 @@ namespace NeteaseCloundMusicMobile.Client.Shared
         private LoginForm _loginForm = new LoginForm();
 
 
-       
+
 
         private async Task LoginAsync()
         {
@@ -35,7 +35,8 @@ namespace NeteaseCloundMusicMobile.Client.Shared
             if (temp.code == 200)
             {
                 var provider = ApiAuthenticationStateProvider as Authentication.ApiAuthenticationStateProvider;
-                await provider.MarkUserAsAuthenticatedAsync(temp.profile);
+                provider.MarkUserAsAuthenticated(temp.profile);
+                
                 await ToastService.SuccessAsync($"登录成功！欢迎,{temp.profile.nickname}");
                 this._loginModalShow = false;
             }
@@ -45,11 +46,11 @@ namespace NeteaseCloundMusicMobile.Client.Shared
             }
 
         }
-        private async Task LoginOutAsync()
+        private Task LoginOutAsync()
         {
             var provider = ApiAuthenticationStateProvider as Authentication.ApiAuthenticationStateProvider;
-            await Task.WhenAll(HttpRequestService.MakePostRequestAsync("/logout"), provider.MarkUserAsLoggedOutAsync().AsTask());
+            return provider.MarkUserAsLoggedOutAsync();
         }
-      
+
     }
 }

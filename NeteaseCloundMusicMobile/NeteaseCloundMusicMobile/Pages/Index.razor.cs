@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace NeteaseCloundMusicMobile.Client.Pages
 {
@@ -37,6 +38,9 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         private IReadOnlyList<MvFirstApiResultItem> _mvFirstApiResultItems;
         private IReadOnlyList<DjProgramApiResultItem> _djProgramApiResultItems;
 
+
+       
+ 
         private async Task FetchCarouseAsync()
         {
             var bannerModel = await HttpRequestService.MakePostRequestAsync<BannerApiResult>("/banner", new { type = 0 }, false);
@@ -86,7 +90,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 
         public async Task PlayAsync(Models.NewSongApiResultItem item)
         {
-           
+
 
             var temp = new SimplePlayableItem
             {
@@ -94,10 +98,10 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                 Title = item.name,
                 Artists = item.artists,
                 Album = item.album,
-                MvId=item.mvid
-               
+                MvId = item.mvid
+
             };
-           
+
             await this.PlayControlFlowService.Add2PlaySequenceAsync(temp);
         }
         protected override async Task OnInitializedAsync()
@@ -112,5 +116,9 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             await Task.WhenAll(task1, task2, task3, task4, task5, task6);
             _pageLoading = false;
         }
+
+
+         
+
     }
 }

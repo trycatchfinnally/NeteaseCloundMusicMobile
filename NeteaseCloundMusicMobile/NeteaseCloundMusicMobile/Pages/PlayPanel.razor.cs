@@ -22,7 +22,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         private IReadOnlyList<Models.Playlist> _simiPlaylists = Array.Empty<Models.Playlist>();
         private IReadOnlyList<Models.NewSongApiResultItem> _simiSongs = Array.Empty<Models.NewSongApiResultItem>();
         private long _trackId;//用以记录当前的歌词、相似音乐等对应的歌曲id
-        private IJSObjectReference _jsModule;
+        //private IJSObjectReference _jsModule;
         private bool _ulPanelHover = false;
         protected override async Task OnInitializedAsync()
         {
@@ -36,14 +36,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             await InitWhenTrackChangedAsync();
             await base.OnInitializedAsync();
         }
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender)
-            {
-                this._jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import",
-                    "/js/playpanel.js");
-            }
-        }
+       
 
 
         private async Task InitWhenTrackChangedAsync()
@@ -104,7 +97,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                     if (this._lyricsKeyValuePair.Count > 0)
                     {
                         var needShow = this._lyricsKeyValuePair.OrderBy(x => Math.Abs((x.Key - PlayControlFlowService.AudioPlayService.Position).TotalMilliseconds)).First();
-                        await this._jsModule.InvokeVoidAsync("activeLi", needShow.Key.TotalMilliseconds, this._ulPanelHover);
+                        await this.JSRuntime.InvokeVoidAsync("activeLi", needShow.Key.TotalMilliseconds, this._ulPanelHover);
                     }
                     break;
             }

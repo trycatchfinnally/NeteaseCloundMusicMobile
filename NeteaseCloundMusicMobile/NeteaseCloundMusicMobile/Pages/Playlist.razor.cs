@@ -17,12 +17,18 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             public bool Liked { get; set; }
 
         }
+        private class SubScribersQuery
+        {
+            public int limit { get; set; }
+            public int offset { get; set; }
+            public long id { get; set; }
+        }
         private Models.Playlist _playlist;
 
-
+        private SubScribersQuery _subScribersQuery;
+        private PlaylistSubscribersApiResultModel _subscribers;
         private string _searchKeyWord;
         private DataTable<TracksItem> _dtPlaylist;
-
         private IReadOnlyList<TracksItem> _displayTracks = Array.Empty<TracksItem>();
 
         [Parameter]
@@ -42,14 +48,22 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             try
             {
 
-                //为了避免id数量过多，分组调接口
+
                 var groups = this._playlist.trackIds
                       .Where(x => this._playlist.tracks.All(y => y.id != x.id))
                       .Select((x, i) => KeyValuePair.Create(x.id, i))
                       .GroupBy((x) => x.Value / 30)//每组数量最多30
                       .ToDictionary(x => x.Key, x => this.HttpRequestService.MakePostRequestAsync<GetSongDetailResultModel>("/song/detail", new { ids = string.Join(",", x.Select(y => y.Key)) }));
                 if (groups.Count == 0) return;
-                await Task.WhenAll(groups.Values);
+                this._subScribersQuery = new SubScribersQuery
+                {
+                    limit = 20,
+                    id = Id,
+                    offset = 0
+                };
+                var subTask = FetchSubscribersAsync();
+                //为了避免id数量过多，分组调接口
+                await Task.WhenAll(groups.Values.Concat<Task>(new[] { subTask }));
                 var others = groups.Values.Select(x => x.Result).SelectMany(x => x.songs);
                 this._playlist.tracks.AddRange(others.Select(x => new TracksItem
                 {
@@ -62,6 +76,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                     dt = x.dt
 
                 }));
+
             }
             finally
             {
@@ -74,6 +89,12 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                 this._playlist.tracks = query.Select(x => x as TracksItem).ToList();
                 this._displayTracks = this._playlist.tracks;
             }
+        }
+        private async Task FetchSubscribersAsync(int pageIndex = 1)
+        {
+            this._subScribersQuery.offset = pageIndex * this._subScribersQuery.limit - this._subScribersQuery.limit;
+            var temp = await this.HttpRequestService.MakePostRequestAsync<PlaylistSubscribersApiResultModel>("/playlist/subscribers", this._subScribersQuery);
+            this._subscribers = temp;
         }
         private Task PlayAllAsync()
         {
@@ -114,8 +135,8 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 
                 Id = x.id,
                 Title = x.name,
-                MvId=x.mv,
-                Liked=(x as WithLikedTracksItem)?.Liked==true,
+                MvId = x.mv,
+                Liked = (x as WithLikedTracksItem)?.Liked == true,
                 Album = new Album
                 {
                     id = x.al.id,
@@ -127,7 +148,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                 {
                     id = y.id,
                     name = y.name,
-                    
+
 
                 }).ToArray()
             };

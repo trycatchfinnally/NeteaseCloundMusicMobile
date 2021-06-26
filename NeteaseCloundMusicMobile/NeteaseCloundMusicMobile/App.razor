@@ -1,7 +1,19 @@
-<Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState >
+<Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
         <Found Context="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            <Microsoft.AspNetCore.Components.Authorization.AuthorizeRouteView RouteData="@routeData"
+                                                                              DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized>
+                    <h1>Sorry</h1>
+                    <p>You're not authorized to reach this page.</p>
+                    <p>You may need to log in as a different user.</p>
+                </NotAuthorized>
+                <Authorizing>
+                    <h1>正在验证你的身份，请稍后</h1>
+                    @*<p>Only visible while authorization is in progress.</p>*@
+                </Authorizing>
+            </Microsoft.AspNetCore.Components.Authorization.AuthorizeRouteView>
+           
         </Found>
         <NotFound>
             <LayoutView Layout="@typeof(MainLayout)">

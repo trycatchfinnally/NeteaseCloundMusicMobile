@@ -13,38 +13,56 @@ namespace NeteaseCloundMusicMobile.Client.Authentication
 {
     public class ApiAuthenticationStateProvider : AuthenticationStateProvider
     {
-        private readonly ILocalStorageService _localStorageService;
-     
+
+        private class LoginStatusApiResultModel : ApiResultModelRootBase
+        {
+            public LoginApiResultModel data { get; set; }
+           
+        }
+
+        private readonly IHttpRequestService _httpRequestService;
+
 
 
         private static readonly ClaimsPrincipal s_empty_principal = new ClaimsPrincipal(new ClaimsIdentity());
-        private const string UserProfile = nameof(UserProfile);
-        public ApiAuthenticationStateProvider(ILocalStorageService localStorageService )
+    
+        public ApiAuthenticationStateProvider(IHttpRequestService httpRequestService)
         {
-            _localStorageService = localStorageService;  
+
+            _httpRequestService = httpRequestService;
         }
 
-       
+
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var savedToken = await this._localStorageService.GetItemAsStringAsync(UserProfile);
+            //var savedToken = await this._localStorageService.GetItemAsStringAsync(UserProfile);
 
-            if (string.IsNullOrWhiteSpace(savedToken))
-            {
-                return new AuthenticationState(s_empty_principal);
-            }
+            //if (string.IsNullOrWhiteSpace(savedToken))
+            //{
+            //    return new AuthenticationState(s_empty_principal);
+            //}
             try
             {
-                var claims = ParseClaimsFromUserProfile(JsonSerializer.Deserialize<UserProfile>(ParseBase64WithoutPadding(savedToken)));
+                //var claims = ParseClaimsFromUserProfile(JsonSerializer.Deserialize<UserProfile>(ParseBase64WithoutPadding(savedToken)));
+
+                var temp = await this._httpRequestService.MakePostRequestAsync<LoginStatusApiResultModel>("/login/status");
+                if (temp.data?.profile?.userId > 0)
+                {
+                    var claims = ParseClaimsFromUserProfile(temp.data.profile);
 
 
-                return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(claims, "jwt")));
+                    var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(claims, "jwt"));
+                   
+                    return new AuthenticationState(authenticatedUser);
+
+                }
+
+                return new AuthenticationState(s_empty_principal);
             }
-            catch (Exception ex)
+            catch 
             {
 
-                Console.WriteLine(ex.Message);
-                await this._localStorageService.RemoveItemAsync(UserProfile);
+
                 return new AuthenticationState(s_empty_principal);
             }
 
@@ -53,28 +71,26 @@ namespace NeteaseCloundMusicMobile.Client.Authentication
         /// 根据指定的token，让用户登录状态
         /// </summary>
         /// <param name="token"></param>
-        public async ValueTask MarkUserAsAuthenticatedAsync(UserProfile user)
+        public void MarkUserAsAuthenticated(UserProfile user)
         {
             var claims = ParseClaimsFromUserProfile(user);
 
 
             var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(claims, "jwt"));
             var authState = Task.FromResult(new AuthenticationState(authenticatedUser));
-            var utf8Bytes = JsonSerializer.SerializeToUtf8Bytes(new { user.nickname, user.userId, user.avatarUrl });
-            var base64String = Convert.ToBase64String(utf8Bytes);
-          
-            await this._localStorageService.SetItemAsStringAsync(UserProfile, base64String);
+           
+         
             NotifyAuthenticationStateChanged(authState);
         }
         /// <summary>
         ///通知退出登录
         /// </summary>
-        public async ValueTask MarkUserAsLoggedOutAsync()
+        public async Task MarkUserAsLoggedOutAsync()
         {
             var anonymousUser = s_empty_principal;
             var authState = Task.FromResult(new AuthenticationState(anonymousUser));
 
-            await this._localStorageService.RemoveItemAsync(UserProfile);
+            await _httpRequestService.MakePostRequestAsync("/logout");
             NotifyAuthenticationStateChanged(authState);
         }
         private static IEnumerable<Claim> ParseClaimsFromUserProfile(UserProfile user)
@@ -115,7 +131,7 @@ namespace NeteaseCloundMusicMobile.Client.Authentication
                 case 2: base64 += "=="; break;
                 case 3: base64 += "="; break;
             }
-            
+
             return Convert.FromBase64String(base64);
         }
     }

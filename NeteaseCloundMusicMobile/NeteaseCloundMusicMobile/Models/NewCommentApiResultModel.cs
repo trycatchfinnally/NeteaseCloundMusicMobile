@@ -48,15 +48,15 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// <summary>
         /// 
         /// </summary>
-        public string comments { get; set; }
+        //public string comments { get; set; }
         /// <summary>
         /// 
         /// </summary>
         public string showReplyCount { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string topCommentIds { get; set; }
+        ///// <summary>
+        ///// "[5340972278]"
+        ///// </summary>
+        //public string topCommentIds { get; set; }
         /// <summary>
         /// 
         /// </summary>

@@ -1,16 +1,18 @@
 ﻿
-.playlist-tags{
-    color:cornflowerblue;
-    
+.playlist-tags {
+    color: cornflowerblue;
 }
+
     .playlist-tags:not(:last-child)::after {
         content: ' / ';
-        color:black
+        color: black
     }
 
 
-.index{
-    width:1.5em;
+.index {
+    width: 1.5em;
 }
 
- 
+.subscriber-nickname {
+    width: 4em;
+}
