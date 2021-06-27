@@ -1,0 +1,69 @@
+﻿@page "/topartist/{type:int}"
+@inherits RazorComponentBase
+<h3>云音乐歌手榜</h3>
+@if (_topArtists != null)
+{
+    <Tabs DefaultTabIndex="Type-1">
+        @foreach (var item in m_supportTypes)
+        {
+            <TabItem Label="@item.Value" Href="@string.Concat("/topartist/",item.Key)">
+                @if (item.Key == Type)
+                {
+                    @ArtistListRenderFragment(_topArtists)
+                }
+            </TabItem>
+        }
+    </Tabs>
+
+}
+<Loading IsActive="_topArtists==null"></Loading>
+
+@code{
+    private RenderFragment<IReadOnlyList<Models.TopArtistsItem>> ArtistListRenderFragment = collection => __builder =>
+    {
+    <ul>
+        @for (int i = 0; i < collection.Count; i++)
+            {
+                var item = collection[i];
+            <li>
+                <a href="/artist/@item.id" class="@B.Join(B.Flex,B.AlignItemsCenter,B.M2,B.P1) hover-list-item border">
+
+
+                    <div class="@B.Join(B.Flex,B.AlignItemsCenter,B.FlexGrow1) w-100">
+                        <div class="text-center rank">
+                            <p>@(1+i)</p>
+                            <div class="count-desc @B.Flex @B.JustifyContentCenter">
+                                @{ var fuck = item.lastRank - i;}
+                                @if (fuck > 0)
+                                    {
+                                    <div class="text-danger">↑</div>
+                                    }
+                                    else if (fuck == 0)
+                                    {
+                                    <div>-</div>
+                                    }
+                                    else
+                                    {
+                                    <div class="text-primary">↓</div>
+                                    }
+                                <div class="@B.ML1">@Math.Abs(fuck)</div>
+                            </div>
+                        </div>
+                        <div class="@B.Join(B.M2)">
+
+                            <img src="@item.picUrl" class="artist-pic" />
+
+                        </div>
+                        <div>
+                            @item.name
+                        </div>
+                    </div>
+                    <div class="right-progress">
+                        <Progress IsSmall value="@item.score" max="@collection.Max(x=>x.score)"></Progress>
+                    </div>
+                </a>
+            </li>
+            }
+    </ul>
+    };
+}

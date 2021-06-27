@@ -1,5 +1,19 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+
+a{
+    color:inherit
+}
+a:hover{
+    text-decoration:none;
+    color:inherit
+}
+a:link{
+    color:inherit
+}
+    a:visited {
+        color: inherit
+    }
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }

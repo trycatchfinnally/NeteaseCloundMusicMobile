@@ -29,19 +29,21 @@
     <Column Size="@Size.OneThird">
         <Columns IsMobile="true" IsGapless="true">
             <Column>
-                <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
-                    <Column IsNarrow="true">
-                        <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter @B.JustifyContentCenter circle-button text-2em">
-                            <div>
-                                <Icon IconClass="iconfont icon-shouyinji-xian large-fontsize"></Icon>
+                <div class="cursor-pointer">
+                    <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
+                        <Column IsNarrow="true">
+                            <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter @B.JustifyContentCenter circle-button text-2em">
+                                <div>
+                                    <Icon IconClass="iconfont icon-shouyinji-xian large-fontsize"></Icon>
+                                </div>
                             </div>
-                        </div>
-                    </Column>
-                    <Column>
-                        <div class="@B.TextLeftTablet @B.TextCenteredMobile @B.TextDark @B.TextWeightBold ">私人FM</div>
-                        <div class="@B.HiddenMobile">享受你的音乐时光</div>
-                    </Column>
-                </Columns>
+                        </Column>
+                        <Column>
+                            <div class="@B.TextLeftTablet @B.TextCenteredMobile @B.TextDark @B.TextWeightBold ">私人FM</div>
+                            <div class="@B.HiddenMobile">享受你的音乐时光</div>
+                        </Column>
+                    </Columns>
+                </div>
             </Column>
             <Column IsNarrow="true">
                 <Divider IsVertical="true" class="h-100"></Divider>
@@ -54,7 +56,7 @@
         <Columns IsMobile="true" IsGapless="true">
 
             <Column>
-                <a class="cursor-pointer"  href="/everydayrecommend">
+                <a  href="/everydayrecommend">
                     <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
                         <Column IsNarrow="true">
                             <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter @B.JustifyContentCenter circle-button text-2em">
@@ -76,19 +78,21 @@
     </Column>
 
     <Column Size="@Size.OneThird">
-        <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
-            <Column IsNarrow="true">
-                <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter @B.JustifyContentCenter circle-button text-2em">
-                    <div>
-                        <Icon IconClass="iconfont icon-paihangbang large-fontsize"></Icon>
+        <a href="/toplist">
+            <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
+                <Column IsNarrow="true">
+                    <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter @B.JustifyContentCenter circle-button text-2em">
+                        <div>
+                            <Icon IconClass="iconfont icon-paihangbang large-fontsize"></Icon>
+                        </div>
                     </div>
-                </div>
-            </Column>
-            <Column>
-                <div class="@B.TextLeftTablet @B.TextCenteredMobile @B.TextDark @B.TextWeightBold  ">排行榜</div>
-                <div class="@B.HiddenMobile">最热音乐榜</div>
-            </Column>
-        </Columns>
+                </Column>
+                <Column>
+                    <div class="@B.TextLeftTablet @B.TextCenteredMobile @B.TextDark @B.TextWeightBold  ">排行榜</div>
+                    <div class="@B.HiddenMobile">最热音乐榜</div>
+                </Column>
+            </Columns>
+        </a>
     </Column>
 </Columns>
 

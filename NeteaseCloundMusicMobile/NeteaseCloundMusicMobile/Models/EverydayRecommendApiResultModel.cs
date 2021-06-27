@@ -27,7 +27,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// 
         /// </summary>
         public string alg { get; set; }
-        public bool liked { get; set; }
+      
     }
 
     public class RecommendReasonsItem

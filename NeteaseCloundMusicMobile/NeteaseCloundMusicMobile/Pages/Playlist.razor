@@ -48,10 +48,7 @@
                             <Icon IconClass="fa fa-play-circle-o"></Icon>
                             <span>播放全部</span>
                         </Button>
-                        <Button class="@B.Join(B.MR4,B.MB4)" IsSmall="true" Color="Color.Warning" @onclick="PlaySelectedAsync">
-                            <Icon IconClass="iconfont icon-kongjian"></Icon>
-                            <span>播放选中</span>
-                        </Button>
+
                         <Button class="@B.Join(B.MR4,B.MB4)" IsSmall="true">
                             <Icon IconClass="iconfont icon-folder-add"></Icon>
                             <span>收藏(@(_playlist.subscribedCount.ToCountString()))</span>
@@ -84,105 +81,12 @@
         </Columns>
 
         <div class="@B.MT6">
-            <div class="float-right @B.HiddenMobile">
-                <Control HasIconsRight>
-                    <Input IsRounded="true" IsSmall="true" placeholder="搜索歌单歌曲" @bind-Value="_searchKeyWord" @onkeyup="OnSearchBoxKeyDownAsync" />
-                    <Icon IsRight IsSmall IconClass="fa fa-search"></Icon>
-                </Control>
 
-            </div>
             <Tabs>
                 <TabItem Label="歌曲列表">
-                    <div>
-
-                        <DataTable @ref="_dtPlaylist" Data="_displayTracks" TItem="Models.TracksItem"
-                                   IsNarrow="true"
-                                   IsHoverable
-                                   IsBordered IsStriped IsFullwidth>
-                            <EmptySlot>
-                                <div>暂无内容</div>
-                            </EmptySlot>
-                            <ColumnsSlot>
-                                <DataTableColumn IsCheckBox="true" Label="选择"></DataTableColumn>
-
-                                <DataTableColumn IsIndex="true" Label="序号" TdClass="@B.HiddenMobile" ThClass="@B.HiddenMobile"></DataTableColumn>
-                                <DataTableColumn Label="操作">
-                                    <TdSlot>
-                                        @{var track = context as WithLikedTracksItem;}
-                                        <div class="text-center count-desc @B.MR2 @B.Flex @B.AlignItemsCenter" @onclick="()=>LikeOrNotAsync(track)">
-
-                                            @if (track.Liked)
-                                            {
-                                                <div class="color-red">
-                                                    <Icon IconClass="fa fa-heart"></Icon>
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                <div class="el-link">
-                                                    <Icon IconClass="fa fa-heart-o"></Icon>
-                                                </div>
-                                            }
-                                        </div>
-                                    </TdSlot>
-                                </DataTableColumn>
-                                <DataTableColumn Label="音乐标题">
-                                    <TdSlot>
-                                        @{var track = context as Models.TracksItem;}
-                                        <div class="@B.Flex @B.AlignItemsCenter">
-                                            <div class="el-link" @onclick="()=>PlayAsync(track)">
-                                                <Icon IconClass="fa fa-play-circle"></Icon>
-                                                <span>@track.name</span>
-                                            </div>
-
-                                            @if (track.h?.br >= 320000)
-                                            {
-                                                <Tag IsLight="true" Color="Color.Danger" class="@B.M1">SQ</Tag>
-                                            }
-                                            @if (track.mv > 0)
-                                            {
-                                                <a href="/mv/@track.mv" class="mv-link">
-                                                    <Icon IconClass="fa fa-youtube-play" Color="Color.Danger"></Icon>
-                                                </a>
-                                            }
-                                        </div>
-                                    </TdSlot>
-                                </DataTableColumn>
-                                <DataTableColumn Label="歌手" TdClass="@B.HiddenMobile" ThClass="@B.HiddenMobile">
-
-                                    <TdSlot>
-                                        @{var track = context as Models.TracksItem;}
-
-                                        <div class="@B.Flex @B.AlignItemsCenter count-desc">
-                                            @foreach (var item in track.ar.Take(5))
-                                            {
-                                                <a class="el-link playlist-tags" href="/artist/@item.id">@item.name</a>
-                                            }
-                                        </div>
-
-
-                                    </TdSlot>
-                                </DataTableColumn>
-                                <DataTableColumn Label="专辑" TdClass="@B.HiddenMobile" ThClass="@B.HiddenMobile">
-                                    <TdSlot>
-                                        @{var track = context as Models.TracksItem;}
-                                        <div class="overflow-hidden text-nowrap text-overflow-ellipsis count-desc">
-                                            <a class="el-link" href="/album/@track.al.id">@track.al.name</a>
-                                        </div>
-                                    </TdSlot>
-                                </DataTableColumn>
-                                <DataTableColumn Label="时长">
-                                    <TdSlot>
-                                        @{var track = context as Models.TracksItem;}
-                                        <div class="count-desc">
-                                            @TimeSpan.FromMilliseconds(track.dt).ToString(@"mm\:ss")
-                                        </div>
-                                    </TdSlot>
-                                </DataTableColumn>
-                            </ColumnsSlot>
-                        </DataTable>
-
-                    </div>
+                    <NeteaseCloundMusicMobile.Client.Components.PlaylistTable @ref="_playlistTable"
+                                                                              EnableSearch="true"
+                                                                              Tracks="ToDto<List<Models.SongsItem>>(_playlist.tracks)"></NeteaseCloundMusicMobile.Client.Components.PlaylistTable>
 
                 </TabItem>
                 <TabItem Label="@($"评论（{_playlist.commentCount.ToCountString()}）")">

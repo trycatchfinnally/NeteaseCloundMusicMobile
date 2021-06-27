@@ -1,0 +1,12 @@
+﻿.artist-pic {
+   max-height:12rem
+}
+.introduction-li h2 {
+    font-size: 20px;
+    font-weight: 700;
+}
+.introduction-li p {
+    white-space: pre-line;
+    margin-top: 10px;
+    line-height: 2em;
+}

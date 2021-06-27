@@ -271,6 +271,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// 
         /// </summary>
         public long publishTime { get; set; }
+        public bool liked { get; set; }
     }
 
     //public class FreeTrialPrivilege

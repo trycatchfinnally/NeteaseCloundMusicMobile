@@ -304,6 +304,8 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// 
         /// </summary>
         public long publishTime { get; set; }
+        public string first { get; set; }
+        public string second { get; set; }
     }
 
     public class TrackIdsItem

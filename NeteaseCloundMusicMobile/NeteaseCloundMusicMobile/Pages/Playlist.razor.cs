@@ -12,11 +12,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 {
     public partial class Playlist
     {
-        private class WithLikedTracksItem : TracksItem
-        {
-            public bool Liked { get; set; }
-
-        }
+       
         private class SubScribersQuery
         {
             public int limit { get; set; }
@@ -24,11 +20,10 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             public long id { get; set; }
         }
         private Models.Playlist _playlist;
-
+        private Components.PlaylistTable _playlistTable;
         private SubScribersQuery _subScribersQuery;
         private PlaylistSubscribersApiResultModel _subscribers;
-        private string _searchKeyWord;
-        private DataTable<TracksItem> _dtPlaylist;
+        
         private IReadOnlyList<TracksItem> _displayTracks = Array.Empty<TracksItem>();
 
         [Parameter]
@@ -80,13 +75,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             }
             finally
             {
-                var likedIds = await this.LikedProgressService.EnsureLikedMusicIdsAsync();
-                var query = ToDto<List<WithLikedTracksItem>>(this._playlist.tracks);
-                foreach (var item in query)
-                {
-                    item.Liked = likedIds.Contains(item.id);
-                }
-                this._playlist.tracks = query.Select(x => x as TracksItem).ToList();
+               
                 this._displayTracks = this._playlist.tracks;
             }
         }
@@ -98,61 +87,12 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         }
         private Task PlayAllAsync()
         {
-            return this.PlayControlFlowService.AddRange2PlaySequenceAsync(this._playlist.tracks.Select(StandardAdapter), clearCollection: true);
+            return _playlistTable.PlayAllAsync();
         }
 
-        private void OnSearchBoxKeyDownAsync(KeyboardEventArgs eventArgs)
-        {
-
-            if (string.Equals(eventArgs.Key, "Enter", StringComparison.OrdinalIgnoreCase))
-            {
-                if (this._searchKeyWord?.Length > 0)
-                    this._displayTracks = this._playlist.tracks.Where(x => x.name.Contains(this._searchKeyWord, StringComparison.OrdinalIgnoreCase)).ToArray();
-                else if (this._displayTracks.Count != this._playlist.trackCount)
-                    this._displayTracks = this._playlist.tracks;
-            }
-
-        }
-        private Task PlayAsync(TracksItem item)
-        {
-            return this.PlayControlFlowService.Add2PlaySequenceAsync(StandardAdapter(item), clearCollection: false);
-
-        }
-        private Task PlaySelectedAsync()
-        {
-            var rows = this._dtPlaylist.GetCheckedItems();
-            if (rows.Count == 0) return ToastMessageService.ErrorAsync("请先选择项").AsTask();
-            return this.PlayControlFlowService.AddRange2PlaySequenceAsync(rows.Select(StandardAdapter), clearCollection: true);
-        }
-        private async Task LikeOrNotAsync(WithLikedTracksItem item)
-        {
-            item.Liked = await this.LikedProgressService.LikedOrNotAsync(item.id, !item.Liked, CanLikedMediaType.Music) ? !item.Liked : item.Liked;
-        }
-        private SimplePlayableItem StandardAdapter(TracksItem x)
-        {
-            return new SimplePlayableItem
-            {
-
-                Id = x.id,
-                Title = x.name,
-                MvId = x.mv,
-                Liked = (x as WithLikedTracksItem)?.Liked == true,
-                Album = new Album
-                {
-                    id = x.al.id,
-                    name = x.al.name,
-                    picUrl = x.al.picUrl,
-
-                },
-                Artists = x.ar.Select(y => new Artist
-                {
-                    id = y.id,
-                    name = y.name,
-
-
-                }).ToArray()
-            };
-        }
+       
+       
+       
 
 
 

@@ -1,7 +1,69 @@
 ﻿@page "/everydayrecommend"
 @inherits RazorComponentBase
-@if (_displayDailySongs != null)
+@if (_dailySongs != null)
 {
+    <div class="@B.M4">
+        <div  >
+            <Columns class="@B.AlignItemsCenter">
+                <Column IsNarrow="true" class="@B.HiddenMobile">
+                    <div class="date-box">
+                        <div class="@B.Join(B.TextCentered,B.MT1,B.MR1) count-desc">@DateTime.Today.DayOfWeek</div>
+                        <p class="date">
 
+                            @DateTime.Today.Day
+
+                        </p>
+                    </div>
+
+                </Column>
+                <Column>
+                    <div>
+                        <Level class="@B.MB2" IsMobile="true">
+                            <LevelLeft>
+                                <Tag IsLight Color="Color.Danger">歌单</Tag>
+                            </LevelLeft>
+                            <LevelItem class="@B.Join(B.JustifyContentLeft,B.PR2,"text-nowrap","overflow-hidden","text-overflow-ellipsis")">
+                                <Subtitle>每日歌曲推荐</Subtitle>
+                            </LevelItem>
+
+                        </Level>
+
+                        <div class="@B.Join(B.MB2,B.Flex,B.AlignItemsCenter,B.FlexWrapWrap)  ">
+                            <Button class="@B.Join(B.MR4 )" IsSmall="true" Color="Color.Danger" @onclick="PlayAllAsync">
+                                <Icon IconClass="fa fa-play-circle-o"></Icon>
+                                <span>播放全部</span>
+                            </Button>
+                           
+                            <Button class="@B.Join(B.MR4 )" IsSmall="true">
+                                <Icon IconClass="iconfont icon-folder-add"></Icon>
+                                <span>收藏全部</span>
+                            </Button>
+                        </div>
+                        <div class="@B.Join(B.MB2,B.Flex) count-desc ">
+                            <div>
+                                <div class="text-wrap">
+                                    <Icon IconClass="fa fa-lightbulb-o"></Icon><span>根据你的音乐口味生成，每日6:00更新</span>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </Column>
+            </Columns>
+
+        </div>
+       
+        <div class="@B.MT4">
+           
+            <NeteaseCloundMusicMobile.Client.Components.PlaylistTable @ref="_playlistTable"
+                                                                      EnableSearch="true"
+                                                                      Tracks="_dailySongs"
+                                                                      >
+
+            </NeteaseCloundMusicMobile.Client.Components.PlaylistTable>
+        </div>
+    </div>
 }
-<Loading IsActive="_displayDailySongs==null"></Loading>
+<Loading IsActive="_dailySongs==null"></Loading>
