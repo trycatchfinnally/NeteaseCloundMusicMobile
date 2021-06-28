@@ -131,7 +131,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// 
         /// </summary>
         public string img1v1Id_str { get; set; }
-        public long mvSize { get; set; }
+        public long? mvSize { get; set; }
     }
 
     public class Album

@@ -10,3 +10,10 @@
     margin-top: 10px;
     line-height: 2em;
 }
+.play-count {
+    position: absolute;
+    z-index: 22;
+    text-align: right;
+    top: 1.5em;
+    right: 2.5em;
+}

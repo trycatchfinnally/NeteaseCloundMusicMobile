@@ -1,0 +1,131 @@
+﻿@page "/mv/{Id:long}"
+@inherits RazorComponentBase
+@if (_mvDetail != null)
+{
+    <div class="@B.M4">
+        <Columns>
+            <Column>
+                <div class="@B.Join(B.FlexGrow1,B.Fullwidth)">
+
+                    <div class="@B.ML2 @B.MR4">
+                        <Level IsMobile="true" class="text-2em">
+                            <LevelLeft>
+                                <p class="@B.Flex">
+                                    <h2>@_mvDetail.data.name</h2>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <small>by &nbsp;<a href="/artist/@_mvDetail.data.artistId">@_mvDetail.data.artistName</a></small>
+                                </p>
+                            </LevelLeft>
+                            <LevelRight>
+                                <p>
+                                    分辨率：<span>
+                                        <Select IsSmall="true" TValue="long" ValueChanged="OnBrSelectedChangedAsync">
+                                            @foreach (var item in _mvDetail.data.brs)
+                                            {
+                                                <Option Value="item.br">@item.br</Option>
+                                            }
+                                        </Select>
+                                    </span>
+                                </p>
+
+                            </LevelRight>
+                        </Level>
+                        <Divider></Divider>
+                        <div>
+                            @if (!string.IsNullOrWhiteSpace(_mvUrlData?.url))
+                            {
+                                <video class="w-100" src="@_mvUrlData.url" autoplay controls></video>
+                            }
+                            else
+                            {
+                                <NeteaseCloundMusicMobile.Client.Components.Empty>加载中</NeteaseCloundMusicMobile.Client.Components.Empty>
+                            }
+                        </div>
+                        <Columns IsMobile="true">
+                            <Column IsNarrow="true">
+                                <Columns Gap="Gap.Gap1" IsMobile="true">
+                                    <Column>
+                                        <Button IsSmall="true">
+                                            <Icon IconClass="fa fa-thumbs-up"></Icon>
+                                            <span>赞（@_mvDetail.data.subCount.ToCountString()）</span>
+                                        </Button>
+                                    </Column>   <Column>
+                                        <Button IsSmall="true">
+                                            <Icon IconClass="iconfont icon-folder-add"></Icon>
+                                            <span>收藏（@_mvDetail.data.commentCount.ToCountString()）</span>
+                                        </Button>
+                                    </Column>   <Column>
+                                        <Button IsSmall="true">
+                                            <Icon IconClass="fa fa-share-square-o"></Icon>
+                                            <span>分享（@_mvDetail.data.shareCount.ToCountString()）</span>
+                                        </Button>
+                                    </Column>
+                                </Columns>
+                            </Column>
+                        </Columns>
+                        <div class="@B.MT6">
+                            <NeteaseCloundMusicMobile.Client.Components.Comment CommentThreadId="@_mvDetail.data.commentThreadId"></NeteaseCloundMusicMobile.Client.Components.Comment>
+                        </div>
+                    </div>
+                </div>
+            </Column>
+            <Column IsNarrowTablet="true">
+                <div  class="right-info">
+                    <h2 class="text-2em">视频介绍</h2>
+                    <Divider></Divider>
+                    <Content>
+                        <p>
+                            发布时间: <small>@_mvDetail.data.publishTime</small>
+                            <br />
+                            播放次数: <small>@_mvDetail.data.playCount.ToCountString()</small>
+                            <br />
+                            简介：  <small>@Nvl(_mvDetail.data.desc, _mvDetail.data.briefDesc)</small>
+                            <br />
+                            标签：
+                        </p>
+                    </Content>
+                    <h2>相关推荐</h2>
+                    <Divider></Divider>
+                    @if (_simiMvs?.Count > 0)
+                    {
+                        <ul>
+                            @foreach (var item in _simiMvs)
+                            {
+                                <li>
+                                    <a href="/mv/@item.id">
+                                        <Columns>
+                                            <Column Size="Size.Half">
+                                                <div class="w-100" >
+                                                    <Image Ratio="Ratio.Ratio16by9">
+                                                        <img src="@item.cover" />
+                                                    </Image>
+                                                </div>
+                                            </Column>
+                                            <Column Size="Size.Half">
+                                                <div class="h-100 w-100">
+                                                    <p class="text-overflow-ellipsis w-100 overflow-hidden text-nowrap">@item.name</p>
+                                                    <div class="count-desc text-overflow-ellipsis w-100 overflow-hidden text-nowrap">@TimeSpan.FromMilliseconds(item.duration).ToString()</div>
+                                                    <div class="count-desc text-overflow-ellipsis w-100 overflow-hidden text-nowrap @B.Flex">
+                                                     <div class="@B.MR2">by</div>
+                                                      @foreach (var artist in item.artists)
+                                                      {
+                                                          <div class="el-link @B.MR2"  >@artist.name</div>
+                                                      }
+
+                                                    </div>
+                                                </div>
+                                                
+                                            </Column>
+                                        </Columns>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </Column>
+        </Columns>
+      
+    </div>
+}
+<Loading IsActive="_mvDetail==null"></Loading>

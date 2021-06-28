@@ -1,0 +1,14 @@
+﻿.album-pic {
+    height: 12rem
+}
+
+.album-introduction h2 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.album-introduction p {
+    white-space: pre-line;
+    margin-top: 10px;
+    line-height: 2em;
+}

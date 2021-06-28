@@ -20,13 +20,19 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 
         private ArtistBriefInfoApiResultModel _briefInfo;
         private IReadOnlyList<IntroductionItem> _introductions;
+        private IReadOnlyList<Artist> _simiArtists;
         private ArtistAlbumApiResultModel _artistAlbumApiResultModel;
         private ArtistAlbumQuery _artistAlbumQuery;
         private bool _artistAlbumLoading = false;
+
+
+        private ArtistMvApiResultModel _artistMvApiResultModel;
+        private ArtistAlbumQuery _artistMvQuery;
+        private bool _artistMvLoading = false;
+
         [Parameter]
         public long Id { get; set; }
-        [Inject]
-        private LikedProgressService LikedProgressService { get; set; }
+       
         protected override async Task OnParametersSetAsync()
         {
             if (Id <= 0)
@@ -34,7 +40,14 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                 NotFound();
                 return;
             }
+            //全部复位
             _briefInfo = null;
+            _introductions = null;
+            _simiArtists = null;
+            _artistAlbumApiResultModel = null;
+            _artistAlbumLoading = false;
+            _artistMvApiResultModel = null;
+            _artistMvLoading = false;
             await base.OnParametersSetAsync();
             var postData = new { id = Id };
             this._artistAlbumQuery = new ArtistAlbumQuery
@@ -43,9 +56,16 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                 offset = 0,
                 id = Id
             };
-            var (briefInfo, introductionsResult, _) = await TaskWhenAllHelper.WhenAllAsync(HttpRequestService.MakePostRequestAsync<ArtistBriefInfoApiResultModel>("/artists", postData),
+            this._artistMvQuery = new ArtistAlbumQuery
+            {
+                limit = 30,
+                offset = 0,
+                id = Id
+            };
+            var (briefInfo, introductionsResult, _, _, simiArtistApiResult) = await TaskWhenAllHelper.WhenAllAsync(HttpRequestService.MakePostRequestAsync<ArtistBriefInfoApiResultModel>("/artists", postData),
                 HttpRequestService.MakePostRequestAsync<ArtistDescApiResultModel>("/artist/desc", postData),
-               FetchArtistAlbumAsync()
+               FetchArtistAlbumAsync(), FetchArtistMvAsync(),
+               HttpRequestService.MakePostRequestAsync<SimiArtistApiResultModel>("/simi/artist", postData)
                 );
             if (briefInfo.artist == null)
             {
@@ -54,6 +74,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             }
             this._briefInfo = briefInfo;
             this._introductions = introductionsResult.introduction;
+            this._simiArtists = simiArtistApiResult.artists;
         }
         private async Task<bool> FetchArtistAlbumAsync()
         {
@@ -72,6 +93,26 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             _artistAlbumLoading = false;
 
             return _artistAlbumLoading;
+        }
+
+
+        private async Task<bool> FetchArtistMvAsync()
+        {
+            if (_artistMvLoading) return _artistMvLoading;
+            _artistMvLoading = true;
+            var temp = await HttpRequestService.MakePostRequestAsync<ArtistMvApiResultModel>("/artist/mv", this._artistMvQuery);
+            if (temp.mvs == null)
+            {
+                _artistMvLoading = false;
+                return _artistMvLoading;
+            }
+            var oldData = (this._artistMvApiResultModel?.mvs as IReadOnlyList<Mv>) ?? Array.Empty<Mv>();
+            temp.mvs.InsertRange(0, oldData);
+            this._artistMvApiResultModel = temp;
+            this._artistMvQuery.offset += this._artistMvApiResultModel.mvs.Count;
+            _artistMvLoading = false;
+
+            return _artistMvLoading;
         }
     }
 }

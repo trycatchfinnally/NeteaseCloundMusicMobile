@@ -1,0 +1,74 @@
+﻿@page "/album/{Id:long}"
+@inherits RazorComponentBase
+@if (_albumDetailApiResultModel != null)
+{
+    <div class="@B.M4">
+        <Columns IsMobile="true">
+            <Column IsNarrowTablet="true">
+                <img src="@Nvl(_albumDetailApiResultModel.album.picUrl,_albumDetailApiResultModel.album.blurPicUrl)" class="album-pic" />
+            </Column>
+            <Column>
+                <div>
+                    <Level class="@B.MB2" IsMobile="true">
+                        <LevelLeft>
+                            <Tag IsLight Color="Color.Danger">专辑</Tag>
+                        </LevelLeft>
+                        <LevelItem class="@B.Join(B.JustifyContentLeft,B.PR2,"text-nowrap","overflow-hidden","text-overflow-ellipsis")">
+                            <Subtitle>@_albumDetailApiResultModel.album.name</Subtitle>
+                        </LevelItem>
+
+                    </Level>
+
+                    <div class="@B.Join(B.MB2,B.Flex,B.AlignItemsCenter,B.FlexWrapWrap)  ">
+                        <Button class="@B.Join(B.MR4,B.MB4,B.HiddenMobile)" IsSmall="true" Color="Color.Danger"
+                                @onclick="PlayAllAsync">
+                            <Icon IconClass="fa fa-play-circle-o"></Icon>
+                            <span>播放全部</span>
+                        </Button>
+
+                        <Button class="@B.Join(B.MR4,B.MB4)" IsSmall="true">
+                            <Icon IconClass="iconfont icon-folder-add"></Icon>
+                            <span>收藏(@(_albumDetailApiResultModel.album.info.likedCount.ToCountString()))</span>
+                        </Button>
+                        <Button class="@B.Join(B.MR4,B.MB4)" IsSmall="true">
+                            <Icon IconClass="fa fa-share-square-o"></Icon>
+                            <span>分享(@(_albumDetailApiResultModel.album.info.shareCount.ToCountString()))</span>
+                        </Button>
+                    </div>
+                    <div class="@B.MB2">
+                        <p>
+                            歌手：<small>@_albumDetailApiResultModel.album.artist.name</small>
+                        </p>
+                    </div>
+                    <div>
+                        <p>
+                            时间：<small>@_albumDetailApiResultModel.album.publishTime.ToDateTime().ToShortDateString()</small>
+                        </p>
+                    </div>
+                </div>
+            </Column>
+        </Columns>
+
+        <div class="@B.MT6">
+            <Tabs>
+                <TabItem Label="歌曲详情">
+                    <NeteaseCloundMusicMobile.Client.Components.PlaylistTable @ref="_playlistTable"
+                                                                              EnableSearch="true"
+                                                                              Tracks="_albumDetailApiResultModel.songs"></NeteaseCloundMusicMobile.Client.Components.PlaylistTable>
+
+                </TabItem>
+                <TabItem Label="评论">
+
+                    <NeteaseCloundMusicMobile.Client.Components.Comment CommentThreadId="@_albumDetailApiResultModel.album.commentThreadId"></NeteaseCloundMusicMobile.Client.Components.Comment>
+                </TabItem>
+                <TabItem Label="专辑详情">
+                    <div class="album-introduction">
+                        <h2>介绍</h2>
+                        <p>@_albumDetailApiResultModel.album.description</p>
+                    </div>
+                </TabItem>
+            </Tabs>
+        </div>
+    </div>
+}
+<Loading IsActive="_albumDetailApiResultModel==null"></Loading>

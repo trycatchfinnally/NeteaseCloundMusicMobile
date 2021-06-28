@@ -1,0 +1,22 @@
+﻿h2{
+    font-weight:700;
+    font-size:20px
+}
+.divider {
+    height: 2em;
+    margin: 0 !important;
+}
+
+.text-2em {
+    height: 2em;
+}
+
+.right-info {
+    width: 16em;
+}
+
+@media screen and ( max-width : 769px),print {
+    .right-info {
+        width: 100% !important;
+    }
+}

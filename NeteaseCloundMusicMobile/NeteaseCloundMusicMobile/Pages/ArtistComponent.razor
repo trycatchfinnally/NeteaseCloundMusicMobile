@@ -9,7 +9,7 @@
                 <img src="@_briefInfo.artist.picUrl" class="artist-pic" />
             </Column>
             <Column>
-                <div>
+                <div> 
                     <Level class="@B.MB2" IsMobile="true">
                         <LevelLeft>
                             <Tag IsLight Color="Color.Danger">歌手</Tag>
@@ -17,7 +17,6 @@
                         <LevelItem class="@B.Join(B.JustifyContentLeft,B.PR2,"text-nowrap","overflow-hidden","text-overflow-ellipsis")">
                             <Subtitle>@_briefInfo.artist.name</Subtitle>
                         </LevelItem>
-
                     </Level>
                     @if (_briefInfo.artist.alias?.Count > 0)
                     {
@@ -45,14 +44,10 @@
                         </div> <div class="@B.MT2">
                             <Icon IconClass="fa fa-video-camera"></Icon>
                             <span>Mv数：</span>
-                            <span class="count-desc">@_briefInfo.artist.mvSize</span>
+                            <span class="count-desc">@_briefInfo.artist.mvSize.GetValueOrDefault()</span>
                         </div>
                     </div>
-                    <div class="@B.Hidden">
-                        <p>
-                            歌手简介：@_briefInfo.artist.briefDesc
-                        </p>
-                    </div>
+                   
                 </div>
             </Column>
         </Columns>
@@ -70,7 +65,7 @@
                         <ul class="@B.Join(B.Flex,B.AlignItemsCenter,B.FlexWrapWrap)">
                             @foreach (var item in _artistAlbumApiResultModel.hotAlbums)
                             {
-                                <li class="col-6 col-md-4 col-xl-3 col-lg-2">
+                                <li class="col-6 col-md-4 col-lg-3 col-xl-2">
                                     <a href="/album/@item.id" class="@B.Join(B.Flex,B.FlexDirectionColumn,B.JustifyContentCenter,B.M2,B.P2) border">
                                         <div class="@B.MB2">
                                             <Image Ratio="Ratio.Ratio1by1">
@@ -94,13 +89,55 @@
                         </ul>
                         @if (_artistAlbumApiResultModel.more)
                         {
-                            <div class="text-center w-100">
+                            <div class="text-center w-100 @B.M2">
                                 <Button IsSmall="true" IsLoading="_artistAlbumLoading" @onclick="FetchArtistAlbumAsync">加载更多</Button>
                             </div>
                         }
                     }
                 </TabItem>
-                <TabItem Label="Mv"></TabItem>
+                <TabItem Label="Mv">
+                    @if (_artistMvApiResultModel != null)
+                    {
+                        <ul class="@B.Join(B.Flex,B.AlignItemsCenter,B.FlexWrapWrap)">
+                            @foreach (var item in _artistMvApiResultModel.mvs)
+                            {
+                                <li class="col-12 col-md-6 col-lg-4 col-xl-3 ">
+                                    <a href="/mv/@item.id" class="@B.Join(B.Flex,B.FlexDirectionColumn,B.JustifyContentCenter,B.M2,B.P2) border">
+                                        <div class="@B.MB2">
+                                            <div class="float-right text-white play-count">
+                                                <Icon IconClass="fa fa-video-camera"></Icon>
+                                                <span>
+                                                    @item.playCount.ToCountString()
+                                                </span>
+
+                                            </div>
+                                            <Image Ratio="Ratio.Ratio16by9">
+                                                <img src="@Nvl(item.imgurl16v9,item.imgurl)" />
+                                            </Image>
+                                        </div>
+
+                                        <p class="w-100 text-center overflow-hidden text-nowrap text-overflow-ellipsis">
+                                            <strong>@item.name</strong>
+
+
+                                        </p>
+
+                                        <p class="w-100 text-center overflow-hidden text-nowrap text-overflow-ellipsis">
+                                            <small>@item.publishTime </small>
+                                        </p>
+                                    </a>
+                                </li>
+                            }
+
+                        </ul>
+                        @if (_artistAlbumApiResultModel.more)
+                        {
+                            <div class="text-center w-100 @B.M2">
+                                <Button IsSmall="true" IsLoading="_artistMvLoading" @onclick="FetchArtistMvAsync">加载更多</Button>
+                            </div>
+                        }
+                    }
+                </TabItem>
                 <TabItem Label="歌手详情">
                     @if (_introductions?.Count > 0)
                     {
@@ -123,7 +160,39 @@
                         <NeteaseCloundMusicMobile.Client.Components.Empty>暂无介绍</NeteaseCloundMusicMobile.Client.Components.Empty>
                     }
                 </TabItem>
-                <TabItem Label="相似歌手"></TabItem>
+                <TabItem Label="相似歌手">
+
+                    @if (_simiArtists?.Count > 0)
+                    {
+                        <ul class="@B.Join(B.Flex,B.AlignItemsCenter,B.FlexWrapWrap)">
+                            @foreach (var item in _simiArtists)
+                            {
+                                <li class="col-6 col-md-4 col-lg-3 col-xl-2">
+                                    <a href="/artist/@item.id" class="@B.Join(B.Flex,B.FlexDirectionColumn,B.JustifyContentCenter,B.M2,B.P2) border">
+                                        <div class="@B.MB2">
+                                             
+                                            <Image Ratio="Ratio.Ratio1by1">
+                                                <img src="@Nvl(item.img1v1Url,item.picUrl)" />
+                                            </Image>
+                                        </div>
+
+                                        <p class="w-100 text-center overflow-hidden text-nowrap text-overflow-ellipsis">
+                                            <strong>@item.name</strong>
+
+
+                                        </p>
+ 
+                                    </a>
+                                </li>
+                            }
+
+                        </ul>
+                    }
+                    else
+                    {
+                        <NeteaseCloundMusicMobile.Client.Components.Empty>暂无推荐</NeteaseCloundMusicMobile.Client.Components.Empty>
+                    }
+                </TabItem>
             </Tabs>
         </div>
     </div>

@@ -73,14 +73,15 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             {
 
                 if (TimeSpan.TryParseExact(input, @"m\:s\.fff", CultureInfo.InvariantCulture, out var ts)) return ts;
+                if (TimeSpan.TryParseExact(input, @"m\:s\.ff", CultureInfo.InvariantCulture, out   ts)) return ts;
                 TimeSpan.TryParseExact(input, @"m\:s", CultureInfo.InvariantCulture, out ts); return ts;
             }
             const string timeRegex = @"\[([0-9])+[0-9]:[0-5][0-9](\.([0-9])+)*\]";
             var matches = Regex.Matches(lineForMap, timeRegex);
             if (matches.Count == 0) return Enumerable.Empty<KeyValuePair<TimeSpan, string>>();
-            var content = lineForMap.Substring(matches.Max(x => x.Index + x.Value.Length));
+            var content = lineForMap[matches.Max(x => x.Index + x.Value.Length)..];
             return matches
-                  .Select(x => x.Value.Substring(1, x.Value.Length - 2))//去除两边[和]号
+                  .Select(x => x.Value[1..^1])//去除两边[和]号
                   .Select(x => KeyValuePair.Create(ParseTimeSpan(x), content));
         }
         private async void AudioPlayService_AudioStateChanged(object sender, string e)
