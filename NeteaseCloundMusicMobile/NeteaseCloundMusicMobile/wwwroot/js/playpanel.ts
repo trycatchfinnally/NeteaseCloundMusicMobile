@@ -1,4 +1,4 @@
-﻿ function activeLi(position: number, isMouseOver: boolean) {
+﻿ function activeLi(position: number, stopMove: boolean) {
     let liElement = document.querySelector(`.lrc-panel  li[data-position='${position}']`) as HTMLLIElement;
     let ulElement = liElement.parentElement;
     for (var i = 0; i < ulElement.children.length; i++) {
@@ -6,7 +6,7 @@
         element.classList.remove("active");
     }
     liElement.classList.add("active");
-    if (isMouseOver) return;
+     if (stopMove) return;
     let clientHeight = ulElement.clientHeight;
     let scrollHeight = ulElement.scrollHeight;
     let offsetTop = liElement.offsetTop - ulElement.offsetTop;
