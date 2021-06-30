@@ -11,7 +11,7 @@ namespace NeteaseCloundMusicMobile.Server
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void MTestain(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
         }
