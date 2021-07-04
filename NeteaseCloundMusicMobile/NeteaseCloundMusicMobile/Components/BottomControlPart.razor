@@ -50,12 +50,12 @@
                             @if (AudioPlayService.CurrentPlayableItem.Artists?.Count > 0)
                             {
                                 <span>-</span>
-                               @foreach (var item in AudioPlayService.CurrentPlayableItem.Artists)
-                               {
-                                   <span class="artists-a">
-                                       <a class="el-link @B.TextWhite" href="/artist/@item.id">@item.name</a>
-                                   </span>
-                               }
+                                @foreach (var item in AudioPlayService.CurrentPlayableItem.Artists)
+                                {
+                                    <span class="artists-a">
+                                        <a class="el-link @B.TextWhite" href="/artist/@item.id">@item.name</a>
+                                    </span>
+                                }
                             }
                         </div>
                     }
@@ -75,7 +75,7 @@
                 <Column IsNarrow="true" class="@B.Join(B.MR2,B.ML2,B.HiddenMobile)">
                     <Columns IsVcentered="true" IsGapless="true" class="font-weight-light light-icons">
                         <Column>
-                            <a>
+                            <a @onclick="OpenPlayList" class="js-openplaylist-a">
                                 <Icon IconClass="iconfont icon-list-01"></Icon>
                             </a>
                         </Column>
@@ -123,4 +123,114 @@
             </Columns>
         </Column>
     </Columns>
+</div>
+<Quickview @ref="_tracksQuickView" IsLeft="false" TriggerSelector=".js-openplaylist-a">
+    <HeaderSlot>
+        播放列表
+    </HeaderSlot>
+    <BodySlot>
+        <div class="@B.M2">
+            <Level IsMobile>
+                <LevelLeft>
+                    <p>共<span>@PlayControlFlowService.Tracks.Count</span>首</p>
+
+                </LevelLeft>
+                <LevelRight>
+                    <Columns IsMobile>
+                        <Column>
+                            <a>
+                                <Icon IconClass="iconfont icon-folder-add"></Icon>
+                            </a>
+                        </Column>
+                        <Column>
+                            <a data-tooltip="@PlayControlFlowService.PlayMode.Name" class="@B.Join(B.TooltipArrow,B.TooltipBottom)"
+                               @onclick="PlayControlFlowService.ChangePlayModel" @onclick:stopPropagation>
+                                <Icon IconClass="@PlayControlFlowService.PlayMode.IconClass"></Icon>
+                            </a>
+
+                        </Column>
+
+                    </Columns>
+
+                </LevelRight>
+            </Level>
+            <Divider></Divider>
+
+            <DataTable Data="PlayControlFlowService.Tracks" IsNarrow="true" TItem="object"
+                       IsHoverable
+                       IsBordered IsStriped IsFullwidth>
+
+                <EmptySlot>
+                    <div>暂无内容</div>
+                </EmptySlot>
+                <ColumnsSlot>
+                    <DataTableColumn Label="音乐标题">
+                        <TdSlot>
+                            @{
+                                var track = context as Models.PlayableItemBase;
+                            }
+                            <div class="@B.Flex @B.AlignItemsCenter">
+                                <div class="el-link" @onclick="()=>PlayAsync(track)">
+                                    <Icon IconClass="fa fa-play-circle"></Icon>
+                                    <span>@track.Title</span>
+                                </div>
+
+
+                                @if (track.MvId > 0)
+                        {
+                                <a href="/mv/@track.MvId" class="mv-link">
+                                    <Icon IconClass="fa fa-youtube-play" Color="Color.Danger"></Icon>
+                                </a>
+                                }
+                            </div>
+                        </TdSlot>
+                    </DataTableColumn>
+                    <DataTableColumn Label="歌手" TdClass="@B.HiddenMobile" ThClass="@B.HiddenMobile">
+
+                        <TdSlot>
+                            @{
+                                var track = context as Models.PlayableItemBase;
+                            }
+
+                            <div class="@B.Flex @B.AlignItemsCenter count-desc">
+                                @foreach (var item in track.Artists.Take(5))
+                        {
+                                <a class="el-link playlist-tags" href="/artist/@item.id">@item.name</a>
+                                }
+                            </div>
+
+
+                        </TdSlot>
+                    </DataTableColumn>
+                    <DataTableColumn Label="专辑" TdClass="@B.HiddenMobile" ThClass="@B.HiddenMobile">
+                        <TdSlot>
+                            @{
+                                var track = context as Models.PlayableItemBase;
+                            }
+                            <div class="overflow-hidden text-nowrap text-overflow-ellipsis count-desc">
+                                <a class="el-link" href="/album/@track.Album.id">@track.Album.name</a>
+                            </div>
+                        </TdSlot>
+                    </DataTableColumn>
+                    <!--  <DataTableColumn Label="时长">
+                          <TdSlot>
+                              @{var track = context as Models.PlayableItemBase;}
+                              <div class="count-desc">
+                                  @TimeSpan.FromMilliseconds(track.).ToString(@"mm\:ss")
+                              </div>
+                          </TdSlot>
+                      </DataTableColumn>-->
+                </ColumnsSlot>
+
+            </DataTable>
+        </div>
+
+    </BodySlot>
+</Quickview>
+<div class="right-nav font-weight-bold @B.HiddenTablet">
+    <a @onclick="OpenPlayList" class="js-openplaylist-a">
+        &lt;
+
+    </a>
+
 </div>

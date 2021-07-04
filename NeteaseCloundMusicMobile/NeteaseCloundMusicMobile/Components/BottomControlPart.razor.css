@@ -5,3 +5,11 @@
 .light-icons a:hover {
     color: white !important
 }
+.right-nav {
+    position:fixed;
+    top: 40%;
+    right: 5px;
+    font-size:1.2em;
+    color:#363636
+}
+ 

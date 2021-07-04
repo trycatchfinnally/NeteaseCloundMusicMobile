@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using NeteaseCloundMusicMobile.Client.Models;
 using NeteaseCloundMusicMobile.Client.Services;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
     public partial class BottomControlPart
     {
 
-
+        private BulmaRazor.Components.Quickview _tracksQuickView;
         private AudioPlayService AudioPlayService => PlayControlFlowService.AudioPlayService;
 
         protected override Task OnParametersSetAsync()
@@ -35,6 +36,15 @@ namespace NeteaseCloundMusicMobile.Client.Components
         {
             if (this.AudioPlayService.CurrentPlayableItem != null)
                 this.NavigationManager.NavigateTo("/playpanel");
+        }
+        private void OpenPlayList()
+        {
+            this._tracksQuickView.Show();
+        }
+        public Task PlayAsync(PlayableItemBase item)
+        {
+            return this.PlayControlFlowService.Add2PlaySequenceAsync(item, clearCollection: false);
+
         }
         public async Task OnPlayOrResumeClickAsync()
         {
