@@ -514,6 +514,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// 
         /// </summary>
         public string sharedUsers { get; set; }
+        public string copywriter { get; set; }
     }
 
  

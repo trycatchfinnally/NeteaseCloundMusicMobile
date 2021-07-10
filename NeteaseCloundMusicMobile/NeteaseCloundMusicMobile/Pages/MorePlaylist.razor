@@ -113,11 +113,13 @@
                         <ul class="@B.Join(B.Flex,B.AlignItemsCenter,B.FlexWrapWrap,B.FlexGrow1)">
                             @foreach (var cat in item.Value)
                             {
-                                <a class=" col-6 col-md-4   " href="/playlist/list?tag=@cat.name"  >
+                               <li class=" col-6 col-md-4   ">
+                                    <a  href="/playlist/list?tag=@cat.name"  >
                                     <div class="@B.MB2">
                                     <NeteaseCloundMusicMobile.Client.Components.PlaylistTagButton Text="@cat.name" Checked="cat.name==_query.cat" MoreText="@(cat.hot?"HOT":string.Empty)"></NeteaseCloundMusicMobile.Client.Components.PlaylistTagButton>
                                     </div>
                                 </a>
+                               </li>
                             }
                         </ul>
                     </li>
