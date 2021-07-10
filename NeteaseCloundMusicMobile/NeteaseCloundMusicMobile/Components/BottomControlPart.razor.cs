@@ -22,7 +22,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
 
         private void AudioPlayService_AudioStateChanged(object sender, string e)
         {
-            
+
             switch (e)
             {
                 case nameof(AudioPlayService.Pause):
@@ -41,6 +41,18 @@ namespace NeteaseCloundMusicMobile.Client.Components
         {
             this._tracksQuickView.Show();
         }
+
+        private void DeleteTrack(PlayableItemBase item)
+        {
+            if (AudioPlayService.CurrentPlayableItem == item)
+            {
+                this.ToastMessageService.ErrorAsync("歌曲正在播放，不能删除");
+            }
+            else
+            {
+                this.PlayControlFlowService.Tracks.Remove(item);
+            }
+        }
         public Task PlayAsync(PlayableItemBase item)
         {
             return this.PlayControlFlowService.Add2PlaySequenceAsync(item, clearCollection: false);
@@ -48,11 +60,11 @@ namespace NeteaseCloundMusicMobile.Client.Components
         }
         public async Task OnPlayOrResumeClickAsync()
         {
-            if (AudioPlayService.Paused&&!string.IsNullOrWhiteSpace(AudioPlayService.CurrentPlayableItem?.Url)) await AudioPlayService.PlayAsync( null);
+            if (AudioPlayService.Paused && !string.IsNullOrWhiteSpace(AudioPlayService.CurrentPlayableItem?.Url)) await AudioPlayService.PlayAsync(null);
             else AudioPlayService.Pause();
         }
 
-        
+
 
         public void Dispose()
         {

@@ -5,6 +5,74 @@ using System.Threading.Tasks;
 
 namespace NeteaseCloundMusicMobile.Client.Models
 {
+    public class LiveUrl
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public string httpPullUrl { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string hlsPullUrl { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string rtmpPullUrl { get; set; }
+    }
+
+    public class liveInfo
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public long liveId { get; set; }
+        /// <summary>
+        /// 景离烟直播间
+        /// </summary>
+        public string roomTitle { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public long roomNo { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public long startTime { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public long endTime { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string coverUrl { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public long userId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int liveStatus { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int liveType { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int livingStatus { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int type { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public LiveUrl liveUrl { get; set; }
+    }
+
     public class Associator
     {
         /// <summary>
@@ -48,7 +116,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// <summary>
         /// 
         /// </summary>
-        public string liveInfo { get; set; }
+        public liveInfo liveInfo { get; set; }
         /// <summary>
         /// 
         /// </summary>

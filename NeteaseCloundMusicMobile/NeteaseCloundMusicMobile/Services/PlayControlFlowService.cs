@@ -124,7 +124,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
         /// <summary>
         /// 用来表示当前的播放列表
         /// </summary>
-        public IReadOnlyList<PlayableItemBase> Tracks => _tracksCollection;
+        public  List<PlayableItemBase> Tracks => _tracksCollection;
         /// <summary>
         /// 表示当前的循环模式
         /// </summary>

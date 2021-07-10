@@ -76,6 +76,17 @@
                     <Columns IsVcentered="true" IsGapless="true" class="font-weight-light light-icons">
                         <Column>
                             <a @onclick="OpenPlayList" class="js-openplaylist-a">
+                                <div class="position-relative">
+                                    @if (PlayControlFlowService.Tracks.Count < 100)
+                                    {
+                                        <Badge Color="Color.Danger">@PlayControlFlowService.Tracks.Count</Badge>
+                                    }
+                                    else
+                                    {
+                                        <Badge Color="Color.Danger">99+</Badge>
+                                    }
+
+                                </div>
                                 <Icon IconClass="iconfont icon-list-01"></Icon>
                             </a>
                         </Column>
@@ -129,14 +140,14 @@
         播放列表
     </HeaderSlot>
     <BodySlot>
-        <div class="@B.M2">
+        <div class="@B.M2 text-small">
             <Level IsMobile>
                 <LevelLeft>
                     <p>共<span>@PlayControlFlowService.Tracks.Count</span>首</p>
 
                 </LevelLeft>
                 <LevelRight>
-                    <Columns IsMobile>
+                    <Columns IsMobile IsCentered>
                         <Column>
                             <a>
                                 <Icon IconClass="iconfont icon-folder-add"></Icon>
@@ -155,10 +166,9 @@
                 </LevelRight>
             </Level>
             <Divider></Divider>
-
-            <DataTable Data="PlayControlFlowService.Tracks" IsNarrow="true" TItem="object"
+              <DataTable Data="PlayControlFlowService.Tracks" IsNarrow="true" TItem="object"
                        IsHoverable
-                       IsBordered IsStriped IsFullwidth>
+                       IsBordered="false" IsStriped IsFullwidth>
 
                 <EmptySlot>
                     <div>暂无内容</div>
@@ -169,7 +179,7 @@
                             @{
                                 var track = context as Models.PlayableItemBase;
                             }
-                            <div class="@B.Flex @B.AlignItemsCenter">
+                            <div class="@B.Flex @B.AlignItemsCenter text-truncate">
                                 <div class="el-link" @onclick="()=>PlayAsync(track)">
                                     <Icon IconClass="fa fa-play-circle"></Icon>
                                     <span>@track.Title</span>
@@ -185,41 +195,42 @@
                             </div>
                         </TdSlot>
                     </DataTableColumn>
-                    <DataTableColumn Label="歌手" TdClass="@B.HiddenMobile" ThClass="@B.HiddenMobile">
+                    <DataTableColumn Label="歌手"   TdClass="@B.HiddenMobile" ThClass="@B.HiddenMobile">
 
                         <TdSlot>
                             @{
                                 var track = context as Models.PlayableItemBase;
                             }
 
-                            <div class="@B.Flex @B.AlignItemsCenter count-desc">
+                            <div class="@B.Flex @B.AlignItemsCenter count-desc " style="max-width:5em">
                                 @foreach (var item in track.Artists.Take(5))
                         {
-                                <a class="el-link playlist-tags" href="/artist/@item.id">@item.name</a>
+                                <a class="el-link playlist-tags text-truncate" href="/artist/@item.id">@item.name</a>
                                 }
                             </div>
 
 
                         </TdSlot>
                     </DataTableColumn>
-                    <DataTableColumn Label="专辑" TdClass="@B.HiddenMobile" ThClass="@B.HiddenMobile">
+                    <DataTableColumn Label="时长">
                         <TdSlot>
                             @{
                                 var track = context as Models.PlayableItemBase;
                             }
                             <div class="overflow-hidden text-nowrap text-overflow-ellipsis count-desc">
-                                <a class="el-link" href="/album/@track.Album.id">@track.Album.name</a>
+                                @track.Duration.ToDateTime().ToString(@"mm\:ss")
                             </div>
                         </TdSlot>
                     </DataTableColumn>
-                    <!--  <DataTableColumn Label="时长">
-                          <TdSlot>
-                              @{var track = context as Models.PlayableItemBase;}
-                              <div class="count-desc">
-                                  @TimeSpan.FromMilliseconds(track.).ToString(@"mm\:ss")
-                              </div>
-                          </TdSlot>
-                      </DataTableColumn>-->
+                    <DataTableColumn Label="操作"    >
+                        <TdSlot>
+                            @{
+                                var track = context as Models.PlayableItemBase;}
+                            <div class="count-desc el-link  "   @onclick="()=>DeleteTrack(track)">
+                               <Icon IconClass="fa fa-trash"></Icon>
+                            </div>
+                        </TdSlot>
+                    </DataTableColumn>
                 </ColumnsSlot>
 
             </DataTable>

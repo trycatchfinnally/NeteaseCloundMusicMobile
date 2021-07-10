@@ -34,6 +34,10 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// 表示播放链接
         /// </summary>
         public string Url { get; set; }
+
+
+
+        public long Duration { get; set; }
         /// <summary>
         /// 获取对应的地址
         /// </summary>

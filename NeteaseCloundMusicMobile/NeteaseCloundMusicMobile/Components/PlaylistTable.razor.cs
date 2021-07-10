@@ -78,6 +78,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
                 Id = x.id,
                 Title = x.name,
                 MvId = x.mv,
+                Duration=x.dt,
                 Liked = x.liked,
                 Album = new Album
                 {

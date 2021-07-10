@@ -1,0 +1,37 @@
+﻿ 
+.hot-tags > li:not(:last-child):after {
+    content: "|";
+    margin: 0 1em
+}
+.play-count {
+    position: absolute;
+    z-index: 22;
+    text-align: right;
+    top: 1.5em;
+    right: 1.5em;
+}
+.playlist-author {
+    position: absolute;
+    z-index: 22;
+    text-align: left;
+    bottom: 3.5em;
+    left: 2.5em;
+    width:calc(100% - 4em)
+}
+
+.highquality-cover {
+    position: absolute;
+    z-index: 22;
+    color: yellow;
+}
+    .highquality-cover .iconfont {
+        border: solid;
+        border-color: yellow;
+        border-radius: 50% 50%;
+        border-width: 3px;
+        width: 5em;
+        height: 5em;
+        font-size: 4em;
+        padding:.1em
+    }
+ 

@@ -1,0 +1,131 @@
+﻿@page "/playlist/list"
+ @inherits RazorComponentBase
+ @implements IDisposable
+
+<div class="@B.M4">
+    <Button IsSmall @onclick="()=>_catModalActive=true">
+        <div class="@B.Join(B.Flex,B.AlignItemsCenter)">
+            <div class="@B.MR1">@(string.IsNullOrWhiteSpace(_query.cat)?"全部歌单":_query.cat)</div>
+            <div>   <Icon class="fa fa-angle-down"></Icon></div>
+        </div>
+
+
+
+    </Button>
+    <div class="@B.MT2">
+        <Columns IsMobile>
+            <Column IsNarrow> <div>热门标签:</div></Column>
+            <Column>
+                <ul class="@B.Join(B.Flex,B.AlignItemsCenter,B.JustifyContentSpaceBetween) w-100  hot-tags count-desc">
+                    @foreach (var item in _constTags)
+                    {
+                        <li class="@B.Join(B.ML1,B.MR1) text-truncate d-block"><a href="/playlist/list?tag=@item">@item</a></li>
+                    }
+
+                </ul>
+            </Column>
+        </Columns>
+
+        <div class="@B.MT2">
+            <ul class="@B.Join(B.Flex,B.FlexWrapWrap)">
+                @if (_topPlaylists?.Playlists?.Count > 0)
+                {
+                    @if (string.IsNullOrWhiteSpace(_query.cat) || _highqualityTags.Any(x => string.Equals(x.name, _query.cat)))
+                    {
+                        <li class="col-6 col-md-4 col-lg-3 col-xl-2  ">
+
+                            <div class="w-100 border @B.Join(B.M2,B.P2 )">
+                                <a href="/playlist/highquality?tag=@_query.cat">
+                                    <div class="@B.Join(B.Flex,B.FlexDirectionColumn,B.AlignContentCenter)">
+                                        <div class="@B.MB1">
+
+                                            <Image Ratio="Ratio.Ratio1by1">
+                                                <img src="/asset/highquality-cover.png" />
+                                            </Image>
+                                        </div>
+                                        <p class="text-center  text-truncate">精品歌单倾心推荐，给最懂音乐的你</p>
+                                    </div>
+                                </a>
+
+                            </div>
+                        </li>
+
+                    }
+
+
+                    foreach (var item in _topPlaylists.Playlists)
+                    {
+                        <li class="col-6 col-md-4 col-lg-3 col-xl-2  ">
+                            <div class="w-100 border @B.Join(B.M2,B.P2 )">
+                                <a href="/playlist/@item.id">
+                                    <div class="@B.Join(B.Flex,B.FlexDirectionColumn,B.AlignContentCenter)">
+                                        <div class="@B.MB1">
+                                            <div class="float-right text-white play-count">
+                                                <Icon IconClass="fa fa-headphones"></Icon>
+                                                <span>
+                                                    @item.playCount.ToCountString()
+                                                </span>
+
+                                            </div>
+                                            <Image Ratio="Ratio.Ratio1by1">
+                                                <img src="@item.coverImgUrl" />
+                                            </Image>
+                                        </div>
+                                        <p class="text-center  text-truncate">@item.name</p>
+                                    </div>
+                                </a>
+                                <div class="playlist-author   text-white text-truncate">
+                                    <a href="/user/@item.creator.userId">
+                                        <Icon IconClass="fa fa-user-o"></Icon>
+                                        @item.creator.nickname
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                }
+            </ul>
+            @if (_topPlaylists?.more == true)
+            {
+                <div class="text-center w-100 @B.M2">
+                    <Button IsSmall="true" IsLoading="_fetching" @onclick="FetchNextPageAsync">加载更多</Button>
+
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<ModalCard IsActive="_catModalActive" HeaderText="选择标签">
+    <BodySlot>
+        <div class="@B.M2">
+            <a href="/playlist/list">
+                <NeteaseCloundMusicMobile.Client.Components.PlaylistTagButton Text="全部歌单" Checked="string.IsNullOrWhiteSpace(_query.cat)" MoreText="HOT"></NeteaseCloundMusicMobile.Client.Components.PlaylistTagButton>
+            </a>
+            <ul>
+                @if (_playlistCatLists?.Count > 0)
+                {
+                foreach (var item in _playlistCatLists)
+                {
+                    <li class="@B.Join(B.Flex,B.AlignItemsFlexStart,B.MT2,B.MR2)">
+                        <div class="color-red text-nowrap">@item.Key</div>
+                        <ul class="@B.Join(B.Flex,B.AlignItemsCenter,B.FlexWrapWrap,B.FlexGrow1)">
+                            @foreach (var cat in item.Value)
+                            {
+                                <a class=" col-6 col-md-4   " href="/playlist/list?tag=@cat.name"  >
+                                    <div class="@B.MB2">
+                                    <NeteaseCloundMusicMobile.Client.Components.PlaylistTagButton Text="@cat.name" Checked="cat.name==_query.cat" MoreText="@(cat.hot?"HOT":string.Empty)"></NeteaseCloundMusicMobile.Client.Components.PlaylistTagButton>
+                                    </div>
+                                </a>
+                            }
+                        </ul>
+                    </li>
+
+                }
+                }
+            </ul>
+        </div>
+
+    </BodySlot>
+</ModalCard>

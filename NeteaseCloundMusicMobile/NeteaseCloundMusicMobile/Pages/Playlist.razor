@@ -62,7 +62,7 @@
                         <div>标签：</div>
                         @foreach (var item in _playlist.tags as IReadOnlyList<string> ?? Array.Empty<string>())
                         {
-                            <div class="playlist-tags cursor-pointer">@item</div>
+                            <a class="playlist-tags " href="/playlist/list?tag=@item">@item</a>
                         }
                     </div>
                     <div class="@B.Join(B.MB2,B.Flex) count-desc ">

@@ -57,8 +57,16 @@ namespace NeteaseCloundMusicMobile.Client.Services
         }
         public async Task<bool> LikedOrNotAsync(long id, bool liked, CanLikedMediaType mediaType)
         {
-            await _toastService.SuccessAsync("操作成功！");
-            return true;
+            var state = await this._authenticationStateProvider.GetAuthenticationStateAsync();
+            if (!state.User.Identity.IsAuthenticated)
+            {
+                await _toastService.ErrorAsync("请先登录！"); return false;
+            }
+            var temp = await this._httpRequestService.MakePostRequestAsync<LikeListApiResult>("/like", new { id, like = liked });
+            var success = temp.code == 200;
+            if (success)
+                await _toastService.SuccessAsync("操作成功！");
+            return success;
         }
         public async Task<bool> DetermineMusicLikedStatusAsync(long musicId)
         {
@@ -67,7 +75,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
             return value.Contains(musicId);
 
         }
-        public Task<List<long>>EnsureLikedMusicIdsAsync()=> this._lazyLoadedUserLikedMusicIds.EnsureValueAsync();
+        public Task<List<long>> EnsureLikedMusicIdsAsync() => this._lazyLoadedUserLikedMusicIds.EnsureValueAsync();
         public void Dispose()
         {
             this._authenticationStateProvider.AuthenticationStateChanged -= AuthenticationStateProvider_AuthenticationStateChanged;
