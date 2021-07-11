@@ -4,7 +4,9 @@
 <div class="@B.M4">
     <Level IsMobile>
         <LevelLeft>
-            <h2 class="font-weight-bold">精品歌单</h2>
+            <h2 class="font-weight-bold">精品歌单<span><a target="_blank" href="https://music.163.com/#/topic?id=202001" title="如何成为精品歌单">
+                <Icon IconClass="fa fa-question-circle-o"></Icon>
+            </a></span></h2>
         </LevelLeft>
         <LevelRight>
             <a class="el-link" @onclick="()=>_catModalActive=true">
@@ -28,11 +30,12 @@
 
                         <Columns IsMobile="true" class="@B.AlignItemsCenter">
                             <Column IsNarrow="true">
-                                <a href="/playlist/@item.id">
-                                    <div class=" play-count text-white position-absolute">
+                                 <div class=" play-count text-white position-absolute">
                                         <div>@item.playCount.ToCountString()</div>
                                     </div>
-                                    <Image Size="Size.Square64"  >
+                                <a href="/playlist/@item.id">
+                                   
+                                    <Image Size="Size.Square128"  >
                                         <img src="@item.coverImgUrl" />
                                     </Image>
                                 </a>
@@ -61,6 +64,13 @@
         }
 
     </ul>
+     @if (_highqualityPlaylistApiResultModel?.more == true)
+            {
+                <div class="text-center w-100 @B.M2">
+                    <Button IsSmall="true" IsLoading="_fetching" @onclick="FetchNextPageAsync">加载更多</Button>
+
+                </div>
+            }
 </div>
 
 

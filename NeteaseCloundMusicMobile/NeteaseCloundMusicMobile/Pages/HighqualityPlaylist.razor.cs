@@ -42,7 +42,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                 this._query.cat = HttpUtility.ParseQueryString(this.NavigationManager.ToAbsoluteUri(this.NavigationManager.Uri).Query).Get("tag");
 
             }
-            var temp = await HttpRequestService.MakePostRequestAsync<HighqualityPlaylistApiResultModel>("/top/playlist", this._query);
+            var temp = await HttpRequestService.MakePostRequestAsync<HighqualityPlaylistApiResultModel>("/top/playlist/highquality", this._query);
             if (!reFetch)
             {
 
@@ -52,6 +52,10 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             _query.before = temp.lasttime;
             _fetching = false;
             return true;
+        }
+        private Task FetchNextPageAsync()
+        {
+            return FetchListAsync(false);
         }
         public void Dispose()
         {
