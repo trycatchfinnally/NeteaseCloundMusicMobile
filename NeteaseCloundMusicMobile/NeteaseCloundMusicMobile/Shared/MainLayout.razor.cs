@@ -1,4 +1,5 @@
 ﻿using BulmaRazor.Components;
+using Microsoft.AspNetCore.Components;
 using NeteaseCloundMusicMobile.Client.Models;
 using System;
 using System.Collections.Generic;
@@ -20,11 +21,12 @@ namespace NeteaseCloundMusicMobile.Client.Shared
         }
 
         private bool _loginModalShow = false;
+        private Quickview _userQuickview;
         private LoginForm _loginForm = new LoginForm();
+        private IReadOnlyList<Playlist> _userPlaylist = Array.Empty<Playlist>();
 
 
-
-
+        private void ShowUserQuickView() => _userQuickview.Show();
         private async Task LoginAsync()
         {
             var temp = await HttpRequestService.MakePostRequestAsync<Models.LoginApiResultModel>("/login/cellphone", new
@@ -36,7 +38,7 @@ namespace NeteaseCloundMusicMobile.Client.Shared
             {
                 var provider = ApiAuthenticationStateProvider as Authentication.ApiAuthenticationStateProvider;
                 provider.MarkUserAsAuthenticated(temp.profile);
-                
+
                 await ToastService.SuccessAsync($"登录成功！欢迎,{temp.profile.nickname}");
                 this._loginModalShow = false;
             }
@@ -52,5 +54,29 @@ namespace NeteaseCloundMusicMobile.Client.Shared
             return provider.MarkUserAsLoggedOutAsync();
         }
 
+
+        private void ApiAuthenticationStateProvider_AuthenticationStateChanged(Task<Microsoft.AspNetCore.Components.Authorization.AuthenticationState> task)
+        {
+            _ = FetchUserListAsync().ContinueWith(x => StateHasChanged());
+        }
+        private async Task FetchUserListAsync()
+        {
+            var state = await ApiAuthenticationStateProvider.GetAuthenticationStateAsync();
+            if (state.User.Identity.IsAuthenticated)
+            {
+                var temp = await this.HttpRequestService.MakePostRequestAsync<UserPlaylistApiResultModel>("/user/playlist", new { uid = state.User.FindFirst(ClaimTypes.NameIdentifier).Value }); ;
+                this._userPlaylist = temp.playlist;
+            }
+            else this._userPlaylist = Array.Empty<Playlist>();
+        }
+        protected override Task OnInitializedAsync()
+        {
+            this.ApiAuthenticationStateProvider.AuthenticationStateChanged += ApiAuthenticationStateProvider_AuthenticationStateChanged;
+            return FetchUserListAsync();
+        }
+        public void Dispose()
+        {
+            this.ApiAuthenticationStateProvider.AuthenticationStateChanged -= ApiAuthenticationStateProvider_AuthenticationStateChanged;
+        }
     }
 }

@@ -1,14 +1,15 @@
 @inherits LayoutComponentBase
- 
+
 @inject Services.IHttpRequestService HttpRequestService
 @inject AuthenticationStateProvider ApiAuthenticationStateProvider
 @inject ToastService ToastService
+@implements IDisposable
 @using Microsoft.AspNetCore.Components.Authorization
 <div>
     <div class="@B.P2 @B.BackgroundDark @B.TextWhite">
         <Columns IsMobile="true" IsVcentered="true" Gap="@Gap.Gap1">
             <BulmaRazor.Components.Column IsNarrow="true">
-                <Icon IconClass="fa fa-bars"></Icon>
+                <a class="js-user-quick-show" @onclick="ShowUserQuickView">  <Icon IconClass="fa fa-bars"></Icon></a>
             </BulmaRazor.Components.Column>
             <BulmaRazor.Components.Column IsNarrow="true">
                 <a href="/">
@@ -85,10 +86,10 @@
 
 
     </div>
-    
-        @Body
-    
- 
+
+    @Body
+
+
     <div class="@B.P2">
         <Footer>
             <Content class="@B.TextCentered">
@@ -151,5 +152,71 @@
     </Modal>
 </div>
 
+
+<div class="user-quick-root">
+    <Quickview IsLeft @ref="_userQuickview" TriggerSelector=".js-user-quick-show" HeaderText="菜单项">
+        <BodySlot>
+            <div class="@B.M2">
+                <Menu>
+                    <MenuLabel>推荐</MenuLabel>
+                    <MenuList>
+                        <MenuItem>
+                            <MenuLink href="/">
+                                <Icon IconClass="fa fa-music"></Icon>
+                                发现音乐
+                            </MenuLink>
+                        </MenuItem>
+                        <MenuItem>
+                            <MenuLink href="/">
+                                <Icon IconClass="iconfont icon-shouyinji-xian"></Icon>
+                                私人FM
+                            </MenuLink>
+                        </MenuItem>
+                        <MenuItem>
+                            <MenuLink href="/video">
+                                <Icon IconClass="fa fa-video-camera"></Icon>
+                                视频
+                            </MenuLink>
+                        </MenuItem>
+                        <MenuItem>
+                            <MenuLink href="/monment">
+                                <Icon IconClass="fa fa-users"></Icon>
+                                朋友
+                            </MenuLink>
+                        </MenuItem>
+                    </MenuList>
+                    <MenuLabel>
+
+                        <div>
+                            <Level IsMobile>
+                                <LevelLeft>创建的歌单</LevelLeft>
+                                <LevelRight>
+                                    <a class="el-link">
+                                        <Icon IconClass="fa fa-plus-circle"></Icon>
+                                    </a>
+                                </LevelRight>
+                            </Level>
+                        </div>
+                    </MenuLabel>
+                    <MenuList>
+                        @foreach (var item in _userPlaylist)
+                        {
+                        <MenuItem>
+                            <MenuLink href="@string.Concat("/playlist/",item.id)">
+                              <div class="text-truncate">
+                                    <Icon IconClass="fa fa-music"></Icon>
+                                @item.name
+                              </div>
+                            </MenuLink>
+                        </MenuItem>
+                        }
+                    </MenuList>
+                </Menu>
+            </div>
+        </BodySlot>
+    </Quickview>
+
+
+</div>
 
 <Backtop Bottom="200"></Backtop>

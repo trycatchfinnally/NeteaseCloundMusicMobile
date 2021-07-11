@@ -13,7 +13,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// <summary>
         /// 
         /// </summary>
-        public string noCopyrightRcmd { get; set; }
+        //public string noCopyrightRcmd { get; set; }
 
         /// <summary>
         /// 根据你可能喜欢的单曲 别想他（way back home中文remix）

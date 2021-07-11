@@ -277,9 +277,13 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// </summary>
         public long single { get; set; }
         /// <summary>
-        /// 
-        /// </summary>
-        public string noCopyrightRcmd { get; set; }
+        ///{
+//  "type": 3,
+//  "typeDesc": "MV可播",
+//  "songId": null
+//}
+    /// </summary>
+   // public string noCopyrightRcmd { get; set; }
         /// <summary>
         /// 
         /// </summary>

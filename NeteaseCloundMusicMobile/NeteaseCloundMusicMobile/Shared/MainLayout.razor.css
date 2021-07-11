@@ -75,3 +75,6 @@
 .login-modal-root ::deep .modal  {
     z-index:1031
 }
+.user-quick-root ::deep .quickview.is-active{
+    width:20rem
+}

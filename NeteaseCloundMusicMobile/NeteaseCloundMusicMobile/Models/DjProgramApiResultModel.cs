@@ -148,7 +148,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// <summary>
         /// 
         /// </summary>
-        public string noCopyrightRcmd { get; set; }
+        //public string noCopyrightRcmd { get; set; }
         /// <summary>
         /// 
         /// </summary>
