@@ -22,7 +22,7 @@ namespace NeteaseCloundMusicMobile.Client.Shared
 
         private bool _loginModalShow = false;
         private Quickview _userQuickview;
-        private LoginForm _loginForm = new LoginForm();
+        private readonly LoginForm _loginForm = new LoginForm();
         private IReadOnlyList<Playlist> _userPlaylist = Array.Empty<Playlist>();
 
 

@@ -179,8 +179,8 @@
                             @{
                                 var track = context as Models.PlayableItemBase;
                             }
-                            <div class="@B.Flex @B.AlignItemsCenter text-truncate">
-                                <div class="el-link" @onclick="()=>PlayAsync(track)">
+                            <div class="@B.Flex @B.AlignItemsCenter ">
+                                <div class="el-link text-wrap e" @onclick="()=>PlayAsync(track)" >
                                     <Icon IconClass="fa fa-play-circle"></Icon>
                                     <span>@track.Title</span>
                                 </div>

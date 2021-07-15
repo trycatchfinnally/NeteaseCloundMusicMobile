@@ -16,7 +16,7 @@
         <Columns IsMobile>
             <Column IsNarrow> <div>热门标签:</div></Column>
             <Column>
-                <ul class="@B.Join(B.Flex,B.AlignItemsCenter,B.JustifyContentSpaceBetween) w-100  hot-tags count-desc">
+                <ul class="@B.Join(B.Flex,B.AlignItemsCenter ) w-100  hot-tags count-desc">
                     @foreach (var item in _constTags)
                     {
                         <li class="@B.Join(B.ML1,B.MR1) text-truncate d-block"><a href="/playlist/list?tag=@item">@item</a></li>
