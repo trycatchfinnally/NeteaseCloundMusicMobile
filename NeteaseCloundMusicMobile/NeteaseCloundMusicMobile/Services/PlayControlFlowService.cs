@@ -124,7 +124,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
         /// <summary>
         /// 用来表示当前的播放列表
         /// </summary>
-        public  List<PlayableItemBase> Tracks => _tracksCollection;
+        public List<PlayableItemBase> Tracks => _tracksCollection;
         /// <summary>
         /// 表示当前的循环模式
         /// </summary>
@@ -134,7 +134,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
 
         }
 
-        private async ValueTask SafePlayAsync(OneOf<int, PlayableItemBase> indexOrItem)
+        private async ValueTask<bool> SafePlayAsync(OneOf<int, PlayableItemBase> indexOrItem)
         {
 
             m_Loading.Value = true;
@@ -144,9 +144,10 @@ namespace NeteaseCloundMusicMobile.Client.Services
                 if (!await item.EnsureUrlAsync(this._httpRequestService))
                 {
                     await this._toastService.ErrorAsync("亲爱的，暂无版权");
-                    return;
+                    return false;
                 }
                 await this._audioPlayService.PlayAsync(item);
+                return true;
             }
             finally
             {
@@ -162,7 +163,12 @@ namespace NeteaseCloundMusicMobile.Client.Services
                 case nameof(AudioPlayService.Position):
                     if (Math.Abs((this._audioPlayService.Position - this._audioPlayService.Duration).TotalSeconds) <= 1)
                     {
-                        await this.NextAsync();
+                        var bNext = await this.NextAsync();
+                        var maxCount = 0;
+                        while (!bNext && maxCount++ < this._tracksCollection.Count)
+                        {
+                            bNext = await this.NextAsync();
+                        }
                     }
                     break;
             }
@@ -220,18 +226,20 @@ namespace NeteaseCloundMusicMobile.Client.Services
         }
 
 
-        public async Task NextAsync()
+        public async Task<bool> NextAsync()
         {
+            if (this._tracksCollection.Count == 0) return false;
             var index = this._playMode.OnNext(this._tracksCollection.FindIndex(x => x.Id == CurrentPlayableItem.Id), this._tracksCollection.Count);
-            if (!index.HasValue) return;
-            await this.SafePlayAsync(index.Value);
+            if (!index.HasValue) return false;
+            return await this.SafePlayAsync(index.Value);
         }
 
-        public async Task PrevAsync()
+        public async Task<bool> PrevAsync()
         {
+            if (this._tracksCollection.Count == 0) return false;
             var index = this._playMode.OnPrev(this._tracksCollection.IndexOf(CurrentPlayableItem), this._tracksCollection.Count);
-            if (!index.HasValue) return;
-            await this.SafePlayAsync(index.Value);
+            if (!index.HasValue) return false;
+            return await this.SafePlayAsync(index.Value);
         }
 
 
