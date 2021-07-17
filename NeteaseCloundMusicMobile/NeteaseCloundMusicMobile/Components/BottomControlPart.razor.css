@@ -24,3 +24,12 @@
  .text-small{
      font-size:.8em
  }
+
+ .visible-symbol{
+     right:1rem;
+     top:-0.6rem;
+     width:2rem;
+     height:2rem;font-size:.5rem
+     
+ }
+ 

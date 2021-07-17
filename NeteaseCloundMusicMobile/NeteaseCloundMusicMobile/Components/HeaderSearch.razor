@@ -1,0 +1,43 @@
+﻿@inherits RazorComponentBase
+
+<Field HasAddons="true" IsExpanded="true">
+    <Control IsExpanded="true">
+        <Input placeholder="搜索音乐、歌手、歌词、用户" TValue="string" @oninput="OnKeyWordChangedAsync" />
+    </Control>
+    <Control>
+        <Button>
+            <Icon IconClass="fa fa-search"></Icon>
+        </Button>
+    </Control>
+</Field>
+
+@if (_searchSuggestModel != null)
+{
+    <Dropdown IsActive>
+
+        <MenuSlot>
+            <ul>
+                @foreach (var order in _searchSuggestModel.order)
+            {
+                <li>
+                   <div> <Icon IconClass="@m_orderNames[order].Value"></Icon>
+                    @m_orderNames[order].Key</div>
+                    <ul class="@B.ML4 count-desc">
+                        @{
+                        var items = _searchSuggestModel[order];
+                            if (items?.Length > 0)
+                            {
+                                foreach (var item in items)
+                                {
+                                    <li>@item</li>
+                                }
+                            }
+                        }
+                    </ul>
+                </li>
+            }
+        </ul>
+    </MenuSlot>
+</Dropdown>
+
+}

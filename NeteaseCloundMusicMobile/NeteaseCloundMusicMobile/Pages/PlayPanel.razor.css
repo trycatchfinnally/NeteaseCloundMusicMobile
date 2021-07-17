@@ -2,7 +2,7 @@
     position: absolute;
     transform-origin: 10% 15%;
     width: 10em;
-    z-index: 99;
+    z-index: 2;
     margin-left: 4em;
     top: 4em;
 }

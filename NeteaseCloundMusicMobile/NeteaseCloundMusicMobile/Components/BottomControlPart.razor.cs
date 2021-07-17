@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
+
 using NeteaseCloundMusicMobile.Client.Models;
 using NeteaseCloundMusicMobile.Client.Services;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +15,30 @@ namespace NeteaseCloundMusicMobile.Client.Components
     {
 
         private BulmaRazor.Components.Quickview _tracksQuickView;
+
+
+        private ElementReference _layoutRef;
+        private bool _opend = true;
+        private bool _openProgressing = false;
         private AudioPlayService AudioPlayService => PlayControlFlowService.AudioPlayService;
+        [Inject]
+        private IJSRuntime JS { get; set; }
 
         protected override Task OnParametersSetAsync()
         {
             this.AudioPlayService.AudioStateChanged += AudioPlayService_AudioStateChanged;
+
             return base.OnParametersSetAsync();
         }
 
+        private async Task HideOrShowAsync()
+        {
+            if (_openProgressing) return;
+            _openProgressing = true;
+            await JS.InvokeVoidAsync(_opend ? "hideBottom" : "showBottom", _layoutRef);
+            _openProgressing = false;
+            _opend = !_opend;
+        }
         private void AudioPlayService_AudioStateChanged(object sender, string e)
         {
 
@@ -40,6 +59,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
         private void OpenPlayList()
         {
             this._tracksQuickView.Show();
+
         }
 
         private void DeleteTrack(PlayableItemBase item)
@@ -55,7 +75,9 @@ namespace NeteaseCloundMusicMobile.Client.Components
         }
         public Task PlayAsync(PlayableItemBase item)
         {
-            return this.PlayControlFlowService.Add2PlaySequenceAsync(item, clearCollection: false);
+            var result = this.PlayControlFlowService.Add2PlaySequenceAsync(item, clearCollection: false);
+            if (_opend) result = Task.WhenAll(result, HideOrShowAsync());
+            return result;
 
         }
         public async Task OnPlayOrResumeClickAsync()

@@ -1,6 +1,10 @@
 ﻿@inherits Shared.RazorComponentBase
 @implements IDisposable
-<div class="fixed-bottom @B.BackgroundDark ">
+<div class="fixed-bottom @B.BackgroundDark " @ref="_layoutRef">
+
+    <div class="position-absolute rounded-circle text-center text-white visible-symbol @B.BackgroundDark" @onclick="HideOrShowAsync">
+        <Icon IconClass="@(_opend?"fa fa-chevron-down":"fa fa-chevron-up")"></Icon>
+    </div>
     <Columns IsVcentered="true" class="@B.M4">
         <Column IsNarrowTablet="true">
             <Columns IsMobile="true" IsVcentered="true" class="@B.MR4">
@@ -166,7 +170,7 @@
                 </LevelRight>
             </Level>
             <Divider></Divider>
-              <DataTable Data="PlayControlFlowService.Tracks" IsNarrow="true" TItem="object"
+            <DataTable Data="PlayControlFlowService.Tracks" IsNarrow="true" TItem="object"
                        IsHoverable
                        IsBordered="false" IsStriped IsFullwidth>
 
@@ -180,7 +184,7 @@
                                 var track = context as Models.PlayableItemBase;
                             }
                             <div class="@B.Flex @B.AlignItemsCenter ">
-                                <div class="el-link text-wrap e" @onclick="()=>PlayAsync(track)" >
+                                <div class="el-link text-wrap e" @onclick="()=>PlayAsync(track)">
                                     <Icon IconClass="fa fa-play-circle"></Icon>
                                     <span>@track.Title</span>
                                 </div>
@@ -195,7 +199,7 @@
                             </div>
                         </TdSlot>
                     </DataTableColumn>
-                    <DataTableColumn Label="歌手"   TdClass="@B.HiddenMobile" ThClass="@B.HiddenMobile">
+                    <DataTableColumn Label="歌手" TdClass="@B.HiddenMobile" ThClass="@B.HiddenMobile">
 
                         <TdSlot>
                             @{
@@ -222,12 +226,13 @@
                             </div>
                         </TdSlot>
                     </DataTableColumn>
-                    <DataTableColumn Label="操作"    >
+                    <DataTableColumn Label="操作">
                         <TdSlot>
                             @{
-                                var track = context as Models.PlayableItemBase;}
-                            <div class="count-desc el-link  "   @onclick="()=>DeleteTrack(track)">
-                               <Icon IconClass="fa fa-trash"></Icon>
+                                var track = context as Models.PlayableItemBase;
+                            }
+                            <div class="count-desc el-link  " @onclick="()=>DeleteTrack(track)">
+                                <Icon IconClass="fa fa-trash"></Icon>
                             </div>
                         </TdSlot>
                     </DataTableColumn>

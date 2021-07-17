@@ -20,6 +20,9 @@ namespace NeteaseCloundMusicMobile.Client.Shared
             public string PassWord { get; set; }
         }
 
+
+
+   
         private bool _loginModalShow = false;
         private Quickview _userQuickview;
         private readonly LoginForm _loginForm = new LoginForm();
@@ -54,11 +57,16 @@ namespace NeteaseCloundMusicMobile.Client.Shared
             return provider.MarkUserAsLoggedOutAsync();
         }
 
+          
+
+
 
         private void ApiAuthenticationStateProvider_AuthenticationStateChanged(Task<Microsoft.AspNetCore.Components.Authorization.AuthenticationState> task)
         {
             _ = FetchUserListAsync().ContinueWith(x => StateHasChanged());
         }
+
+          
         private async Task FetchUserListAsync()
         {
             var state = await ApiAuthenticationStateProvider.GetAuthenticationStateAsync();
