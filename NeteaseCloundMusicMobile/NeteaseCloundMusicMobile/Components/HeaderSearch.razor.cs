@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 using NeteaseCloundMusicMobile.Client.Models;
 
@@ -15,10 +16,13 @@ namespace NeteaseCloundMusicMobile.Client.Components
     /// </summary>
     public partial class HeaderSearch
     {
-        private DateTime? _lastDateTime;
+
         private TimeSpan _fetchFrequency = TimeSpan.FromMilliseconds(1000);
         private SearchSuggestResponseModel _searchSuggestModel;
-
+        private ElementReference _searchElement;
+        private DotNetObjectReference<HeaderSearch> _objRef;
+        [Inject]
+        private IJSRuntime JSRuntime { get; set; }
         private static readonly Dictionary<string, KeyValuePair<string, string>> m_orderNames = new()
         {
             { "songs", KeyValuePair.Create("单曲", "fa fa-music") },
@@ -26,27 +30,83 @@ namespace NeteaseCloundMusicMobile.Client.Components
             { "artists", KeyValuePair.Create("歌手", "fa fa-music") },
             { "playlists", KeyValuePair.Create("歌单", "iconfont icon-gedan") },
         };
-        private async Task OnKeyWordChangedAsync(ChangeEventArgs args)
+        private async Task SuggestItemClickAsync(INameIdModel item)
         {
-            var keywords = args.Value?.ToString();
-            var dtNow = DateTime.Now;
-            if (!_lastDateTime.HasValue)
+            try
             {
-                _lastDateTime = dtNow;
+                if (item is Artist)
+                {
+                    this.NavigationManager.NavigateTo($"/artist/{item.id}"); return;
+                }
+                if (item is Playlist)
+                {
+                    this.NavigationManager.NavigateTo($"/playlist/{item.id}"); return;
+                }
+                if (item is Album)
+                {
+                    this.NavigationManager.NavigateTo($"/album/{item.id}"); return;
+                }
+                if (item is SuggestSongsItem song)
+                {
+                    await this.PlayControlFlowService.Add2PlaySequenceAsync(StandardAdapter(song), clearCollection: false);
+
+                }
             }
-            var start = _lastDateTime.Value;
-            if (dtNow - start < _fetchFrequency)
+            finally
             {
-                _lastDateTime = dtNow;
-                _searchSuggestModel = null;
-                return;
+                this._searchSuggestModel = null;
             }
-            _lastDateTime = dtNow;
-            if (string.IsNullOrWhiteSpace(keywords)) return;
-            _searchSuggestModel = await this.HttpRequestService.MakePostRequestAsync<SearchSuggestApiResultModel>("/search/suggest", new { keywords }).ContinueWith(x=>x.Result.result);
+        }
+        private SimplePlayableItem StandardAdapter(SuggestSongsItem x)
+        {
+
+            return new SimplePlayableItem
+            {
+
+                Id = x.id,
+                Title = x.name,
+                MvId = x.mv,
+                Duration = x.dt,
+                Liked = x.liked,
+
+                Artists = x.artists.Select(y => new Models.Artist
+                {
+                    id = y.id,
+                    name = y.name,
+
+
+                }).ToArray()
+            };
+        }
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                _objRef = DotNetObjectReference.Create(this);
+                await this.JSRuntime.InvokeVoidAsync("searchProgress.initComponent", _objRef, this._searchElement);
+            }
+            await base.OnAfterRenderAsync(firstRender);
 
         }
 
+        [JSInvokable]
+        public async Task DoSearchAsync(string keywords)
+        {
+            Console.WriteLine(keywords);
+            if (string.IsNullOrWhiteSpace(keywords))
+            {
+                _searchSuggestModel = null;
+
+            }
+            else
+                _searchSuggestModel = await this.HttpRequestService.MakePostRequestAsync<SearchSuggestApiResultModel>("/search/suggest", new { keywords }).ContinueWith(x => x.Result.result);
+            StateHasChanged();
+        }
+        public void Dispose()
+        {
+            _objRef?.Dispose();
+        }
+       
 
     }
 }

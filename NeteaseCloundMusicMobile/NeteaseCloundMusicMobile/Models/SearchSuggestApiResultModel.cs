@@ -16,7 +16,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         public Album[] albums { get; set; }
         public Artist[] artists { get; set; }
         public Playlist[] playlists { get; set; }
-        public SongsItem[] songs { get; set; }
+        public SuggestSongsItem[] songs { get; set; }
 
         public Array this[string key]
         {
@@ -29,4 +29,10 @@ namespace NeteaseCloundMusicMobile.Client.Models
             }
         }
     }
+
+
+    public class SuggestSongsItem: SongsItem {
+        public Artist[] artists { get; set; }
+    }
+
 }

@@ -57,7 +57,7 @@ namespace NeteaseCloundMusicMobile.Client.Shared
             return provider.MarkUserAsLoggedOutAsync();
         }
 
-          
+           
 
 
 
@@ -77,6 +77,7 @@ namespace NeteaseCloundMusicMobile.Client.Shared
             }
             else this._userPlaylist = Array.Empty<Playlist>();
         }
+       
         protected override Task OnInitializedAsync()
         {
             this.ApiAuthenticationStateProvider.AuthenticationStateChanged += ApiAuthenticationStateProvider_AuthenticationStateChanged;

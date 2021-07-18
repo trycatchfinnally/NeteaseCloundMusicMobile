@@ -113,7 +113,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         public long vd { get; set; }
     }
 
-    public class SongsItem
+    public class SongsItem: INameIdModel
     {
         /// <summary>
         /// 海阔天空

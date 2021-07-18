@@ -86,7 +86,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// <summary>
         /// 
         /// </summary>
-        public string latestLikedUsers { get; set; }
+        public UserProfile[] latestLikedUsers { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -110,7 +110,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// <summary>
         /// 
         /// </summary>
-        public string latestLikedUsers { get; set; }
+        public UserProfile[] latestLikedUsers { get; set; }
         /// <summary>
         /// 
         /// </summary>

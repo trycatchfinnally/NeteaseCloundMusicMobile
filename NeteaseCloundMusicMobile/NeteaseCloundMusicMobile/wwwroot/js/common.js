@@ -128,4 +128,18 @@ function showBottom(rootElement) {
         return true;
     });
 }
+class searchProgress {
+    initComponent(dotNetObjectReference, input) {
+        // this._dotNetObjectReference = dotNetObjectReference;
+        const rxjs = window.rxjs;
+        rxjs.fromEvent(input, "input").pipe(rxjs.operators.debounceTime(200), rxjs.operators.distinctUntilChanged())
+            .subscribe((value) => {
+            const keyword = value.target.value;
+            if ((keyword === null || keyword === void 0 ? void 0 : keyword.length) > 0) {
+                dotNetObjectReference.invokeMethodAsync("DoSearchAsync", keyword);
+            }
+        });
+    }
+}
+window.searchProgress = new searchProgress();
 //# sourceMappingURL=common.js.map

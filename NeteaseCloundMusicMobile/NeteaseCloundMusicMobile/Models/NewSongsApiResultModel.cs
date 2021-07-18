@@ -73,7 +73,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         public string img1v1Id_str { get; set; }
     }
 
-    public class Artist
+    public class Artist: INameIdModel
     {
         /// <summary>
         /// 
@@ -134,7 +134,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         public long? mvSize { get; set; }
     }
 
-    public class Album
+    public class Album: INameIdModel
     {
         /// <summary>
         /// 

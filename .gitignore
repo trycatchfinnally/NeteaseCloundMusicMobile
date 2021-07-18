@@ -3,3 +3,5 @@ obj
 bin
 /NeteaseCloundMusicMobile/NeteaseCloundMusicMobile.Server/Properties/PublishProfiles
 *.user
+node_modules/
+package-lock.json

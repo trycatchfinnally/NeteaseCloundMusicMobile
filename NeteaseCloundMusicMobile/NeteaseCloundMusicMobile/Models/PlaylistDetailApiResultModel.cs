@@ -344,7 +344,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         public string rcmdReason { get; set; }
     }
 
-    public class Playlist
+    public class Playlist: INameIdModel
     {
         /// <summary>
         /// 

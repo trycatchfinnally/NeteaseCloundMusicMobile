@@ -1,0 +1,8 @@
+﻿.drop-suggest{
+    min-width:30rem;
+}
+@media (max-width:768px){
+    .drop-suggest{
+        min-width:15rem !important;
+    }
+}

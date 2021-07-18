@@ -125,3 +125,25 @@ async function showBottom(rootElement: HTMLElement) {
     rootElement.style.bottom = "0px";
     return true;
 }
+
+
+class searchProgress {
+
+    public initComponent(dotNetObjectReference: any, input: HTMLInputElement) {
+        // this._dotNetObjectReference = dotNetObjectReference;
+        const rxjs = (window as any).rxjs;
+        rxjs.fromEvent(input, "input").pipe(rxjs.operators.debounceTime(200), rxjs.operators.distinctUntilChanged())
+            .subscribe((value: any) => {
+                const keyword = value.target.value as string;
+
+                if (keyword?.length > 0) {
+                    dotNetObjectReference.invokeMethodAsync("DoSearchAsync", keyword);
+                }
+
+            });
+
+    }
+
+
+}
+(window as any).searchProgress = new searchProgress();

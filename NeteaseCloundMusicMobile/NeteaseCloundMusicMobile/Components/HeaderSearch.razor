@@ -1,8 +1,8 @@
 ﻿@inherits RazorComponentBase
-
+@implements IDisposable
 <Field HasAddons="true" IsExpanded="true">
     <Control IsExpanded="true">
-        <Input placeholder="搜索音乐、歌手、歌词、用户" TValue="string" @oninput="OnKeyWordChangedAsync" />
+        <input class="input" placeholder="搜索音乐、歌手、歌词、用户" @ref="_searchElement" />
     </Control>
     <Control>
         <Button>
@@ -13,31 +13,37 @@
 
 @if (_searchSuggestModel != null)
 {
-    <Dropdown IsActive>
+    <div class="position-absolute w-100">
+        <Dropdown IsActive>
 
-        <MenuSlot>
-            <ul>
-                @foreach (var order in _searchSuggestModel.order)
-            {
-                <li>
-                   <div> <Icon IconClass="@m_orderNames[order].Value"></Icon>
-                    @m_orderNames[order].Key</div>
-                    <ul class="@B.ML4 count-desc">
-                        @{
-                        var items = _searchSuggestModel[order];
-                            if (items?.Length > 0)
-                            {
-                                foreach (var item in items)
+            <MenuSlot>
+                <ul class="drop-suggest">
+                    @foreach (var order in _searchSuggestModel.order)
+                {
+                    <li>
+                        <div>
+                            <Icon IconClass="@m_orderNames[order].Value"></Icon>
+                            @m_orderNames[order].Key
+                        </div>
+                        <ul class="@B.ML4 count-desc">
+                            @{
+                                var items = _searchSuggestModel[order];
+                                if (items?.Length > 0)
                                 {
-                                    <li>@item</li>
+                                    foreach (Models.INameIdModel item in items)
+                                    {
+                                        <li class="@B.Join(B.MT2) text-truncate hover-list-item">
+                                            <a class="w-100" @onclick="@(()=>SuggestItemClickAsync(item))">@item.name</a>
+                                        </li>
+                                    }
                                 }
                             }
-                        }
-                    </ul>
-                </li>
-            }
-        </ul>
-    </MenuSlot>
-</Dropdown>
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </MenuSlot>
+    </Dropdown>
 
+</div>
 }
