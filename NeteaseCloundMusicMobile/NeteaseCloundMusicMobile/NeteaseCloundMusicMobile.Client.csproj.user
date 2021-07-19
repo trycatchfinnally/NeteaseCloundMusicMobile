@@ -7,4 +7,5 @@
     <ActiveDebugProfile>NeteaseCloundMusicMobile</ActiveDebugProfile>
     <ShowAllFiles>false</ShowAllFiles>
   </PropertyGroup>
+  <ItemGroup />
 </Project>

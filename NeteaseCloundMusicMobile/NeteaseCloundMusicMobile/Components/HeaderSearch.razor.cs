@@ -46,9 +46,13 @@ namespace NeteaseCloundMusicMobile.Client.Components
                 {
                     this.NavigationManager.NavigateTo($"/album/{item.id}"); return;
                 }
-                if (item is SuggestSongsItem song)
+                if (item is SuggestSongsItem)
                 {
-                    await this.PlayControlFlowService.Add2PlaySequenceAsync(StandardAdapter(song), clearCollection: false);
+                    var temp =
+                        await this.HttpRequestService.MakePostRequestAsync<GetSongDetailResultModel>("/song/detail",
+                            new { ids = item.id });
+                    if (temp.songs?.Count > 0)
+                        await this.PlayControlFlowService.Add2PlaySequenceAsync(StandardAdapter(temp.songs[0]), clearCollection: false);
 
                 }
             }
@@ -57,9 +61,9 @@ namespace NeteaseCloundMusicMobile.Client.Components
                 this._searchSuggestModel = null;
             }
         }
-        private SimplePlayableItem StandardAdapter(SuggestSongsItem x)
-        {
 
+        private SimplePlayableItem StandardAdapter(SongsItem x)
+        {
             return new SimplePlayableItem
             {
 
@@ -68,8 +72,14 @@ namespace NeteaseCloundMusicMobile.Client.Components
                 MvId = x.mv,
                 Duration = x.dt,
                 Liked = x.liked,
+                Album = new Album
+                {
+                    id = x.al.id,
+                    name = x.al.name,
+                    picUrl = x.al.picUrl,
 
-                Artists = x.artists.Select(y => new Models.Artist
+                },
+                Artists = x.ar.Select(y => new Models.Artist
                 {
                     id = y.id,
                     name = y.name,
@@ -78,6 +88,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
                 }).ToArray()
             };
         }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -94,10 +105,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
         {
             Console.WriteLine(keywords);
             if (string.IsNullOrWhiteSpace(keywords))
-            {
                 _searchSuggestModel = null;
-
-            }
             else
                 _searchSuggestModel = await this.HttpRequestService.MakePostRequestAsync<SearchSuggestApiResultModel>("/search/suggest", new { keywords }).ContinueWith(x => x.Result.result);
             StateHasChanged();
@@ -106,7 +114,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
         {
             _objRef?.Dispose();
         }
-       
+
 
     }
 }

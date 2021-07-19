@@ -32,8 +32,8 @@
                                 {
                                     foreach (Models.INameIdModel item in items)
                                     {
-                                        <li class="@B.Join(B.MT2) text-truncate hover-list-item">
-                                            <a class="w-100" @onclick="@(()=>SuggestItemClickAsync(item))">@item.name</a>
+                                        <li class="@B.Join(B.MT2,B.P2 ) text-truncate hover-list-item" @onclick="@(()=>SuggestItemClickAsync(item))">
+                                            <a class="w-100" >@item.name</a>
                                         </li>
                                     }
                                 }

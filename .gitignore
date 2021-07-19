@@ -5,3 +5,4 @@ bin
 *.user
 node_modules/
 package-lock.json
+*.user

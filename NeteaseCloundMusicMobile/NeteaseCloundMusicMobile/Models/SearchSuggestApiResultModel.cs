@@ -22,16 +22,27 @@ namespace NeteaseCloundMusicMobile.Client.Models
         {
             get
             {
-              var prop=  typeof(SearchSuggestResponseModel)
-                    .GetProperty(key, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-                if (prop != null) return prop.GetValue(this) as Array;
-                return null;
+                //var prop=  typeof(SearchSuggestResponseModel)
+                //      .GetProperty(key, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                //  if (prop != null) return prop.GetValue(this) as Array;
+                //  return null;
+                //这里用switch更好
+                switch (key)
+                {
+                    case nameof(albums): return albums;
+                    case nameof(songs): return songs;
+                    case nameof(artists): return artists;
+                    case nameof(playlists): return playlists;
+                    default: throw new IndexOutOfRangeException(nameof(key));
+                }
+
             }
         }
     }
 
 
-    public class SuggestSongsItem: SongsItem {
+    public class SuggestSongsItem : SongsItem
+    {
         public Artist[] artists { get; set; }
     }
 
