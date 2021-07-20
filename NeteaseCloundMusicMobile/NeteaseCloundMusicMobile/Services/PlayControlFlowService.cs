@@ -15,7 +15,12 @@ namespace NeteaseCloundMusicMobile.Client.Services
     public class PlayControlFlowService : IDisposable
     {
 
-
+        private enum PlayStatus
+        {
+            Pending,
+            AccessDenied,
+            Success
+        }
 
         #region 播放模式
         private class RepeateOnePlayMode : IPlayMode
@@ -105,7 +110,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
         }.OrderBy(x => x.Sort).ToArray();
 
         private IPlayMode _playMode = s_support[0];
-        private readonly AsyncLocal<bool> m_Loading = new AsyncLocal<bool>();
+        private bool m_Loading = false;//用来标识是否加载中
         private readonly AudioPlayService _audioPlayService;
         private readonly IHttpRequestService _httpRequestService;
         private readonly ToastService _toastService;
@@ -134,24 +139,24 @@ namespace NeteaseCloundMusicMobile.Client.Services
 
         }
 
-        private async ValueTask<bool> SafePlayAsync(OneOf<int, PlayableItemBase> indexOrItem)
+        private async ValueTask<PlayStatus> SafePlayAsync(OneOf<int, PlayableItemBase> indexOrItem)
         {
-
-            m_Loading.Value = true;
+            if (m_Loading) return PlayStatus.Pending;
+            m_Loading = true;
             try
             {
                 var item = indexOrItem.IsT0 ? this._tracksCollection[indexOrItem.AsT0] : indexOrItem.AsT1;
                 if (!await item.EnsureUrlAsync(this._httpRequestService))
                 {
                     await this._toastService.ErrorAsync("亲爱的，暂无版权");
-                    return false;
+                    return PlayStatus.AccessDenied;
                 }
                 await this._audioPlayService.PlayAsync(item);
-                return true;
+                return PlayStatus.Success;
             }
             finally
             {
-                m_Loading.Value = false;
+                m_Loading = false;
             }
         }
         private async void AudioPlayService_AudioStateChanged(object sender, string e)
@@ -163,6 +168,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
                 case nameof(AudioPlayService.Position):
                     if (Math.Abs((this._audioPlayService.Position - this._audioPlayService.Duration).TotalSeconds) <= 1)
                     {
+                        if (m_Loading) return;//加载完了自己会走下一个流程
                         var bNext = await this.NextAsync();
                         var maxCount = 0;
                         while (!bNext && maxCount++ < this._tracksCollection.Count)
@@ -226,20 +232,36 @@ namespace NeteaseCloundMusicMobile.Client.Services
         }
 
 
-        public async Task<bool> NextAsync()
+        public Task<bool> NextAsync() => NextImplAsync(null);
+        public Task<bool> PrevAsync() => PrevImplAsync(null);
+        private async Task<bool> NextImplAsync(int? currentIndex )
         {
             if (this._tracksCollection.Count == 0) return false;
-            var index = this._playMode.OnNext(this._tracksCollection.FindIndex(x => x.Id == CurrentPlayableItem.Id), this._tracksCollection.Count);
+            currentIndex ??= this._tracksCollection.IndexOf(CurrentPlayableItem);
+            var index = this._playMode.OnNext(currentIndex.Value, this._tracksCollection.Count);
             if (!index.HasValue) return false;
-            return await this.SafePlayAsync(index.Value);
+            var temp = await this.SafePlayAsync(index.Value);
+            if (temp == PlayStatus.AccessDenied)
+            {
+                return await NextImplAsync(index);
+            }
+            return temp == PlayStatus.Success;
         }
 
-        public async Task<bool> PrevAsync()
+
+
+        private async Task<bool> PrevImplAsync(int? currentIndex )
         {
             if (this._tracksCollection.Count == 0) return false;
-            var index = this._playMode.OnPrev(this._tracksCollection.IndexOf(CurrentPlayableItem), this._tracksCollection.Count);
+            currentIndex ??= this._tracksCollection.IndexOf(CurrentPlayableItem);
+            var index = this._playMode.OnPrev(currentIndex.Value, this._tracksCollection.Count);
             if (!index.HasValue) return false;
-            return await this.SafePlayAsync(index.Value);
+            var temp = await this.SafePlayAsync(index.Value);
+            if (temp == PlayStatus.AccessDenied)
+            {
+                return await PrevImplAsync(index);
+            }
+            return temp == PlayStatus.Success;
         }
 
 

@@ -89,7 +89,10 @@ function activeLi(position: number, stopMove: boolean) {
 }
 function delay(ms: number) {
     return new Promise((resolve, reject) => {
-        setTimeout(resolve, ms);
+      let ts=  setTimeout(() => {
+            resolve(0);
+          clearTimeout(ts);
+        }, ms);
     });
 }
 async function hideBottom(rootElement: HTMLElement) {
@@ -98,7 +101,7 @@ async function hideBottom(rootElement: HTMLElement) {
 
     let bottom = 0;
     const totalPiex = Math.abs(-symbolElement.offsetTop - height);
-    console.log("大威天龙！")
+    console.log("大威天龙！" + totalPiex)
     while (bottom > -totalPiex) {
         bottom -= totalPiex / 100;
         rootElement.style.bottom = bottom + "px";
@@ -116,7 +119,7 @@ async function showBottom(rootElement: HTMLElement) {
         bottom = Number(bottomString.slice(0, bottomString.length - 2));
     else return await hideBottom(rootElement);
     const totalPiex = Math.abs(-symbolElement.offsetTop - height);
-    console.log("大胆妖孽，还不现出原形！")
+    console.log("大胆妖孽，还不现出原形！" + totalPiex)
     while (bottom < 0) {
         bottom += totalPiex / 100;
         rootElement.style.bottom = bottom + "px";
