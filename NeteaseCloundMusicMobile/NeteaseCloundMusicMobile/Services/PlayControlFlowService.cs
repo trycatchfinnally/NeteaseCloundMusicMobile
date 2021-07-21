@@ -45,7 +45,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
         {
             int IPlayMode.Sort => -1;
             public string Name => "列表循环";
-
+            bool IPlayMode.SupportJumpTheQueue => true;
             public string IconClass => "iconfont icon-repeat";
 
             public int? OnNext(int index, int count)
@@ -221,6 +221,15 @@ namespace NeteaseCloundMusicMobile.Client.Services
             }
         }
 
+
+        public async Task<bool> JumpTheQueueAsync(PlayableItemBase playableItem)
+        {
+            if (!this.PlayMode.SupportJumpTheQueue) return false;
+            if (this.CurrentPlayableItem == null)return await Add2PlaySequenceAsync(playableItem).ContinueWith(x=>x.IsCompletedSuccessfully);
+            var index = this._tracksCollection.IndexOf(CurrentPlayableItem);
+            this._tracksCollection.Insert(index+1,playableItem);
+            return true;
+        }
         /// <summary>
         /// 下一个
         /// </summary>
@@ -278,6 +287,10 @@ namespace NeteaseCloundMusicMobile.Client.Services
     /// </summary>
     public interface IPlayMode
     {
+        /// <summary>
+        /// 该播放模式是否支持插队播放
+        /// </summary>
+        bool SupportJumpTheQueue => false;
         /// <summary>
         /// 表示显示顺序
         /// </summary>

@@ -2,7 +2,7 @@
 @implements IDisposable
 <Field HasAddons="true" IsExpanded="true">
     <Control IsExpanded="true">
-        <input class="input" placeholder="搜索音乐、歌手、歌词、用户" @ref="_searchElement" />
+        <input class="input" placeholder="搜索音乐、歌手、歌词、用户" @ref="_searchElement"  @onfocusout="OnLeaveInputAsync" @onfocus="()=>_focus=true"/>
     </Control>
     <Control>
         <Button>
@@ -17,32 +17,35 @@
         <Dropdown IsActive>
 
             <MenuSlot>
+                <a class="text-secondary count-desc m-2  " href="/search?keyword=@_keyword">
+                    搜索“ <span class="font-italic">@_keyword</span> ”相关内容
+                </a>
                 <ul class="drop-suggest">
                     @foreach (var order in _searchSuggestModel.order)
-                {
-                    <li>
-                        <div>
-                            <Icon IconClass="@m_orderNames[order].Value"></Icon>
-                            @m_orderNames[order].Key
-                        </div>
-                        <ul class="@B.ML4 count-desc">
-                            @{
-                                var items = _searchSuggestModel[order];
-                                if (items?.Length > 0)
-                                {
-                                    foreach (Models.INameIdModel item in items)
+                    {
+                        <li>
+                            <div>
+                                <Icon IconClass="@m_orderNames[order].Value"></Icon>
+                                @m_orderNames[order].Key
+                            </div>
+                            <ul class="@B.ML4 count-desc">
+                                @{
+                                    var items = _searchSuggestModel[order];
+                                    if (items?.Length > 0)
                                     {
-                                        <li class="@B.Join(B.MT2,B.P2 ) text-truncate hover-list-item" @onclick="@(()=>SuggestItemClickAsync(item))">
-                                            <a class="w-100" >@item.name</a>
-                                        </li>
+                                        foreach (Models.INameIdModel item in items)
+                                        {
+                                            <li class="@B.Join(B.MT2, B.P2) text-truncate hover-list-item" @onclick="@(() => SuggestItemClickAsync(item))">
+                                                <a class="w-100">@item.name</a>
+                                            </li>
+                                        }
                                     }
                                 }
-                            }
-                        </ul>
-                    </li>
-                }
-            </ul>
-        </MenuSlot>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </MenuSlot>
     </Dropdown>
 
 </div>

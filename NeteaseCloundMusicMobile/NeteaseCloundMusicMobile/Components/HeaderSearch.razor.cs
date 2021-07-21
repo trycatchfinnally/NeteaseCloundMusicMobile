@@ -20,6 +20,8 @@ namespace NeteaseCloundMusicMobile.Client.Components
         private TimeSpan _fetchFrequency = TimeSpan.FromMilliseconds(1000);
         private SearchSuggestResponseModel _searchSuggestModel;
         private ElementReference _searchElement;
+        private string _keyword;
+        private bool _focus;
         private DotNetObjectReference<HeaderSearch> _objRef;
         [Inject]
         private IJSRuntime JSRuntime { get; set; }
@@ -89,6 +91,12 @@ namespace NeteaseCloundMusicMobile.Client.Components
             };
         }
 
+        private async Task OnLeaveInputAsync()
+        {
+            _focus = false;
+            await Task.Delay(500);
+            if (!_focus) this._searchSuggestModel = null;
+        }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -103,11 +111,11 @@ namespace NeteaseCloundMusicMobile.Client.Components
         [JSInvokable]
         public async Task DoSearchAsync(string keywords)
         {
-            Console.WriteLine(keywords);
             if (string.IsNullOrWhiteSpace(keywords))
                 _searchSuggestModel = null;
             else
                 _searchSuggestModel = await this.HttpRequestService.MakePostRequestAsync<SearchSuggestApiResultModel>("/search/suggest", new { keywords }).ContinueWith(x => x.Result.result);
+            this._keyword = keywords;
             StateHasChanged();
         }
         public void Dispose()

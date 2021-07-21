@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+const rxjs = window.rxjs;
 class AudioPlayer {
     constructor() {
         this.initComponent();
@@ -100,13 +101,15 @@ function hideBottom(rootElement) {
         const symbolElement = rootElement.querySelector(".visible-symbol");
         let bottom = 0;
         const totalPiex = Math.abs(-symbolElement.offsetTop - height);
-        console.log("大威天龙！" + totalPiex);
+        console.log("大威天龙！");
+        let bottomArray = [bottom];
         while (bottom > -totalPiex) {
-            bottom -= totalPiex / 100;
-            rootElement.style.bottom = bottom + "px";
-            yield delay(10);
+            bottom -= totalPiex / 50;
+            bottomArray.push(bottom);
         }
-        rootElement.style.bottom = -totalPiex + "px";
+        bottomArray.push(-totalPiex);
+        rxjs.interval(20).pipe(rxjs.operators.take(bottomArray.length), rxjs.operators.map(x => bottomArray[x]))
+            .subscribe(x => rootElement.style.bottom = x + "px");
         return true;
     });
 }
@@ -121,20 +124,21 @@ function showBottom(rootElement) {
         else
             return yield hideBottom(rootElement);
         const totalPiex = Math.abs(-symbolElement.offsetTop - height);
-        console.log("大胆妖孽，还不现出原形！" + totalPiex);
+        console.log("大胆妖孽，还不现出原形！");
+        let bottomArray = [bottom];
         while (bottom < 0) {
-            bottom += totalPiex / 100;
-            rootElement.style.bottom = bottom + "px";
-            yield delay(10);
+            bottom += totalPiex / 50;
+            bottomArray.push(bottom);
         }
-        rootElement.style.bottom = "0px";
+        bottomArray.push(0);
+        rxjs.interval(20).pipe(rxjs.operators.take(bottomArray.length), rxjs.operators.map(x => bottomArray[x]))
+            .subscribe(x => rootElement.style.bottom = x + "px");
         return true;
     });
 }
 class searchProgress {
     initComponent(dotNetObjectReference, input) {
         // this._dotNetObjectReference = dotNetObjectReference;
-        const rxjs = window.rxjs;
         rxjs.fromEvent(input, "input").pipe(rxjs.operators.debounceTime(200), rxjs.operators.distinctUntilChanged())
             .subscribe((value) => {
             const keyword = value.target.value;

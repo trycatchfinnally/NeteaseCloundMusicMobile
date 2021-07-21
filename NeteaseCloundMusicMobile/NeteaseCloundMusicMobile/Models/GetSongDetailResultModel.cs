@@ -113,164 +113,9 @@ namespace NeteaseCloundMusicMobile.Client.Models
         public long vd { get; set; }
     }
 
-    public class SongsItem: INameIdModel
+    public class SongsItem : TracksItem
     {
-        /// <summary>
-        /// 海阔天空
-        /// </summary>
-        public string name { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long id { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long pst { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long t { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public List<ArItem> ar { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public List<string> alia { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long pop { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long st { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string rt { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long fee { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long v { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string crbt { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string cf { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public Al al { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long dt { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public H h { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public M m { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public L l { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string a { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string cd { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long no { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string rtUrl { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long ftype { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public List<string> rtUrls { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long djId { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long copyright { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long s_id { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long mark { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long originCoverType { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        //public string originSongSimpleData { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string resourceState { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long single { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        //public string noCopyrightRcmd { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long mv { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long rtype { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string rurl { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long mst { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long cp { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public long publishTime { get; set; }
+
         public bool liked { get; set; }
     }
 
@@ -390,17 +235,37 @@ namespace NeteaseCloundMusicMobile.Client.Models
         public List<ChargeInfoListItem> chargeInfoList { get; set; }
     }
 
-    public class GetSongDetailResultModel:ApiResultModelRootBase
+    public class GetSongDetailResultModel : ApiResultModelRootBase
     {
+
+        private List<SongsItem> _songs;
         /// <summary>
         /// 
         /// </summary>
-        public List<SongsItem> songs { get; set; }
+        public List<SongsItem> songs
+        {
+            get
+            {
+                if (_songs?.Count > 0 && _songs[0].privilege == null && privileges?.Count > 0)
+                {
+                    _songs = _songs.Join(privileges, x => x.id, y => y.id, (x, y) =>
+                        {
+                            x.privilege = y;
+                            return x;
+                        })
+                        .ToList();
+
+                }
+                return _songs;
+            }
+            set => _songs = value;
+        }
+
         /// <summary>
         /// 
         /// </summary>
         public List<PrivilegesItem> privileges { get; set; }
-  
+
     }
 
 }

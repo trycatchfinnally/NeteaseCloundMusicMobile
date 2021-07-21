@@ -1,4 +1,4 @@
-﻿
+﻿const rxjs = (window as any).rxjs;
 class AudioPlayer {
     private _audioElement: HTMLAudioElement;
 
@@ -45,7 +45,7 @@ class AudioPlayer {
             );
     }
     private initComponent() {
-        this._audioElement = document.querySelector("#mainAudio");
+        this._audioElement = document.querySelector("#mainAudio") as HTMLAudioElement;
         this._audioElement.src = '';
 
     }
@@ -101,13 +101,15 @@ async function hideBottom(rootElement: HTMLElement) {
 
     let bottom = 0;
     const totalPiex = Math.abs(-symbolElement.offsetTop - height);
-    console.log("大威天龙！" + totalPiex)
+    console.log("大威天龙！");
+    let bottomArray = [bottom];
     while (bottom > -totalPiex) {
-        bottom -= totalPiex / 100;
-        rootElement.style.bottom = bottom + "px";
-        await delay(10);
+        bottom -= totalPiex / 50;
+        bottomArray.push(bottom);
     }
-    rootElement.style.bottom = -totalPiex + "px";
+    bottomArray.push(-totalPiex);
+    rxjs.interval(20).pipe(rxjs.operators.take(bottomArray.length), rxjs.operators.map(x => bottomArray[x]))
+        .subscribe(x => rootElement.style.bottom = x + "px");
     return true;
 }
 async function showBottom(rootElement: HTMLElement) {
@@ -119,13 +121,15 @@ async function showBottom(rootElement: HTMLElement) {
         bottom = Number(bottomString.slice(0, bottomString.length - 2));
     else return await hideBottom(rootElement);
     const totalPiex = Math.abs(-symbolElement.offsetTop - height);
-    console.log("大胆妖孽，还不现出原形！" + totalPiex)
+    console.log("大胆妖孽，还不现出原形！");
+    let bottomArray = [bottom];
     while (bottom < 0) {
-        bottom += totalPiex / 100;
-        rootElement.style.bottom = bottom + "px";
-        await delay(10);
+        bottom += totalPiex / 50;
+        bottomArray.push(bottom);
     }
-    rootElement.style.bottom = "0px";
+    bottomArray.push(0);
+    rxjs.interval(20).pipe(rxjs.operators.take(bottomArray.length), rxjs.operators.map(x => bottomArray[x]))
+        .subscribe(x => rootElement.style.bottom = x + "px");
     return true;
 }
 
@@ -134,7 +138,7 @@ class searchProgress {
 
     public initComponent(dotNetObjectReference: any, input: HTMLInputElement) {
         // this._dotNetObjectReference = dotNetObjectReference;
-        const rxjs = (window as any).rxjs;
+       
         rxjs.fromEvent(input, "input").pipe(rxjs.operators.debounceTime(200), rxjs.operators.distinctUntilChanged())
             .subscribe((value: any) => {
                 const keyword = value.target.value as string;

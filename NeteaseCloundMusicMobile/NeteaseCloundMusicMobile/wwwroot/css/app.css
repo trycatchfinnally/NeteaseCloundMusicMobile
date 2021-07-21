@@ -112,3 +112,7 @@ a, .btn-link {
 .color-red{
     color:red
 }
+.playlist-tags:not(:last-child):after {
+    content: "/";
+    color: #7a7a7a
+}

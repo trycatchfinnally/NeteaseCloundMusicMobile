@@ -38,6 +38,8 @@ namespace NeteaseCloundMusicMobile.Client.Components
 
             this._displayTracks = Tracks;
         }
+
+
         public Task PlayAllAsync()
         {
             return this.PlayControlFlowService.AddRange2PlaySequenceAsync(Tracks.Select(StandardAdapter), clearCollection: true);
@@ -48,11 +50,29 @@ namespace NeteaseCloundMusicMobile.Client.Components
 
         }
 
+        private Task SkipTryAsync()
+        {
+            var temp = this.Tracks.Where(x => x.privilege == null || x.privilege.fl * x.privilege.pl > 0)
+                .Select(StandardAdapter);
+            return this.PlayControlFlowService.AddRange2PlaySequenceAsync(temp, clearCollection: true);
+        }
         public Task PlaySelectedAsync()
         {
             var rows = this._dtPlaylist.GetCheckedItems();
             if (rows.Count == 0) return ToastMessageService.ErrorAsync("请先选择项").AsTask();
             return this.PlayControlFlowService.AddRange2PlaySequenceAsync(rows.Select(StandardAdapter), clearCollection: true);
+        }
+
+        private async Task JumpTheQueueAsync(SongsItem item)
+        {
+
+            if (!await this.PlayControlFlowService.JumpTheQueueAsync(StandardAdapter(item)))
+            {
+                await this.ToastMessageService.ErrorAsync("插队播放失败，只有再列表播放模式下才受支持");
+                return;
+            }
+
+            await this.ToastMessageService.SuccessAsync("操作成功!");
         }
         private async Task LikeOrNotAsync(SongsItem item)
         {
@@ -78,7 +98,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
                 Id = x.id,
                 Title = x.name,
                 MvId = x.mv,
-                Duration=x.dt,
+                Duration = x.dt,
                 Liked = x.liked,
                 Album = new Album
                 {

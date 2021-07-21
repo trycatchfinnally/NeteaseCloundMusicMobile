@@ -136,9 +136,10 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// </summary>
         public string avatarImgId_str { get; set; }
     }
- 
-    public class TracksItem
+
+    public class TracksItem : INameIdModel
     {
+        public PrivilegesItem privilege { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -278,12 +279,12 @@ namespace NeteaseCloundMusicMobile.Client.Models
         public long single { get; set; }
         /// <summary>
         ///{
-//  "type": 3,
-//  "typeDesc": "MV可播",
-//  "songId": null
-//}
-    /// </summary>
-   // public string noCopyrightRcmd { get; set; }
+        //  "type": 3,
+        //  "typeDesc": "MV可播",
+        //  "songId": null
+        //}
+        /// </summary>
+        // public string noCopyrightRcmd { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -344,7 +345,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         public string rcmdReason { get; set; }
     }
 
-    public class Playlist: INameIdModel
+    public class Playlist : INameIdModel
     {
         /// <summary>
         /// 
@@ -521,10 +522,10 @@ namespace NeteaseCloundMusicMobile.Client.Models
         public string copywriter { get; set; }
     }
 
- 
-    public class PlaylistDetailApiResultModel:ApiResultModelRootBase
+
+    public class PlaylistDetailApiResultModel : ApiResultModelRootBase
     {
-      
+        private Playlist _playlist;
         /// <summary>
         /// 
         /// </summary>
@@ -532,7 +533,25 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// <summary>
         /// 
         /// </summary>
-        public Playlist playlist { get; set; }
+        public Playlist playlist
+        {
+            get
+            {
+                if (_playlist?.tracks?.Count > 0 && _playlist.tracks[0].privilege == null && privileges?.Count > 0)
+                {
+                    _playlist.tracks = _playlist.tracks.Join(privileges, x => x.id, y => y.id,
+                        (x, y) =>
+                        {
+                            x.privilege = y;
+                            return x;
+                        }).ToList();
+                }
+
+                return _playlist;
+            }
+            set => _playlist = value;
+        }
+
         /// <summary>
         /// 
         /// </summary>

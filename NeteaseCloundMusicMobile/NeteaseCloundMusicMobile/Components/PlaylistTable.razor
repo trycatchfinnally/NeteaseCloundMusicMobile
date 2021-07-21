@@ -1,4 +1,5 @@
-﻿@inherits RazorComponentBase
+﻿@using Newtonsoft.Json
+@inherits RazorComponentBase
 <div>
 
     <div class="@B.Join(B.Flex,B.AlignItemsCenter)">
@@ -6,6 +7,10 @@
             <Button class="@B.Join(B.MR4,B.MB4)" IsSmall="true" Color="Color.Danger" @onclick="PlayAllAsync">
                 <Icon IconClass="fa fa-play-circle-o"></Icon>
                 <span>播放全部</span>
+            </Button>
+            <Button class="@B.Join(B.MR4,B.MB4)" IsSmall="true" Color="Color.Success" @onclick="SkipTryAsync">
+                <Icon IconClass="fa fa-handshake-o"></Icon>
+                <span>跳过试听</span>
             </Button>
             <Button class="@B.Join(B.MR4,B.MB4)" IsSmall="true" Color="Color.Warning" @onclick="PlaySelectedAsync">
                 <Icon IconClass="iconfont icon-kongjian"></Icon>
@@ -23,34 +28,56 @@
         }
     </div>
 
-    <DataTable @ref="_dtPlaylist" Data="_displayTracks" IsNarrow="true" TItem="Models.SongsItem"
+    <DataTable @ref="_dtPlaylist" Data="_displayTracks" IsNarrow="true" TItem="Models.SongsItem"   TdClass="table-playlist"
                IsHoverable
                IsBordered IsStriped IsFullwidth>
         <EmptySlot>
             <div>暂无内容</div>
         </EmptySlot>
         <ColumnsSlot>
-
-            <DataTableColumn IsCheckBox="true" Label="选择"></DataTableColumn>
-            <DataTableColumn IsIndex="true" Label="序号" TdClass="@B.HiddenMobile" ThClass="@B.HiddenMobile"></DataTableColumn>
-            <DataTableColumn Label="操作">
+            <DataTableColumn TdClass="@B.Hidden" ThClass="@B.Hidden">
+                <TdSlot>
+                    <div >@JsonConvert.SerializeObject(context)</div>
+                </TdSlot>
+            </DataTableColumn>
+            <DataTableColumn IsCheckBox="true"  TdClass="text-center" >
+                <ThSlot>
+                    <div class="@B.HiddenMobile text-nowrap">选择</div>
+                </ThSlot>
+            </DataTableColumn>
+            <DataTableColumn IsIndex="true" Label="序号" TdClass="@B.Join(B.HiddenMobile,"text-center")" ThClass="@B.Join(B.HiddenMobile,"text-nowrap")"></DataTableColumn>
+            <DataTableColumn Label="操作" ThClass=" text-center text-nowrap ">
                 <TdSlot>
                     @{var track = context as Models.SongsItem;}
-                    <div class="text-center count-desc @B.MR2 @B.Flex @B.AlignItemsCenter" @onclick="()=>LikeOrNotAsync(track)">
+                    <Columns class="text-center count-desc" IsGapless="true">
+                        <Column>
+                            <div   @onclick="()=>LikeOrNotAsync(track)">
 
-                        @if (track.liked)
-                        {
-                            <div class="color-red">
-                                <Icon IconClass="fa fa-heart"></Icon>
+                                @if (track.liked)
+                                {
+                                    <div class="color-red @B.TooltipBottom @B.TooltipMultiline" data-tooltip="取消喜欢">
+                                        <Icon IconClass="fa fa-heart"></Icon>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="el-link @B.TooltipBottom @B.TooltipMultiline" data-tooltip="喜欢">
+                                        <Icon IconClass="fa fa-heart-o"></Icon>
+                                    </div>
+                                }
                             </div>
-                        }
-                        else
-                        {
-                            <div class="el-link">
-                                <Icon IconClass="fa fa-heart-o"></Icon>
-                            </div>
-                        }
-                    </div>
+                        </Column>
+                       @if (PlayControlFlowService.PlayMode.SupportJumpTheQueue)
+                       {
+                           <Column>
+                               <div class="el-link @B.TooltipBottom @B.TooltipMultiline" data-tooltip="插队播放" @onclick="()=>JumpTheQueueAsync(track)">
+                                   <Icon IconClass="fa fa-arrow-up"></Icon>
+
+                               </div>
+                           </Column>
+                       }
+                    </Columns>
+
                 </TdSlot>
             </DataTableColumn>
             <DataTableColumn Label="音乐标题">
@@ -72,6 +99,10 @@
                                 <Icon IconClass="fa fa-youtube-play" Color="Color.Danger"></Icon>
                             </a>
                         }
+                        @if (track.privilege!=null&&track.privilege.fl * track.privilege.pl == 0)
+                        {
+                            <Tag IsLight="true" Color="Color.Danger" class="@B.M1">试听</Tag>
+                        }
                     </div>
                 </TdSlot>
             </DataTableColumn>
@@ -80,7 +111,7 @@
                 <TdSlot>
                     @{var track = context as Models.SongsItem;}
 
-                    <div class="@B.Flex @B.AlignItemsCenter count-desc">
+                    <div class="@B.Flex @B.AlignItemsCenter count-desc ml-2">
                         @foreach (var item in track.ar.Take(5))
                         {
                             <a class="el-link playlist-tags" href="/artist/@item.id">@item.name</a>
@@ -93,15 +124,16 @@
             <DataTableColumn Label="专辑" TdClass="@B.HiddenMobile" ThClass="@B.HiddenMobile">
                 <TdSlot>
                     @{var track = context as Models.SongsItem;}
-                    <div class="overflow-hidden text-nowrap text-overflow-ellipsis count-desc">
+                    <div class="text-truncate count-desc ml-2">
                         <a class="el-link" href="/album/@track.al.id">@track.al.name</a>
                     </div>
                 </TdSlot>
             </DataTableColumn>
-            <DataTableColumn Label="时长">
+            <DataTableColumn Label="时长" ThClass=" text-nowrap ">
+
                 <TdSlot>
                     @{var track = context as Models.SongsItem;}
-                    <div class="count-desc">
+                    <div class="count-desc ml-2">
                         @TimeSpan.FromMilliseconds(track.dt).ToString(@"mm\:ss")
                     </div>
                 </TdSlot>

@@ -12,7 +12,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 {
     public partial class Playlist
     {
-       
+
         private class SubScribersQuery
         {
             public int limit { get; set; }
@@ -23,7 +23,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         private Components.PlaylistTable _playlistTable;
         private SubScribersQuery _subScribersQuery;
         private PlaylistSubscribersApiResultModel _subscribers;
-        
+
         private IReadOnlyList<TracksItem> _displayTracks = Array.Empty<TracksItem>();
 
         [Parameter]
@@ -59,8 +59,8 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                 var subTask = FetchSubscribersAsync();
                 //为了避免id数量过多，分组调接口
                 await Task.WhenAll(groups.Values.Concat<Task>(new[] { subTask }));
-                var others = groups.Values.Select(x => x.Result).SelectMany(x => x.songs);
-                this._playlist.tracks.AddRange(others.Select(x => new TracksItem
+                var others = groups.Values.Select(x => x.Result).ToArray();
+                this._playlist.tracks.AddRange(others.SelectMany(x => x.songs).Select(x => new TracksItem
                 {
 
                     id = x.id,
@@ -71,6 +71,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                     dt = x.dt
 
                 }));
+                
 
             }
             finally
@@ -90,9 +91,9 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             return _playlistTable.PlayAllAsync();
         }
 
-       
-       
-       
+
+
+
 
 
 
