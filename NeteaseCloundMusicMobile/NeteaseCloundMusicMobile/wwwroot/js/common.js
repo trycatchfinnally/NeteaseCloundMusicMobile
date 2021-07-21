@@ -70,9 +70,9 @@ function activeLi(position, stopMove) {
     const ulElement = liElement.parentElement;
     for (let i = 0; i < ulElement.children.length; i++) {
         const element = ulElement.children[i];
-        element.classList.remove("active");
+        element.classList.remove("text-danger");
     }
-    liElement.classList.add("active");
+    liElement.classList.add("text-danger");
     if (stopMove)
         return;
     const clientHeight = ulElement.clientHeight;
@@ -135,6 +135,25 @@ function showBottom(rootElement) {
             .subscribe(x => rootElement.style.bottom = x + "px");
         return true;
     });
+}
+function positionTrack(id) {
+    console.log(id);
+    const element = document.querySelector(`[data-track-id='${id}']`);
+    if (element == null)
+        return;
+    const trElement = element.parentElement.parentElement;
+    const tbodyElement = trElement.parentElement;
+    const clientHeight = tbodyElement.clientHeight;
+    const scrollHeight = tbodyElement.scrollHeight;
+    const offsetTop = trElement.offsetTop - tbodyElement.offsetTop;
+    let scrollTop = 0;
+    if (offsetTop <= 0.4 * clientHeight)
+        scrollTop = 0;
+    else if (offsetTop > scrollHeight - 0.6 * clientHeight)
+        scrollTop = scrollHeight - clientHeight;
+    else
+        scrollTop = offsetTop - 0.4 * clientHeight;
+    tbodyElement.scrollTop = scrollTop;
 }
 class searchProgress {
     initComponent(dotNetObjectReference, input) {

@@ -73,6 +73,16 @@ namespace NeteaseCloundMusicMobile.Client.Components
                 this.PlayControlFlowService.Tracks.Remove(item);
             }
         }
+
+
+
+        private async Task ScrollToCurrentAsync()
+        {
+            if (PlayControlFlowService.CurrentPlayableItem?.Id > 0)
+            {
+                await this.JS.InvokeVoidAsync("positionTrack", PlayControlFlowService.CurrentPlayableItem.Id);
+            }
+        }
         public Task PlayAsync(PlayableItemBase item)
         {
             var result = this.PlayControlFlowService.Add2PlaySequenceAsync(item, clearCollection: false);

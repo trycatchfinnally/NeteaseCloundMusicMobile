@@ -73,9 +73,9 @@ function activeLi(position: number, stopMove: boolean) {
     const ulElement = liElement.parentElement;
     for (let i = 0; i < ulElement.children.length; i++) {
         const element = ulElement.children[i];
-        element.classList.remove("active");
+        element.classList.remove("text-danger");
     }
-    liElement.classList.add("active");
+    liElement.classList.add("text-danger");
     if (stopMove) return;
     const clientHeight = ulElement.clientHeight;
     const scrollHeight = ulElement.scrollHeight;
@@ -133,6 +133,23 @@ async function showBottom(rootElement: HTMLElement) {
     return true;
 }
 
+function positionTrack(id: number) {
+    console.log(id);
+    const element = document.querySelector(`[data-track-id='${id}']`) as HTMLElement;
+    
+    if (element == null) return;
+    const trElement = element.parentElement.parentElement;
+    const tbodyElement = trElement.parentElement;
+    const clientHeight = tbodyElement.clientHeight;
+    const scrollHeight = tbodyElement.scrollHeight;
+    const offsetTop = trElement.offsetTop - tbodyElement.offsetTop;
+    let scrollTop = 0;
+    if (offsetTop <= 0.4 * clientHeight) scrollTop = 0;
+    else if (offsetTop > scrollHeight - 0.6 * clientHeight)
+        scrollTop = scrollHeight - clientHeight;
+    else scrollTop = offsetTop - 0.4 * clientHeight;
+    tbodyElement.scrollTop = scrollTop;
+}
 
 class searchProgress {
 

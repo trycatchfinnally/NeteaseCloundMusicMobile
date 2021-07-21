@@ -68,7 +68,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
 
             if (!await this.PlayControlFlowService.JumpTheQueueAsync(StandardAdapter(item)))
             {
-                await this.ToastMessageService.ErrorAsync("插队播放失败，只有再列表播放模式下才受支持");
+                await this.ToastMessageService.ErrorAsync("操作失败");
                 return;
             }
 

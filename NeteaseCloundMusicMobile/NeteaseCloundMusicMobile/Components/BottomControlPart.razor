@@ -48,7 +48,7 @@
                     {
 
 
-                        <div class="@B.TextWhite text-nowrap overflow-hidden text-overflow-ellipsis">
+                        <div class="@B.TextWhite text-truncate">
 
                             @(AudioPlayService.CurrentPlayableItem.Title)
                             @if (AudioPlayService.CurrentPlayableItem.Artists?.Count > 0)
@@ -164,7 +164,13 @@
                             </a>
 
                         </Column>
+                        <Column>
+                            <a data-tooltip="定位到当前播放项" class="@B.Join(B.TooltipArrow,B.TooltipBottom)"
+                               @onclick="ScrollToCurrentAsync" @onclick:stopPropagation>
+                                <Icon IconClass="fa fa-map-marker"></Icon>
+                            </a>
 
+                        </Column>
                     </Columns>
 
                 </LevelRight>
@@ -183,18 +189,18 @@
                             @{
                                 var track = context as Models.PlayableItemBase;
                             }
-                            <div class="@B.Flex @B.AlignItemsCenter ">
-                                <div class="el-link text-wrap e" @onclick="()=>PlayAsync(track)">
+                            <div class="@B.Flex @B.AlignItemsCenter " data-track-id="@track.Id">
+                                <div class="el-link text-wrap @(track.Equals(PlayControlFlowService.CurrentPlayableItem)?"text-danger":String.Empty)" @onclick="()=>PlayAsync(track)">
                                     <Icon IconClass="fa fa-play-circle"></Icon>
                                     <span>@track.Title</span>
                                 </div>
 
 
                                 @if (track.MvId > 0)
-                        {
-                                <a href="/mv/@track.MvId" class="mv-link">
-                                    <Icon IconClass="fa fa-youtube-play" Color="Color.Danger"></Icon>
-                                </a>
+                                {
+                                    <a href="/mv/@track.MvId" class="mv-link">
+                                        <Icon IconClass="fa fa-youtube-play" Color="Color.Danger"></Icon>
+                                    </a>
                                 }
                             </div>
                         </TdSlot>
@@ -208,8 +214,8 @@
 
                             <div class="@B.Flex @B.AlignItemsCenter count-desc " style="max-width:5em">
                                 @foreach (var item in track.Artists.Take(5))
-                        {
-                                <a class="el-link playlist-tags text-truncate" href="/artist/@item.id">@item.name</a>
+                                {
+                                    <a class="el-link playlist-tags text-truncate" href="/artist/@item.id">@item.name</a>
                                 }
                             </div>
 
@@ -247,7 +253,7 @@
                                     </Column>
                                 }
                             </Columns>
-                           
+
                         </TdSlot>
                     </DataTableColumn>
                 </ColumnsSlot>

@@ -225,9 +225,15 @@ namespace NeteaseCloundMusicMobile.Client.Services
         public async Task<bool> JumpTheQueueAsync(PlayableItemBase playableItem)
         {
             if (!this.PlayMode.SupportJumpTheQueue) return false;
-            if (this.CurrentPlayableItem == null)return await Add2PlaySequenceAsync(playableItem).ContinueWith(x=>x.IsCompletedSuccessfully);
+
+
+            if (this.CurrentPlayableItem == null) return await Add2PlaySequenceAsync(playableItem).ContinueWith(x => x.IsCompletedSuccessfully);
+            if (CurrentPlayableItem.Equals(playableItem)) return false;
+
+            var existIndex = this._tracksCollection.FindIndex(x => x.Equals(playableItem));
+            if (existIndex >= 0) this._tracksCollection.RemoveAt(existIndex);
             var index = this._tracksCollection.IndexOf(CurrentPlayableItem);
-            this._tracksCollection.Insert(index+1,playableItem);
+            this._tracksCollection.Insert(index + 1, playableItem);
             return true;
         }
         /// <summary>
@@ -243,7 +249,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
 
         public Task<bool> NextAsync() => NextImplAsync(null);
         public Task<bool> PrevAsync() => PrevImplAsync(null);
-        private async Task<bool> NextImplAsync(int? currentIndex )
+        private async Task<bool> NextImplAsync(int? currentIndex)
         {
             if (this._tracksCollection.Count == 0) return false;
             currentIndex ??= this._tracksCollection.IndexOf(CurrentPlayableItem);
@@ -259,7 +265,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
 
 
 
-        private async Task<bool> PrevImplAsync(int? currentIndex )
+        private async Task<bool> PrevImplAsync(int? currentIndex)
         {
             if (this._tracksCollection.Count == 0) return false;
             currentIndex ??= this._tracksCollection.IndexOf(CurrentPlayableItem);

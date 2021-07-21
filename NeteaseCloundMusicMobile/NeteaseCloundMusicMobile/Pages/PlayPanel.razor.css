@@ -31,9 +31,7 @@
         overflow-y: scroll;
         height: 18em;
     }
-.lrc-panel   .active{
-    color:darkred;
-}
+ 
 .play-symbol {
     position: absolute;
     z-index: 22;
