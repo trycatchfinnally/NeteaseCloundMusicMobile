@@ -7,6 +7,7 @@ using NeteaseCloundMusicMobile.Client.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace NeteaseCloundMusicMobile.Client.Components
@@ -18,6 +19,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
 
 
         private ElementReference _layoutRef;
+        private ElementReference _trackQuickBodyRoot;
         private bool _opend = true;
         private bool _openProgressing = false;
         private AudioPlayService AudioPlayService => PlayControlFlowService.AudioPlayService;
@@ -27,7 +29,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
         protected override Task OnParametersSetAsync()
         {
             this.AudioPlayService.AudioStateChanged += AudioPlayService_AudioStateChanged;
-
+           
             return base.OnParametersSetAsync();
         }
 
@@ -80,7 +82,8 @@ namespace NeteaseCloundMusicMobile.Client.Components
         {
             if (PlayControlFlowService.CurrentPlayableItem?.Id > 0)
             {
-                await this.JS.InvokeVoidAsync("positionTrack", PlayControlFlowService.CurrentPlayableItem.Id);
+             
+                await this.JS.InvokeVoidAsync("positionTrack", PlayControlFlowService.CurrentPlayableItem.Id, _trackQuickBodyRoot);
             }
         }
         public Task PlayAsync(PlayableItemBase item)

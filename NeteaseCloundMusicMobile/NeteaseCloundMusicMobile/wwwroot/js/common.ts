@@ -77,25 +77,18 @@ function activeLi(position: number, stopMove: boolean) {
     }
     liElement.classList.add("text-danger");
     if (stopMove) return;
-    const clientHeight = ulElement.clientHeight;
-    const scrollHeight = ulElement.scrollHeight;
-    const offsetTop = liElement.offsetTop - ulElement.offsetTop;
-    let scrollTop = 0;
-    if (offsetTop <= 0.4 * clientHeight) scrollTop = 0;
-    else if (offsetTop > scrollHeight - 0.6 * clientHeight)
-        scrollTop = scrollHeight - clientHeight;
-    else scrollTop = offsetTop - 0.4 * clientHeight;
-    ulElement.scrollTop = scrollTop;
+    scrollToCenter(ulElement, liElement);
+
 }
 function delay(ms: number) {
     return new Promise((resolve, reject) => {
-      let ts=  setTimeout(() => {
+        let ts = setTimeout(() => {
             resolve(0);
-          clearTimeout(ts);
+            clearTimeout(ts);
         }, ms);
     });
 }
-async function hideBottom(rootElement: HTMLElement) {
+function hideBottom(rootElement: HTMLElement) {
     const height = rootElement.clientHeight;
     const symbolElement = rootElement.querySelector(".visible-symbol") as HTMLElement;
 
@@ -112,14 +105,14 @@ async function hideBottom(rootElement: HTMLElement) {
         .subscribe(x => rootElement.style.bottom = x + "px");
     return true;
 }
-async function showBottom(rootElement: HTMLElement) {
+function showBottom(rootElement: HTMLElement) {
     const height = rootElement.clientHeight;
     const symbolElement = rootElement.querySelector(".visible-symbol") as HTMLElement;
     let bottom = 0;
     const bottomString = rootElement.style.bottom;
     if (bottomString && bottomString.length > 2)
         bottom = Number(bottomString.slice(0, bottomString.length - 2));
-    else return await hideBottom(rootElement);
+    else return hideBottom(rootElement);
     const totalPiex = Math.abs(-symbolElement.offsetTop - height);
     console.log("大胆妖孽，还不现出原形！");
     let bottomArray = [bottom];
@@ -133,29 +126,37 @@ async function showBottom(rootElement: HTMLElement) {
     return true;
 }
 
-function positionTrack(id: number) {
-    console.log(id);
+function positionTrack(id: number, trackQuickBodyRoot: HTMLElement) {
+
     const element = document.querySelector(`[data-track-id='${id}']`) as HTMLElement;
-    
+
     if (element == null) return;
     const trElement = element.parentElement.parentElement;
-    const tbodyElement = trElement.parentElement;
-    const clientHeight = tbodyElement.clientHeight;
-    const scrollHeight = tbodyElement.scrollHeight;
-    const offsetTop = trElement.offsetTop - tbodyElement.offsetTop;
+    const tbodyElement = trackQuickBodyRoot.parentElement.parentElement;
+    scrollToCenter(tbodyElement, trElement);
+
+}
+
+
+function scrollToCenter(containerElement: HTMLElement, itemElement: HTMLElement) {
+
+    const clientHeight = containerElement.clientHeight;
+    const scrollHeight = containerElement.scrollHeight;
+    const offsetTop = itemElement.offsetTop - containerElement.offsetTop;
+
     let scrollTop = 0;
     if (offsetTop <= 0.4 * clientHeight) scrollTop = 0;
     else if (offsetTop > scrollHeight - 0.6 * clientHeight)
         scrollTop = scrollHeight - clientHeight;
     else scrollTop = offsetTop - 0.4 * clientHeight;
-    tbodyElement.scrollTop = scrollTop;
-}
 
+    containerElement.scrollTop = scrollTop;
+}
 class searchProgress {
 
     public initComponent(dotNetObjectReference: any, input: HTMLInputElement) {
         // this._dotNetObjectReference = dotNetObjectReference;
-       
+
         rxjs.fromEvent(input, "input").pipe(rxjs.operators.debounceTime(200), rxjs.operators.distinctUntilChanged())
             .subscribe((value: any) => {
                 const keyword = value.target.value as string;

@@ -32,3 +32,11 @@
      height:2rem;font-size:.5rem
      
  }
+.tracks-info-title {
+    top: 3.2rem;
+    z-index: 2;
+    background: white;
+}
+.tracks-info-title + div {
+    margin-top: 9rem
+}

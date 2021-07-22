@@ -155,7 +155,7 @@
                     </CardImage>
                     <CardFooter>
                         <div class="@B.PT1 w-100 ">
-                            <div class="@B.TextLeft    @B.TextDark @B.TextWeightBold    overflow-hidden text-nowrap text-overflow-ellipsis">@item.name</div>
+                            <div class="@B.TextLeft    @B.TextDark @B.TextWeightBold    text-truncate">@item.name</div>
                             <div class="@B.TextLeft text-nowrap overflow-hidden text-overflow-ellipsis">@item.copywriter</div>
                         </div>
                     </CardFooter>
@@ -197,7 +197,7 @@
                                     <div class="@B.Flex  ">
                                         @foreach (var artist in item.artists)
                                         {
-                                            <div class="@B.PR2">@artist.name</div>
+                                            <div class="@B.PR2 text-secondary">@artist.name</div>
                                         }
                                     </div>
                                 }
@@ -268,9 +268,9 @@
                         </Column>
                         <Column class="w-75">
 
-                            <div class=" @B.TextWeightBold  text-nowrap overflow-hidden text-overflow-ellipsis ">@item.name</div>
+                            <div class=" @B.TextWeightBold  text-truncate ">@item.name</div>
 
-                            <div class=" font-italic text-nowrap overflow-hidden text-overflow-ellipsis">@item.copywriter</div>
+                            <div class=" font-italic text-truncate text-secondary">@item.copywriter</div>
                         </Column>
                     </Columns>
                 </div>

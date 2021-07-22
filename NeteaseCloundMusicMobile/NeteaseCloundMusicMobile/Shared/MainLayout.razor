@@ -28,7 +28,7 @@
                 </a>
             </BulmaRazor.Components.Column>
             <BulmaRazor.Components.Column>
-              <NeteaseCloundMusicMobile.Client.Components.HeaderSearch></NeteaseCloundMusicMobile.Client.Components.HeaderSearch>
+                <NeteaseCloundMusicMobile.Client.Components.HeaderSearch></NeteaseCloundMusicMobile.Client.Components.HeaderSearch>
             </BulmaRazor.Components.Column>
             <BulmaRazor.Components.Column IsNarrow="true">
                 <Columns IsMobile="true" IsVcentered="true" Gap="@Gap.Gap1">
@@ -192,14 +192,14 @@
                     <MenuList>
                         @foreach (var item in _userPlaylist)
                         {
-                        <MenuItem>
-                            <MenuLink href="@string.Concat("/playlist/",item.id)">
-                              <div class="text-truncate">
-                                    <Icon IconClass="fa fa-music"></Icon>
-                                @item.name
-                              </div>
-                            </MenuLink>
-                        </MenuItem>
+                            <MenuItem>
+                                <MenuLink href="@string.Concat("/playlist/",item.id)">
+                                    <div class="text-truncate">
+                                        <Icon IconClass="fa fa-music"></Icon>
+                                        @item.name
+                                    </div>
+                                </MenuLink>
+                            </MenuItem>
                         }
                     </MenuList>
                 </Menu>
