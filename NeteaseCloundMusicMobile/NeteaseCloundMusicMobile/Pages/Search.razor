@@ -1,6 +1,88 @@
 ﻿@page "/Search"
-<h3>Search</h3>
+@using NeteaseCloundMusicMobile.Client.Models
+@inherits RazorComponentBase
+@implements IDisposable
+<LoadingContainer IsActive="_loading">
+    <div class="@B.M4">
+        @if (_searchResponse != null)
+        {
+
+            <Content>
+                <p>搜索“<i>@_searchRequest.keywords</i>”，找到@(string.Concat(GetCount(_searchRequest.type),MapSearchResultDescription()))</p>
+            </Content>
+            <Tabs DefaultTabIndex="Array.FindIndex(m_supportSearchTypes,x=>x.type==_searchRequest.type)">
+                @foreach (var item in m_supportSearchTypes)
+                {
+                    <TabItem Label="@item.name" Href="@string.Concat("/search?keyword=",_searchRequest.keywords,"&type=",item.type)">
+                        <ContentSlot>
+                            @item.renderFragment(this)
+                        </ContentSlot>
+                    </TabItem>
+                }
+
+            </Tabs>
+
+        }
+
+    </div>
+</LoadingContainer>
+
 
 @code {
+    private static RenderFragment<Search> _songsRenderFragment = (temp) => __builder =>
+                               {
+                                   var (result, request) = (temp._searchResponse, temp._searchRequest);
+                                   if (result?.songs != null)
+                                   {
 
+                                   <NeteaseCloundMusicMobile.Client.Components.PlaylistTable EnableSearch="false" Tracks="result.songs">
+
+                                   </NeteaseCloundMusicMobile.Client.Components.PlaylistTable>
+                                   <NeteaseCloundMusicMobile.Client.Components.FuncPagination TotalCount="result.songCount" PageSize="request.limit"
+                                                           OnPageChange="temp.OnPageChangeAsync"></NeteaseCloundMusicMobile.Client.Components.FuncPagination>
+
+                                   }
+
+                               };
+
+    private static RenderFragment<Search> _albumsRenderFragment = (temp) => __builder =>
+    {
+        var (result, request) = (temp._searchResponse, temp._searchRequest);
+        if (result?.albums != null)
+        {
+            <ul>
+                @foreach (var item in result.albums)
+                {
+                    <li class="hover-list-item">
+                        <a href="/album/@item.id">
+                            <div class="d-flex align-items-center w-100 p-4">
+                                <div class="w-50 d-flex align-items-center">
+                                    <div>
+                                        <Image Size="Size.Square48">
+                                            <img src="@item.picUrl" />
+                                        </Image>
+                                    </div>
+                                    <div class="ml-2">
+                                        @item.name
+                                    </div>
+
+                                </div>
+                                <div class="w-50">
+                                    <ul class="d-flex">
+                                        @foreach (var artist in item.artists.Take(3))
+                                        {
+                                            <li class="playlist-tags">@artist.name</li>
+                                        }
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </a>
+                    </li>
+                }
+            </ul>
+            <NeteaseCloundMusicMobile.Client.Components.FuncPagination TotalCount="result.albumCount" PageSize="request.limit"
+                                                           OnPageChange="temp.OnPageChangeAsync"></NeteaseCloundMusicMobile.Client.Components.FuncPagination>
+        }
+    };
 }
