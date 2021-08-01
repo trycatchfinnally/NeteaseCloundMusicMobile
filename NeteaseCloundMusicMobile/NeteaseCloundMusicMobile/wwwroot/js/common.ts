@@ -172,3 +172,19 @@ class searchProgress {
 
 }
 (window as any).searchProgress = new searchProgress();
+
+
+function copy(txt: string) {
+    if (txt?.length > 0) {
+        const aux = document.createElement("input");
+        aux.setAttribute("value", txt);
+        document.body.appendChild(aux);
+        aux.select();
+        document.execCommand("copy");
+        document.body.removeChild(aux);
+ 
+    
+        return true;
+    }
+    return false;
+}

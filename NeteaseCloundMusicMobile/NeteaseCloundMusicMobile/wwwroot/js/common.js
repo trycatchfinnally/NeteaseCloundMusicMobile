@@ -147,4 +147,16 @@ class searchProgress {
     }
 }
 window.searchProgress = new searchProgress();
+function copy(txt) {
+    if ((txt === null || txt === void 0 ? void 0 : txt.length) > 0) {
+        const aux = document.createElement("input");
+        aux.setAttribute("value", txt);
+        document.body.appendChild(aux);
+        aux.select();
+        document.execCommand("copy");
+        document.body.removeChild(aux);
+        return true;
+    }
+    return false;
+}
 //# sourceMappingURL=common.js.map

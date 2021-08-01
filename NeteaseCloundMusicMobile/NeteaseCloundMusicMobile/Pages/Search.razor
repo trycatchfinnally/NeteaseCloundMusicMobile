@@ -30,30 +30,32 @@
 
 @code {
     private static RenderFragment<Search> _songsRenderFragment = (temp) => __builder =>
-                               {
-                                   var (result, request) = (temp._searchResponse, temp._searchRequest);
-                                   if (result?.songs != null)
-                                   {
+                                                                                                           {
+                                                                                                               var (result, request) = (temp._searchResponse, temp._searchRequest);
+                                                                                                               if (result?.songs != null)
+                                                                                                               {
+                                                                                                               <div class="mb-4">
+                                                                                                                   <NeteaseCloundMusicMobile.Client.Components.PlaylistTable EnableSearch="false" Tracks="result.songs">
 
-                                   <NeteaseCloundMusicMobile.Client.Components.PlaylistTable EnableSearch="false" Tracks="result.songs">
+                                                                                                                   </NeteaseCloundMusicMobile.Client.Components.PlaylistTable>
+                                                                                                               </div>
 
-                                   </NeteaseCloundMusicMobile.Client.Components.PlaylistTable>
-                                   <NeteaseCloundMusicMobile.Client.Components.FuncPagination TotalCount="result.songCount" PageSize="request.limit"
+                                                                                                               <NeteaseCloundMusicMobile.Client.Components.FuncPagination TotalCount="result.songCount" PageSize="request.limit"
                                                            OnPageChange="temp.OnPageChangeAsync"></NeteaseCloundMusicMobile.Client.Components.FuncPagination>
 
-                                   }
+                                                                                                               }
 
-                               };
+                                                                                                           };
 
     private static RenderFragment<Search> _albumsRenderFragment = (temp) => __builder =>
     {
         var (result, request) = (temp._searchResponse, temp._searchRequest);
         if (result?.albums != null)
         {
-            <ul>
+            <ul class="mb-4">
                 @foreach (var item in result.albums)
                 {
-                    <li class="hover-list-item">
+                    <li class="hover-list-item" @key="@string.Concat("album",item.id)">
                         <a href="/album/@item.id">
                             <div class="d-flex align-items-center w-100 p-4">
                                 <div class="w-50 d-flex align-items-center">
@@ -82,6 +84,243 @@
                 }
             </ul>
             <NeteaseCloundMusicMobile.Client.Components.FuncPagination TotalCount="result.albumCount" PageSize="request.limit"
+                                                           OnPageChange="temp.OnPageChangeAsync"></NeteaseCloundMusicMobile.Client.Components.FuncPagination>
+        }
+    };
+    private static RenderFragment<Search> _artistsRenderFragment = (temp) => __builder =>
+    {
+
+        var (result, request) = (temp._searchResponse, temp._searchRequest);
+        if (result?.artists?.Count > 0)
+        {
+            <ul class="d-flex flex-wrap mb-4">
+                @foreach (var item in result.artists)
+                {
+                    <li class="hover-list-item col-12 col-md-6 col-lg-4 col-xl-3 p-4" @key="@string.Concat("artist",item.id)">
+                        <a href="/artist/@item.id">
+                            <div class="d-flex align-items-center w-100 ">
+                                <div>
+                                    <Image Size="Size.Square48" Ratio="Ratio.Ratio1by1">
+                                        <img src="@temp.Nvl(item.img1v1Url,item.picUrl)" />
+                                    </Image>
+                                </div>
+                                <div class="ml-2">
+                                    @item.name
+                                </div>
+                                @if (item.accountId > 0)
+                                {
+                                    <div class="ml-2">
+                                        <BulmaRazor.Components.Tag IsLight IsRounded Color="Color.Danger">
+                                            <NavLink href="@string.Concat("/user/",item.accountId)"><Icon IconClass="fa fa-user-o"></Icon></NavLink>
+                                        </BulmaRazor.Components.Tag>
+                                    </div>
+                                }
+                            </div>
+                        </a>
+                    </li>
+                }
+            </ul>
+            <NeteaseCloundMusicMobile.Client.Components.FuncPagination TotalCount="result.artistCount" PageSize="request.limit"
+                                                           OnPageChange="temp.OnPageChangeAsync"></NeteaseCloundMusicMobile.Client.Components.FuncPagination>
+        }
+    };
+    private static RenderFragment<Search> _playlistsRenderFragment = (temp) => __builder =>
+    {
+        var (result, request) = (temp._searchResponse, temp._searchRequest);
+        if (result?.playlists?.Count > 0)
+        {
+            <ul class="mb-4">
+                @foreach (var item in result.playlists)
+                {
+                    <li class="hover-list-item p-4" @key="@string.Concat("playlist",item.id)">
+                        <a href="/playlist/@item.id">
+                            <div class="d-flex align-items-center w-100">
+                                <div class="w-50 d-flex align-items-center">
+                                    <div>
+                                        <Image Size="Size.Square48" Ratio="Ratio.Ratio1by1">
+                                            <img src="@item.coverImgUrl" />
+                                        </Image>
+                                    </div>
+                                    <div class="ml-2">@item.name</div>
+                                </div>
+                                <div class="count-desc ">
+                                    <Level IsMobile>
+                                        <LevelLeft><div class="text-10rem">@string.Concat(item.trackCount,"首")</div></LevelLeft>
+                                        <LevelItem>
+                                            <p class="ml-5">
+                                                by &nbsp; <span>
+                                                    <NavLink href="@string.Concat("/user/",item.creator.userId)">@item.creator.nickname</NavLink>
+                                                </span>
+                                            </p>
+                                        </LevelItem>
+                                    </Level>
+                                </div>
+
+                            </div>
+                        </a>
+
+                    </li>
+                }
+            </ul>
+            <NeteaseCloundMusicMobile.Client.Components.FuncPagination TotalCount="result.playlistCount" PageSize="request.limit"
+                                                           OnPageChange="temp.OnPageChangeAsync"></NeteaseCloundMusicMobile.Client.Components.FuncPagination>
+        }
+    };
+
+
+
+    private static RenderFragment<Search> _usersRenderFragment = (temp) => __builder =>
+    {
+        var (result, request) = (temp._searchResponse, temp._searchRequest);
+        if (result?.userprofiles?.Count > 0)
+        {
+
+
+            <ul class="mb-4">
+                @foreach (var item in result.userprofiles)
+                {
+                    <li class="hover-list-item p-4" @key="@string.Concat("user",item.userId)">
+                        <a href="/user/@item.userId">
+                            <Level IsMobile>
+                                <LevelLeft>
+                                    <div class="d-flex align-items-center">
+                                        <div class="position-relative">
+
+                                            <Image Size="Size.Square48" Ratio="Ratio.Ratio1by1">
+                                                <img src="@item.avatarUrl" class="@B.Rounded" />
+                                            </Image>
+                                            @if (!string.IsNullOrWhiteSpace(item.avatarDetail?.identityIconUrl))
+                                                    {
+                                                        <div class="identity-icon-url">
+                                                            <Image Size="Size.Square16" Ratio="Ratio.Ratio1by1">
+                                                                <img src="@item.avatarDetail.identityIconUrl" class="@B.Rounded" />
+
+                                                            </Image>
+                                                        </div>
+                                                    }
+
+                                                </div>
+                                                <div class="ml-2">
+                                                    @item.nickname
+                                                </div>
+                                                <div class="ml-2">
+                                                    <Icon IconClass="@temp.IfElse(item.gender==1,"fa fa-mars","fa fa-venus")"></Icon>
+                                                </div>
+                                            </div>
+                                        </LevelLeft>
+                                        <LevelRight class="w-50 count-desc text-truncate text-right">
+                                            @temp.Nvl(item.description,"网易音乐人")
+                                        </LevelRight>
+
+                                    </Level>
+                                </a>
+                            </li>
+                }
+            </ul>
+
+
+            <NeteaseCloundMusicMobile.Client.Components.FuncPagination TotalCount="result.userprofileCount" PageSize="request.limit"
+                                                           OnPageChange="temp.OnPageChangeAsync"></NeteaseCloundMusicMobile.Client.Components.FuncPagination>
+        }
+    };
+
+
+    private static RenderFragment<Search> _mvsRenderFragment = (temp) => __builder =>
+    {
+        var (result, request) = (temp._searchResponse, temp._searchRequest);
+        if (result?.mvs?.Count > 0)
+        {
+            <ul class="mb-4 d-flex align-items-center flex-wrap">
+                @foreach (var item in result.mvs)
+                {
+                    <li class="col-6 col-md-4 col-lg-3 col-xl-2  " @key="@string.Concat("mv",item.id)">
+                        <div class="w-100 border m-2 p-2">
+                            <a href="/mv/@item.id">
+
+                                <NeteaseCloundMusicMobile.Client.Components.PlayListCardItem Count="@item.playCount"
+                                                                             PicUrl="@item.cover"
+                                                                             FooterTitle="@item.name"
+                                                                             FooterDescription="@item.artistName"
+                                                                             CountIconClass="fa fa-video-camera">
+
+                                </NeteaseCloundMusicMobile.Client.Components.PlayListCardItem>
+                            </a>
+
+                        </div>
+                    </li>
+                }
+            </ul>
+
+            <NeteaseCloundMusicMobile.Client.Components.FuncPagination TotalCount="result.mvCount" PageSize="request.limit"
+                                                           OnPageChange="temp.OnPageChangeAsync"></NeteaseCloundMusicMobile.Client.Components.FuncPagination>
+        }
+    };
+
+
+    private static RenderFragment<Search> _lyricsRenderFragment = (temp) => __builder =>
+    {
+        var (result, request) = (temp._searchResponse, temp._searchRequest);
+        if (result?.songs?.Length > 0)
+        {
+            <ul class="mb-4">
+
+                @foreach (var item in result.songs)
+                {
+
+
+                    var lyric = item.lyrics as WithActionLyric;
+                    <li class="p-2" @key="@string.Concat("lyric",item.id)">
+                        <div class="d-flex align-items-center ">
+                            <div class="col-2 count-desc">
+                                <Columns IsMobile>
+                                    <Column></Column>
+                                    <Column>
+                                        <div  >
+
+                                            @if (item.liked)
+                                                    {
+                                                        <div class="color-red @B.TooltipBottom @B.TooltipMultiline" data-tooltip="取消喜欢">
+                                                            <Icon IconClass="fa fa-heart"></Icon>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="el-link @B.TooltipBottom @B.TooltipMultiline" data-tooltip="喜欢">
+                                                            <Icon IconClass="fa fa-heart-o"></Icon>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </Column>
+
+                                        </Columns>
+                                    </div>
+                                    <div class="col-6 d-flex align-items-center">
+                                        <div class="col-5 text-truncate">@item.name</div>
+                                          <div class="col-3"></div>
+                                            <div class="col-4"></div>
+                                    </div>
+                                    <div class="col-4"></div>
+                                </div>
+                                <div class="hover-list-item d-flex align-items-start pt-2">
+                                    <div class="col-2"></div>
+                                    <div class="col-6 txt-pre-line">
+                                        <p class="@temp.IfElse(lyric.Expanded,"multi-line-truncate",string.Empty)">@lyric.txt</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <Buttons>
+                                            <NeteaseCloundMusicMobile.Client.Components.FuncButton Click="lyric.ChangeExpanded">
+                                                @temp.IfElse(lyric.Expanded,"展开歌词","折叠歌词")
+                                            </NeteaseCloundMusicMobile.Client.Components.FuncButton>
+                                            <NeteaseCloundMusicMobile.Client.Components.FuncButton Click="lyric.CopyAsync">复制歌词</NeteaseCloundMusicMobile.Client.Components.FuncButton>
+
+                                        </Buttons>
+
+                                    </div>
+                                </div>
+                            </li>
+                }
+            </ul>
+            <NeteaseCloundMusicMobile.Client.Components.FuncPagination TotalCount="result.songCount" PageSize="request.limit"
                                                            OnPageChange="temp.OnPageChangeAsync"></NeteaseCloundMusicMobile.Client.Components.FuncPagination>
         }
     };
