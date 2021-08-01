@@ -260,7 +260,7 @@
     private static RenderFragment<Search> _lyricsRenderFragment = (temp) => __builder =>
     {
         var (result, request) = (temp._searchResponse, temp._searchRequest);
-        if (result?.songs?.Length > 0)
+        if (result?.songs?.Length > 0&& request.type==1006)
         {
             <ul class="mb-4">
 
