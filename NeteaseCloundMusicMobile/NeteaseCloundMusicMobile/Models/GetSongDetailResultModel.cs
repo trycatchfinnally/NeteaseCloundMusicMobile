@@ -117,6 +117,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
     {
 
         public bool liked { get; set; }
+      
     }
 
     //public class FreeTrialPrivilege

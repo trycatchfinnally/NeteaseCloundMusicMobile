@@ -198,7 +198,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// <summary>
         /// 
         /// </summary>
-        public string avatarDetail { get; set; }
+        public avatarDetail avatarDetail { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -208,7 +208,14 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// </summary>
         public long playlistBeSubscribedCount { get; set; }
     }
+    public class avatarDetail
+    {
+        public string identityIconUrl { get; set; }
+        public int identityLevel { get; set; }
 
+
+        public int userType { get; set; }
+    }
     public class BindingsItem
     {
         /// <summary>

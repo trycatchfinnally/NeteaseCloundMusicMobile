@@ -1,0 +1,9 @@
+﻿
+<Button IsSmall @onclick="Click">@ChildContent</Button>
+@code {
+    [Parameter]
+    public Func<Task> Click { get; set; }
+    [Parameter]
+
+    public RenderFragment ChildContent { get; set; }
+}

@@ -70,7 +70,11 @@
             <LoadingContainer IsActive="_newCommentQuery.Loading"></LoadingContainer>
             @foreach (var item in _newCommentData.comments)
             {
-                @ReplyRenderFragment(new ReplyRenderFragmentParameter { Item = item, LikeOrNotEventCallBack =EventCallback.Factory.Create<MouseEventArgs>(this, (e)=> LikeOrNotAsync(item)) })
+                @ReplyRenderFragment(new ReplyRenderFragmentParameter { Item = item, 
+                
+                LikeOrNotEventCallBack =EventCallback.Factory.Create<MouseEventArgs>(this, (e)=> LikeOrNotAsync(item))
+                
+            })
             }
             <div>
                 <Pagination TotalCount="(int)_newCommentData.totalCount"

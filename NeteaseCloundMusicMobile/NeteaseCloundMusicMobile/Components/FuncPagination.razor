@@ -1,0 +1,12 @@
+﻿ 
+  <Pagination TotalCount="TotalCount" HideOnSinglePage IsCentered IsRounded PageSize="PageSize"
+                                       OnPageChange="OnPageChange"   />
+@code {
+    [Parameter]
+    public Func<int,Task>OnPageChange{ get; set; }
+     [Parameter]
+     public int TotalCount{get;set;}
+      [Parameter]
+     public int PageSize{get;set;}
+
+}
