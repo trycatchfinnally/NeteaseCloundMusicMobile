@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NLog.Extensions.Logging;
 
 namespace NeteaseCloundMusicMobile.Server
 {
@@ -21,6 +22,7 @@ namespace NeteaseCloundMusicMobile.Server
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+                .ConfigureLogging(x=>x.ClearProviders().AddNLog());
     }
 }

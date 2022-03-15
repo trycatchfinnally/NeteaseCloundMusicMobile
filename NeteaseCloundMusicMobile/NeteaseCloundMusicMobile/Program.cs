@@ -10,19 +10,20 @@ using NeteaseCloundMusicMobile.Client.Services;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace NeteaseCloundMusicMobile
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-
-           builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+          
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             ConfigureService(builder.Services);
-            await builder.Build().RunAsync();
+            return builder.Build().RunAsync();
         }
 
 
@@ -32,7 +33,7 @@ namespace NeteaseCloundMusicMobile
             //{
 
             //    var httpClient = new HttpClient { BaseAddress = new Uri("http://home.tangkh.top:63310") };
-              
+
 
             //    return httpClient;
             //});
