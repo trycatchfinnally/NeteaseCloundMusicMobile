@@ -88,8 +88,10 @@ function hideBottom(rootElement) {
         bottomArray.push(bottom);
     }
     bottomArray.push(-totalPiex);
-    rxjs.interval(20).pipe(rxjs.operators.take(bottomArray.length), rxjs.operators.map(x => bottomArray[x]))
-        .subscribe(x => rootElement.style.bottom = x + "px");
+    rxjs.from(bottomArray.map(x => rxjs.of(x).pipe(rxjs.operators.delay(20)))).pipe(rxjs.operators.concatAll())
+        .subscribe(x => {
+        rootElement.style.bottom = x + "px";
+    });
     return true;
 }
 function showBottom(rootElement) {
@@ -109,8 +111,10 @@ function showBottom(rootElement) {
         bottomArray.push(bottom);
     }
     bottomArray.push(0);
-    rxjs.interval(20).pipe(rxjs.operators.take(bottomArray.length), rxjs.operators.map(x => bottomArray[x]))
-        .subscribe(x => rootElement.style.bottom = x + "px");
+    rxjs.from(bottomArray.map(x => rxjs.of(x).pipe(rxjs.operators.delay(20)))).pipe(rxjs.operators.concatAll())
+        .subscribe(x => {
+        rootElement.style.bottom = x + "px";
+    });
     return true;
 }
 function positionTrack(id, trackQuickBodyRoot) {
