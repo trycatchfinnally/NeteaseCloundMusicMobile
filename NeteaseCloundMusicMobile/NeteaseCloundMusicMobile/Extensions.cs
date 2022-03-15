@@ -8,7 +8,7 @@ namespace NeteaseCloundMusicMobile.Client
     public static class Extensions
     {
 
-        private static readonly DateTime s_begin_datetime=new DateTime(1970, 1, 1);
+        private static readonly DateTime UnixEpoch = DateTime.UnixEpoch;
         public static string ToCountString(this long count)
         {
             const long w1 = 10000;
@@ -18,10 +18,14 @@ namespace NeteaseCloundMusicMobile.Client
             }
             return $"{count / w1}万";
         }
-
+        /// <summary>
+        /// 将时间戳转换为时间
+        /// </summary>
+        /// <param name="timeStamp"></param>
+        /// <returns></returns>
         public static DateTime ToDateTime(this long timeStamp)
         {
-          return s_begin_datetime.AddMilliseconds(timeStamp);
+          return UnixEpoch.AddMilliseconds(timeStamp);
         }
 
 

@@ -4,6 +4,7 @@ using NeteaseCloundMusicMobile.Client.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -34,7 +35,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
 
         private async void AuthenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> task)
         {
-
+           
             var (value, temp) = await TaskWhenAllHelper.WhenAllAsync(this._lazyLoadedUserLikedMusicIds.EnsureValueAsync(), FetchMusicLikedListAsync());
             value.Clear();
             value.AddRange(temp);

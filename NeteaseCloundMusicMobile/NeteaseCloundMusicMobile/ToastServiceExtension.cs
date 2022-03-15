@@ -8,6 +8,9 @@ using OneOf;
 
 namespace NeteaseCloundMusicMobile.Client
 {
+    /// <summary>
+    /// 提供一些扩展方法，用以快速的显示一些Toast信息
+    /// </summary>
     static class ToastServiceExtension
     {
         /// <summary>

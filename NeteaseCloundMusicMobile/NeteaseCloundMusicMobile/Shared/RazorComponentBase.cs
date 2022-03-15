@@ -10,6 +10,9 @@ using BulmaRazor.Components;
 
 namespace NeteaseCloundMusicMobile.Client.Shared
 {
+    /// <summary>
+    /// 用作组件的基类，以便注入一些通用的服务
+    /// </summary>
     public abstract class RazorComponentBase : ComponentBase
     {
         [Inject]
@@ -37,6 +40,12 @@ namespace NeteaseCloundMusicMobile.Client.Shared
         {
             this.NavigationManager.NavigateTo("/404");
         }
+        /// <summary>
+        /// 进行指定类型的转换，
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
         protected static T ToDto<T>(object source)
         {
             var json = System.Text.Json.JsonSerializer.Serialize(source);

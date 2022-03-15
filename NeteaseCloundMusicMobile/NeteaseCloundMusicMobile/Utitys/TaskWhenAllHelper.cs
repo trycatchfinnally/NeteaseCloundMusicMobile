@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 
 namespace NeteaseCloundMusicMobile.Client
 {
+    /// <summary>
+    /// 提供一些方法，用以使多任务并发的调用更简单
+    /// 类似于es6中 let [result1,result2]=Promise.all([promise1,promise2])
+    /// </summary>
     public static class TaskWhenAllHelper
     {
 

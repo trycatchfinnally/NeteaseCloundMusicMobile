@@ -5,18 +5,25 @@ using NeteaseCloundMusicMobile.Client.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace NeteaseCloundMusicMobile.Client.Services
 {
-    public class AudioPlayService
+    /// <summary>
+    /// 此服务封装播放相关的接口
+    /// </summary>
+    public class AudioPlayService : IDisposable
     {
         private readonly IJSInProcessRuntime _jSRuntime;
-        private readonly IHttpRequestService _httpRequestService;
+        
+        private IDisposable _positionSubscribe;
         private bool _postionChangedStart = false;
         public event EventHandler<string> AudioStateChanged;
-
+        /// <summary>
+        /// 当前播放的项
+        /// </summary>
         public PlayableItemBase CurrentPlayableItem { get; private set; }
 
         /// <summary>
@@ -35,7 +42,9 @@ namespace NeteaseCloundMusicMobile.Client.Services
         }
 
 
-
+        /// <summary>
+        /// 是否静音
+        /// </summary>
         public bool Muted
         {
             get
@@ -79,19 +88,23 @@ namespace NeteaseCloundMusicMobile.Client.Services
         /// 表示是否暂停或者停止状态
         /// </summary>
         public bool Paused => this.GetPropertyFromJavaScript<bool>("paused");
-        public AudioPlayService(IJSRuntime jSRuntime, IHttpRequestService httpRequestService)
+        public AudioPlayService(IJSRuntime jSRuntime )
         {
             this._jSRuntime = jSRuntime as IJSInProcessRuntime;
-            this._httpRequestService = httpRequestService;
+           
         }
-
+        /// <summary>
+        /// 播放
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
 
         public async Task PlayAsync(PlayableItemBase item)
         {
             if (item != null)
             {
                 this.CurrentPlayableItem = item;
-                
+
 
             }
             if (this.CurrentPlayableItem == null) return;
@@ -100,7 +113,11 @@ namespace NeteaseCloundMusicMobile.Client.Services
             if (!this._postionChangedStart)
             {
                 this._postionChangedStart = true;
-                _ = this.InvokePositionChangedAsync();
+                
+                if (this._positionSubscribe == null)
+                    this._positionSubscribe = Observable.Interval(TimeSpan.FromSeconds(0.5))
+                         .Subscribe(InvokePositionChanged);
+
             }
         }
         /// <summary>
@@ -124,22 +141,30 @@ namespace NeteaseCloundMusicMobile.Client.Services
             this._jSRuntime.InvokeVoid("eval", $"audioPlayer.{propName}={value}");
             InvokeEvent(names);
         }
-
+        /// <summary>
+        /// 触发对应的事件
+        /// </summary>
+        /// <param name="names"></param>
         private void InvokeEvent([CallerMemberName] string names = null)
         {
-            
+
             AudioStateChanged?.Invoke(this, names);
         }
+        /// <summary>
+        /// 对应
+        /// </summary>
+        /// <param name="args"></param>
 
-
-        private async Task InvokePositionChangedAsync()
+        private void InvokePositionChanged(long args)
         {
-            while (true)
-            {
-                await Task.Delay(500);
-                if (this.Paused) continue;
-                this.InvokeEvent(nameof(Position));
-            }
+
+            this.InvokeEvent(nameof(Position));
+
+        }
+
+        public void Dispose()
+        {
+            _positionSubscribe?.Dispose();
         }
     }
 }
