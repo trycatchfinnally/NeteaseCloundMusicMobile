@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace NeteaseCloundMusicMobile.Client.Shared
 
 
 
-   
+
         private bool _loginModalShow = false;
         private Quickview _userQuickview;
         private readonly LoginForm _loginForm = new LoginForm();
@@ -57,16 +58,19 @@ namespace NeteaseCloundMusicMobile.Client.Shared
             return provider.MarkUserAsLoggedOutAsync();
         }
 
-           
 
 
+        private void ShowLoginModal()
+        {
+            this._loginModalShow = true;
+        }
 
         private void ApiAuthenticationStateProvider_AuthenticationStateChanged(Task<Microsoft.AspNetCore.Components.Authorization.AuthenticationState> task)
         {
-            _ = FetchUserListAsync().ContinueWith(x => StateHasChanged());
+            FetchUserListAsync().ToObservable().Subscribe();
         }
 
-          
+
         private async Task FetchUserListAsync()
         {
             var state = await ApiAuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -76,8 +80,10 @@ namespace NeteaseCloundMusicMobile.Client.Shared
                 this._userPlaylist = temp.playlist;
             }
             else this._userPlaylist = Array.Empty<Playlist>();
+
+            StateHasChanged();
         }
-       
+
         protected override Task OnInitializedAsync()
         {
             this.ApiAuthenticationStateProvider.AuthenticationStateChanged += ApiAuthenticationStateProvider_AuthenticationStateChanged;

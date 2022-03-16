@@ -195,6 +195,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         }
         private async Task LikeOrNotAsync(SongsItem item)
         {
+            
             item.liked = await this.LikedProgressService.LikedOrNotAsync(item.id, !item.liked, CanLikedMediaType.Music) ? !item.liked : item.liked;
         }
         protected override Task OnInitializedAsync()

@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -36,7 +38,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             await InitWhenTrackChangedAsync();
             await base.OnInitializedAsync();
         }
-       
+
 
 
         private async Task InitWhenTrackChangedAsync()
@@ -73,7 +75,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             {
 
                 if (TimeSpan.TryParseExact(input, @"m\:s\.fff", CultureInfo.InvariantCulture, out var ts)) return ts;
-                if (TimeSpan.TryParseExact(input, @"m\:s\.ff", CultureInfo.InvariantCulture, out   ts)) return ts;
+                if (TimeSpan.TryParseExact(input, @"m\:s\.ff", CultureInfo.InvariantCulture, out ts)) return ts;
                 TimeSpan.TryParseExact(input, @"m\:s", CultureInfo.InvariantCulture, out ts); return ts;
             }
             const string timeRegex = @"\[([0-9])+[0-9]:[0-5][0-9](\.([0-9])+)*\]";
@@ -84,9 +86,32 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                   .Select(x => x.Value[1..^1])//去除两边[和]号
                   .Select(x => KeyValuePair.Create(ParseTimeSpan(x), content));
         }
-        private async void AudioPlayService_AudioStateChanged(object sender, string e)
+        private void AudioPlayService_AudioStateChanged(object sender, string e)
         {
 
+            using var dispose = OnAudioPlayServiceAudioStateChangedAsync(e).ToObservable()
+                   .Subscribe();
+        }
+        public Task PlayAsync(Models.NewSongApiResultItem item)
+        {
+
+
+            var temp = new SimplePlayableItem
+            {
+                Id = item.id,
+                Title = item.name,
+                Artists = item.artists,
+                Album = item.album,
+                MvId = item.mvid,
+                Duration = item.duration
+
+            };
+
+            return this.PlayControlFlowService.Add2PlaySequenceAsync(temp);
+        }
+
+        private async Task OnAudioPlayServiceAudioStateChangedAsync(string e)
+        {
             switch (e)
             {
                 case nameof(AudioPlayService.Pause):
@@ -102,23 +127,6 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                     }
                     break;
             }
-        }
-        public Task PlayAsync(Models.NewSongApiResultItem item)
-        {
-
-
-            var temp = new SimplePlayableItem
-            {
-                Id = item.id,
-                Title = item.name,
-                Artists = item.artists,
-                Album = item.album,
-                MvId = item.mvid,
-                Duration=item.duration
-
-            };
-
-            return this.PlayControlFlowService.Add2PlaySequenceAsync(temp);
         }
         private async Task LikeOrNotAsync()
         {

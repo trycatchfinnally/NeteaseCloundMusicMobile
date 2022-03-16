@@ -26,7 +26,9 @@ namespace NeteaseCloundMusicMobile.Client.Components
         [Inject]
         private IJSRuntime JS { get; set; }
 
-        protected override Task OnParametersSetAsync()
+       
+
+        protected override Task OnInitializedAsync()
         {
             this.AudioPlayService.AudioStateChanged += AudioPlayService_AudioStateChanged;
            
@@ -35,6 +37,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
 
         private async Task HideOrShowAsync()
         {
+            
             if (_openProgressing) return;
             _openProgressing = true;
             await JS.InvokeVoidAsync(_opend ? "hideBottom" : "showBottom", _layoutRef);

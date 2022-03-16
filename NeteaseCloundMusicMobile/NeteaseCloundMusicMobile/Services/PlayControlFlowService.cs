@@ -4,8 +4,12 @@ using OneOf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace NeteaseCloundMusicMobile.Client.Services
 {
@@ -111,6 +115,8 @@ namespace NeteaseCloundMusicMobile.Client.Services
 
         private IPlayMode _playMode = s_support[0];
         private bool m_Loading = false;//用来标识是否加载中
+        private readonly ILogger<PlayControlFlowService> _logger;
+        private readonly IDisposable _positionChangedSubscriber;
         private readonly AudioPlayService _audioPlayService;
         private readonly IHttpRequestService _httpRequestService;
         private readonly ToastService _toastService;
@@ -159,36 +165,42 @@ namespace NeteaseCloundMusicMobile.Client.Services
                 m_Loading = false;
             }
         }
-        private async void AudioPlayService_AudioStateChanged(object sender, string e)
+
+
+
+        private async Task PositionEndedNextAsync()
         {
-
-            switch (e)
+            if (m_Loading) return;//加载完了自己会走下一个流程
+            var bNext = await this.NextAsync();
+            var maxCount = 0;
+            while (!bNext && maxCount++ < this._tracksCollection.Count)
             {
+                bNext = await this.NextAsync();
 
-                case nameof(AudioPlayService.Position):
-                    if (Math.Abs((this._audioPlayService.Position - this._audioPlayService.Duration).TotalSeconds) <= 1)
-                    {
-                        if (m_Loading) return;//加载完了自己会走下一个流程
-                        var bNext = await this.NextAsync();
-                        var maxCount = 0;
-                        while (!bNext && maxCount++ < this._tracksCollection.Count)
-                        {
-                            bNext = await this.NextAsync();
-                        }
-                    }
-                    break;
             }
         }
         public PlayControlFlowService(AudioPlayService audioPlayService,
             IHttpRequestService httpRequestService,
-            ToastService toastService)
+            ToastService toastService, ILogger<PlayControlFlowService> logger)
         {
             _audioPlayService = audioPlayService;
             this._httpRequestService = httpRequestService;
             this._toastService = toastService;
+            _logger = logger;
 
 
-            this._audioPlayService.AudioStateChanged += AudioPlayService_AudioStateChanged;
+            this._positionChangedSubscriber =
+                Observable
+                    .FromEventPattern<string>(x => audioPlayService.AudioStateChanged += x,
+                        x => audioPlayService.AudioStateChanged -= x)
+                    .Where(x => x.EventArgs == nameof(AudioPlayService.Position))
+                    .Select(x => x.Sender as AudioPlayService)
+                    .Where(x => Math.Abs((x.Position - x.Duration).TotalSeconds) <= 1)
+                    .Subscribe(x =>
+                    {
+                        using (PositionEndedNextAsync().ToObservable().Subscribe()) {}
+                    });
+
 
         }
 
@@ -251,6 +263,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
         public Task<bool> PrevAsync() => PrevImplAsync(null);
         private async Task<bool> NextImplAsync(int? currentIndex)
         {
+            this._logger.LogInformation($"调用NextImplAsync，参数：【{currentIndex}】,播放模式：【{_playMode.Name}】");
             if (this._tracksCollection.Count == 0) return false;
             currentIndex ??= this._tracksCollection.IndexOf(CurrentPlayableItem);
             var index = this._playMode.OnNext(currentIndex.Value, this._tracksCollection.Count);
@@ -283,7 +296,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
 
         public void Dispose()
         {
-            this._audioPlayService.AudioStateChanged -= AudioPlayService_AudioStateChanged;
+            _positionChangedSubscriber?.Dispose();
         }
     }
 

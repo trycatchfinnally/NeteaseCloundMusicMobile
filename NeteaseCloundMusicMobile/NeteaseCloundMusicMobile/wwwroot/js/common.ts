@@ -10,7 +10,7 @@ class AudioPlayer {
         this._audioElement.volume = value / 100;
     }
 
-    ///总的时长，以秒为单位
+    /*总的时长，以秒为单位*/
     public get duration(): number {
         if (
             this._audioElement.duration == null ||
@@ -38,12 +38,7 @@ class AudioPlayer {
     constructor() {
         this.initComponent();
     }
-    private checkAcess() {
-        if (!this._audioElement)
-            throw new Error(
-                "使用此服务之前，你必须先调用init为其指定一个合法的audio对象"
-            );
-    }
+
     private initComponent() {
         this._audioElement = document.querySelector("#mainAudio") as HTMLAudioElement;
         this._audioElement.src = '';
@@ -89,6 +84,9 @@ function delay(ms: number) {
     });
 }
 function hideBottom(rootElement: HTMLElement) {
+    const loadingSymbolCssName = "js-loading";
+    if (rootElement.classList.contains(loadingSymbolCssName)) return false;
+    rootElement.classList.add(loadingSymbolCssName);
     const height = rootElement.clientHeight;
     const symbolElement = rootElement.querySelector(".visible-symbol") as HTMLElement;
 
@@ -101,15 +99,19 @@ function hideBottom(rootElement: HTMLElement) {
         bottomArray.push(bottom);
     }
     bottomArray.push(-totalPiex);
-    
+
     rxjs.from(bottomArray.map(x => rxjs.of(x).pipe(rxjs.operators.delay(20)))).pipe(rxjs.operators.concatAll())
         .subscribe(x => {
             rootElement.style.bottom = x + "px";
-           
-        });
+            
+        },null, () => rootElement.classList.remove(loadingSymbolCssName));
     return true;
 }
 function showBottom(rootElement: HTMLElement) {
+    const loadingSymbolCssName = "js-loading";
+    if (rootElement.classList.contains(loadingSymbolCssName)) return false;
+    rootElement.classList.add(loadingSymbolCssName);
+
     const height = rootElement.clientHeight;
     const symbolElement = rootElement.querySelector(".visible-symbol") as HTMLElement;
     let bottom = 0;
@@ -128,8 +130,8 @@ function showBottom(rootElement: HTMLElement) {
     rxjs.from(bottomArray.map(x => rxjs.of(x).pipe(rxjs.operators.delay(20)))).pipe(rxjs.operators.concatAll())
         .subscribe(x => {
             rootElement.style.bottom = x + "px";
-
-        });
+            
+        },null, () => rootElement.classList.remove(loadingSymbolCssName));
     return true;
 }
 
@@ -189,8 +191,8 @@ function copy(txt: string) {
         aux.select();
         document.execCommand("copy");
         document.body.removeChild(aux);
- 
-    
+
+
         return true;
     }
     return false;

@@ -7,7 +7,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 <div>
     <div class="@B.P2 @B.BackgroundDark @B.TextWhite">
-        <Columns IsMobile="true" IsVcentered="true" Gap="@Gap.Gap1">
+        <Columns IsMobile="true" IsVcentered="true" Gap="@Gap.Gap1" class="p-2">
             <BulmaRazor.Components.Column IsNarrow="true">
                 <a class="js-user-quick-show" @onclick="ShowUserQuickView">  <Icon IconClass="fa fa-bars"></Icon></a>
             </BulmaRazor.Components.Column>
@@ -56,7 +56,7 @@
                                 <Columns IsMobile="true" Gap="@Gap.Gap1">
 
                                     <Column> <a>注册</a></Column>
-                                    <Column>   <a @onclick="()=>_loginModalShow=true">登录</a></Column>
+                                    <Column>   <a @onclick="ShowLoginModal">登录</a></Column>
                                 </Columns>
                             </NotAuthorized>
 
