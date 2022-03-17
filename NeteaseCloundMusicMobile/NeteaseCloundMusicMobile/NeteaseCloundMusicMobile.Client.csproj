@@ -54,5 +54,7 @@
     <DefineConstants></DefineConstants>
   </PropertyGroup>
 
- 
+	<PropertyGroup>
+		<RunAOTCompilation>true</RunAOTCompilation>
+	</PropertyGroup>
 </Project>

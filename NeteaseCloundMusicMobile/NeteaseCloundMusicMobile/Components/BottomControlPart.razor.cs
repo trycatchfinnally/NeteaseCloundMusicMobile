@@ -43,7 +43,16 @@ namespace NeteaseCloundMusicMobile.Client.Components
                                     || x == nameof(AudioPlayService.PlayAsync) 
                                     || x == nameof(AudioPlayService.Position))
                         .Where(x => _opend)//当关闭后，不予执行
-                        .Subscribe(_ => StateHasChanged());
+                        .Subscribe(x =>
+                        {
+                            if (x == nameof(AudioPlayService.PlayAsync))
+                            {
+                                //默认关闭，减少内存消耗
+                                _opend = false;
+                            }
+                            else if (x == nameof(AudioPlayService.Paused)) _opend = true;
+                            StateHasChanged();
+                        });
             return base.OnInitializedAsync();
         }
 

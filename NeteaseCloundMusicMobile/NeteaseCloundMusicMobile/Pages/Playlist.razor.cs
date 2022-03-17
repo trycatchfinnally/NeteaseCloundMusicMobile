@@ -23,7 +23,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         private Components.PlaylistTable _playlistTable;
         private SubScribersQuery _subScribersQuery;
         private PlaylistSubscribersApiResultModel _subscribers;
-
+        
         private IReadOnlyList<TracksItem> _displayTracks = Array.Empty<TracksItem>();
 
         [Parameter]
@@ -33,6 +33,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         protected override async Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
+            
             var temp = await this.HttpRequestService.MakePostRequestAsync<PlaylistDetailApiResultModel>("/playlist/detail", new { id = Id });
             this._playlist = temp.playlist;
             if (this._playlist == null)
@@ -91,11 +92,10 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             return _playlistTable.PlayAllAsync();
         }
 
-
-
-
-
-
-
+        protected override void OnAfterRender(bool firstRender)
+        {
+            base.OnAfterRender(firstRender);
+            
+        }
     }
 }

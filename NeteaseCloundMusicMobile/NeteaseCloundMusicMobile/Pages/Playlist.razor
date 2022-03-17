@@ -1,15 +1,16 @@
 ﻿@page "/playlist/{Id:long}"
+@using NeteaseCloundMusicMobile.Client.Utitys
 @inherits RazorComponentBase
 
 @if (_playlist != null)
 {
     <div class="@B.M4">
-        <Columns>
-            <Column IsNarrow="true" class="@B.HiddenMobile">
-                <img src="@_playlist.coverImgUrl" style="height:12em" />
-            </Column>
-            <Column>
-                <div>
+        
+        <div class="columns">
+            <div class="column is-hidden-mobile is-narrow"> <img src="@_playlist.coverImgUrl" style="height:12em" /></div>
+            <div class="column">
+                
+                 <div>
                     <Level class="@B.MB2" IsMobile="true">
                         <LevelLeft>
                             <Tag IsLight Color="Color.Danger">歌单</Tag>
@@ -44,7 +45,7 @@
                         </div>
                     </div>
                     <div class="@B.Join(B.MB2,B.Flex,B.AlignItemsCenter,B.FlexWrapWrap)  ">
-                        <Button class="@B.Join(B.MR4,B.MB4)" IsSmall="true" Color="Color.Danger" @onclick="PlayAllAsync">
+                        <Button class="@B.Join(B.MR4,B.MB4)" IsSmall="true" Color="Color.Danger" @onclick="EventUtil.AsNonRenderingEventHandler(PlayAllAsync)">
                             <Icon IconClass="fa fa-play-circle-o"></Icon>
                             <span>播放全部</span>
                         </Button>
@@ -77,9 +78,8 @@
 
                     </div>
                 </div>
-            </Column>
-        </Columns>
-
+            </div>
+        </div>
         <div class="@B.MT6">
 
             <Tabs>

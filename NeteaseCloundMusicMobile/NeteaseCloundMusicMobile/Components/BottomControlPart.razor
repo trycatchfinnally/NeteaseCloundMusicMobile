@@ -1,40 +1,38 @@
 ﻿@inherits Shared.RazorComponentBase
 @implements IDisposable
-<div class="@B.Join("fixed-bottom",B.BackgroundDark,_opend?"show-progress":"hide-progress")" >
+<div class="@B.Join("fixed-bottom",B.BackgroundDark,_opend?"show-progress":"hide-progress")">
 
-    <div class="position-absolute rounded-circle text-center text-white visible-symbol @B.BackgroundDark " @onclick="HideOrShowAsync"  @onclick:stopPropagation>
+    <div class="position-absolute rounded-circle text-center text-white visible-symbol @B.BackgroundDark " @onclick="HideOrShowAsync" @onclick:stopPropagation>
         <Icon IconClass="@(_opend?"fa fa-chevron-down":"fa fa-chevron-up")"></Icon>
     </div>
-    <Columns IsVcentered="true" class="@B.M4">
-        <Column IsNarrowTablet="true">
-            <Columns IsMobile="true" IsVcentered="true" class="@B.MR4">
-                <Column Size="Size.OneThird" class="@B.TextCentered">
+
+    <div class="columns m-4 is-vcentered">
+        <div class="column is-narrow-tablet">
+            <div class="columns mr-4 is-mobile is-vcentered">
+                <div class="column has-text-centered is-one-third">
                     <div @onclick="PlayControlFlowService.PrevAsync" @onclick:stopPropagation>
                         <Button IsRounded="true" class="circle-button">
                             <Icon IconClass="fa fa-step-backward"></Icon>
                         </Button>
                     </div>
-                </Column>
-                <Column Size="Size.OneThird" class="@B.TextCentered">
+                </div>
+                <div class="column has-text-centered is-one-third">
                     <div @onclick="OnPlayOrResumeClickAsync" @onclick:stopPropagation>
-
-
                         <Button IsRounded class="circle-button ">
-
                             <Icon IconClass="@(AudioPlayService.Paused?"fa fa-play":"fa fa-pause")"></Icon>
                         </Button>
                     </div>
-                </Column>
-                <Column Size="Size.OneThird" class="@B.TextCentered">
+                </div>
+                <div class="column has-text-centered is-one-third">
                     <div @onclick="PlayControlFlowService.NextAsync" @onclick:stopPropagation>
                         <Button IsRounded class="circle-button">
                             <Icon IconClass="fa fa-step-forward"></Icon>
                         </Button>
                     </div>
-                </Column>
-            </Columns>
-        </Column>
-        <Column>
+                </div>
+            </div>
+        </div>
+        <div class="column">
             <Columns Gap="@Gap.Gap0" IsVcentered="true" IsMobile="true">
                 <Column IsNarrow="true" class="@B.Join(B.PR4)">
                     <Image Size="Size.Square48" IsFullwidth="true">
@@ -136,15 +134,15 @@
                             max="100"></Slider>
                 </Column>
             </Columns>
-        </Column>
-    </Columns>
+        </div>
+    </div>
 </div>
 <Quickview @ref="_tracksQuickView" IsLeft="false" TriggerSelector=".js-openplaylist-a">
     <HeaderSlot>
         播放列表
     </HeaderSlot>
     <BodySlot>
-        <div class="@B.M2 text-small"  @ref ="_trackQuickBodyRoot">
+        <div class="@B.M2 text-small" @ref="_trackQuickBodyRoot">
             <div class="position-fixed w-100  tracks-info-title ">
                 <Divider></Divider>
                 <div class="p-2">
@@ -179,11 +177,11 @@
 
                         </LevelRight>
                     </Level>
-                   
+
                 </div>
                 <Divider></Divider>
             </div>
-            <div  >
+            <div>
                 <DataTable Data="PlayControlFlowService.Tracks" IsNarrow="true" TItem="object"
                            IsHoverable
                            IsBordered="false" IsStriped IsFullwidth>
