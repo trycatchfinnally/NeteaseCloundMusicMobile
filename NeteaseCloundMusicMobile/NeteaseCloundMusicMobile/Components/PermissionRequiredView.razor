@@ -1,5 +1,13 @@
-﻿<div></div>
+﻿
+ @if (Href == null)
+ {
+     <div @onclick="OnClickAsync"  @onclick:stopPropagation>
+    
+         @ChildContent
+     </div>
 
-@code {
-
-}
+ }
+ else
+ {
+     <a href="javascript:;" @onclick="OnHrefClickAsync" @onclick:stopPropagation>@ChildContent</a>
+ }

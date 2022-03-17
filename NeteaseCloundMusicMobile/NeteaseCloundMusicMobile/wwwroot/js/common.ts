@@ -83,6 +83,10 @@ function delay(ms: number) {
         }, ms);
     });
 }
+/**
+ * 已废弃，改用css实现
+ * @param rootElement
+ */
 function hideBottom(rootElement: HTMLElement) {
     const loadingSymbolCssName = "js-loading";
     if (rootElement.classList.contains(loadingSymbolCssName)) return false;
@@ -107,6 +111,11 @@ function hideBottom(rootElement: HTMLElement) {
         },null, () => rootElement.classList.remove(loadingSymbolCssName));
     return true;
 }
+
+/**
+ * 已废弃，改用css实现
+ * @param rootElement
+ */
 function showBottom(rootElement: HTMLElement) {
     const loadingSymbolCssName = "js-loading";
     if (rootElement.classList.contains(loadingSymbolCssName)) return false;

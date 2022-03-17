@@ -29,7 +29,7 @@ namespace NeteaseCloundMusicMobile.Client.Shared
         private readonly LoginForm _loginForm = new LoginForm();
         private IReadOnlyList<Playlist> _userPlaylist = Array.Empty<Playlist>();
 
-
+        private Action _showLoginModalAction;
         private void ShowUserQuickView() => _userQuickview.Show();
         private async Task LoginAsync()
         {
@@ -63,6 +63,7 @@ namespace NeteaseCloundMusicMobile.Client.Shared
         private void ShowLoginModal()
         {
             this._loginModalShow = true;
+            StateHasChanged();
         }
 
         private void ApiAuthenticationStateProvider_AuthenticationStateChanged(Task<Microsoft.AspNetCore.Components.Authorization.AuthenticationState> task)
@@ -87,6 +88,7 @@ namespace NeteaseCloundMusicMobile.Client.Shared
         protected override Task OnInitializedAsync()
         {
             this.ApiAuthenticationStateProvider.AuthenticationStateChanged += ApiAuthenticationStateProvider_AuthenticationStateChanged;
+            _showLoginModalAction = ShowLoginModal;
             return FetchUserListAsync();
         }
         public void Dispose()

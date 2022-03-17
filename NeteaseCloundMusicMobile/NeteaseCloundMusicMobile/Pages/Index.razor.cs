@@ -8,13 +8,16 @@ using NeteaseCloundMusicMobile.Client.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace NeteaseCloundMusicMobile.Client.Pages
 {
-    public partial class Index
+    public partial class Index : IDisposable
     {
         private CarouselOptions _carouselOptions = new CarouselOptions
         {
@@ -31,6 +34,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         };
 
         private bool _pageLoading = true;
+
         private IReadOnlyList<Banner> _displayBanners;
         private IReadOnlyList<RecommendPlaylist> _recommendPlaylist;
         private IReadOnlyList<PrivateContentItem> _privateContentItems;
@@ -38,9 +42,10 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         private IReadOnlyList<MvFirstApiResultItem> _mvFirstApiResultItems;
         private IReadOnlyList<DjProgramApiResultItem> _djProgramApiResultItems;
 
+        [Inject]
+        private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
 
-       
- 
+
         private async Task FetchCarouseAsync()
         {
             var bannerModel = await HttpRequestService.MakePostRequestAsync<BannerApiResult>("/banner", new { type = 0 }, false);
@@ -54,6 +59,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         {
             var rootModel = await HttpRequestService.MakePostRequestAsync<EvenydayRecommendPlaylistApiResult>("/recommend/resource");
             this._recommendPlaylist = rootModel.recommend;
+            StateHasChanged();
         }
 
         private async Task FetchPrivateContentAsync()
@@ -87,8 +93,19 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 
         }
 
+        private async Task PersonalFmClickAsync()
+        {
 
-        public async Task PlayAsync(Models.NewSongApiResultItem item)
+          var json=await  HttpRequestService.MakePostRequestAsync("/personal_fm");
+          Console.WriteLine(json);
+        }
+        private void AuthenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> task)
+        {
+            using (FetchEverydayRecommendPlaylistAsync().ToObservable()
+
+                       .Subscribe()) { }
+        }
+        private async Task PlayAsync(Models.NewSongApiResultItem item)
         {
 
 
@@ -99,14 +116,17 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                 Artists = item.artists,
                 Album = item.album,
                 MvId = item.mvid,
-                Duration=item.duration
+                Duration = item.duration
 
             };
 
             await this.PlayControlFlowService.Add2PlaySequenceAsync(temp);
         }
+
+        
         protected override async Task OnInitializedAsync()
         {
+
             await base.OnInitializedAsync();
             var task1 = FetchCarouseAsync();
             var task2 = FetchEverydayRecommendPlaylistAsync();
@@ -115,11 +135,17 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             var task5 = FetchMvFirstAsync();
             var task6 = FetchFirstDjProgramAsync();
             await Task.WhenAll(task1, task2, task3, task4, task5, task6);
+
+            this.AuthenticationStateProvider.AuthenticationStateChanged += AuthenticationStateProvider_AuthenticationStateChanged;
             _pageLoading = false;
+           
         }
 
+      
 
-         
-
+        public void Dispose()
+        {
+            this.AuthenticationStateProvider.AuthenticationStateChanged -= AuthenticationStateProvider_AuthenticationStateChanged;
+        }
     }
 }

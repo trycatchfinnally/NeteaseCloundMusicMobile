@@ -121,7 +121,10 @@ namespace NeteaseCloundMusicMobile.Client.Services
         private readonly IHttpRequestService _httpRequestService;
         private readonly ToastService _toastService;
         private readonly List<PlayableItemBase> _tracksCollection = new List<PlayableItemBase>();
-
+        /// <summary>
+        /// 当成功切换到下一首的时候执行
+        /// </summary>
+        public event EventHandler SuccessfulNextExecute;
 
         /// <summary>
         /// 表示支持的播放循环模式
@@ -198,7 +201,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
                     .Where(x => Math.Abs((x.Position - x.Duration).TotalSeconds) <= 1)
                     .Subscribe(x =>
                     {
-                        using (PositionEndedNextAsync().ToObservable().Subscribe()) {}
+                        using (PositionEndedNextAsync().ToObservable().Subscribe()) { }
                     });
 
 
@@ -259,16 +262,21 @@ namespace NeteaseCloundMusicMobile.Client.Services
         }
 
 
-        public Task<bool> NextAsync() => NextImplAsync(null);
+        public async Task<bool> NextAsync()
+        {
+            var temp = await NextImplAsync(null).ConfigureAwait(false);
+            if (temp && SuccessfulNextExecute != null) SuccessfulNextExecute.Invoke(this, EventArgs.Empty);
+            return temp;
+        }
         public Task<bool> PrevAsync() => PrevImplAsync(null);
         private async Task<bool> NextImplAsync(int? currentIndex)
         {
-            this._logger.LogInformation($"调用NextImplAsync，参数：【{currentIndex}】,播放模式：【{_playMode.Name}】");
+
             if (this._tracksCollection.Count == 0) return false;
             currentIndex ??= this._tracksCollection.IndexOf(CurrentPlayableItem);
             var index = this._playMode.OnNext(currentIndex.Value, this._tracksCollection.Count);
             if (!index.HasValue) return false;
-            var temp = await this.SafePlayAsync(index.Value);
+            var temp = await this.SafePlayAsync(index.Value).ConfigureAwait(false);
             if (temp == PlayStatus.AccessDenied)
             {
                 return await NextImplAsync(index);
@@ -284,7 +292,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
             currentIndex ??= this._tracksCollection.IndexOf(CurrentPlayableItem);
             var index = this._playMode.OnPrev(currentIndex.Value, this._tracksCollection.Count);
             if (!index.HasValue) return false;
-            var temp = await this.SafePlayAsync(index.Value);
+            var temp = await this.SafePlayAsync(index.Value).ConfigureAwait(false);
             if (temp == PlayStatus.AccessDenied)
             {
                 return await PrevImplAsync(index);

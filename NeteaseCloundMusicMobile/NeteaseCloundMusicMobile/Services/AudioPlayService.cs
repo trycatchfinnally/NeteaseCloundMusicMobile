@@ -5,6 +5,7 @@ using NeteaseCloundMusicMobile.Client.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -17,9 +18,9 @@ namespace NeteaseCloundMusicMobile.Client.Services
     public class AudioPlayService : IDisposable
     {
         private readonly IJSInProcessRuntime _jSRuntime;
-        
+
         private IDisposable _positionSubscribe;
-        private bool _postionChangedStart = false;
+
         public event EventHandler<string> AudioStateChanged;
         /// <summary>
         /// 当前播放的项
@@ -88,10 +89,10 @@ namespace NeteaseCloundMusicMobile.Client.Services
         /// 表示是否暂停或者停止状态
         /// </summary>
         public bool Paused => this.GetPropertyFromJavaScript<bool>("paused");
-        public AudioPlayService(IJSRuntime jSRuntime )
+        public AudioPlayService(IJSRuntime jSRuntime)
         {
             this._jSRuntime = jSRuntime as IJSInProcessRuntime;
-           
+
         }
         /// <summary>
         /// 播放
@@ -110,15 +111,13 @@ namespace NeteaseCloundMusicMobile.Client.Services
             if (this.CurrentPlayableItem == null) return;
             await this._jSRuntime.InvokeVoidAsync("audioPlayer.play", item?.Url ?? string.Empty);
             InvokeEvent();
-            if (!this._postionChangedStart)
-            {
-                this._postionChangedStart = true;
-                
-                if (this._positionSubscribe == null)
-                    this._positionSubscribe = Observable.Interval(TimeSpan.FromSeconds(0.5))
-                         .Subscribe(InvokePositionChanged);
 
-            }
+
+            if (this._positionSubscribe == null)
+                this._positionSubscribe = Observable.Interval(TimeSpan.FromSeconds(0.5),ThreadPoolScheduler.Instance)
+                     .Subscribe(InvokePositionChanged);
+
+
         }
         /// <summary>
         /// 暂停播放
@@ -147,8 +146,12 @@ namespace NeteaseCloundMusicMobile.Client.Services
         /// <param name="names"></param>
         private void InvokeEvent([CallerMemberName] string names = null)
         {
-
-            AudioStateChanged?.Invoke(this, names);
+            if (AudioStateChanged!=null)
+            {
+                
+                AudioStateChanged.Invoke(this, names);
+            }
+           
         }
         /// <summary>
         /// 对应

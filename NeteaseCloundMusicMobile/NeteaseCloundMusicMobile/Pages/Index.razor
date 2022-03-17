@@ -30,19 +30,22 @@
         <Columns IsMobile="true" IsGapless="true">
             <Column>
                 <div class="cursor-pointer">
-                    <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
-                        <Column IsNarrow="true">
-                            <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter @B.JustifyContentCenter circle-button text-2em">
-                                <div>
-                                    <Icon IconClass="iconfont icon-shouyinji-xian large-fontsize"></Icon>
+                    <NeteaseCloundMusicMobile.Client.Components.PermissionRequiredView OnClick="PersonalFmClickAsync">
+
+                        <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
+                            <Column IsNarrow="true">
+                                <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter @B.JustifyContentCenter circle-button text-2em">
+                                    <div>
+                                        <Icon IconClass="iconfont icon-shouyinji-xian large-fontsize"></Icon>
+                                    </div>
                                 </div>
-                            </div>
-                        </Column>
-                        <Column>
-                            <div class="@B.TextLeftTablet @B.TextCenteredMobile @B.TextDark @B.TextWeightBold ">私人FM</div>
-                            <div class="@B.HiddenMobile">享受你的音乐时光</div>
-                        </Column>
-                    </Columns>
+                            </Column>
+                            <Column>
+                                <div class="@B.TextLeftTablet @B.TextCenteredMobile @B.TextDark @B.TextWeightBold ">私人FM</div>
+                                <div class="@B.HiddenMobile">享受你的音乐时光</div>
+                            </Column>
+                        </Columns>
+                    </NeteaseCloundMusicMobile.Client.Components.PermissionRequiredView>
                 </div>
             </Column>
             <Column IsNarrow="true">
@@ -56,7 +59,8 @@
         <Columns IsMobile="true" IsGapless="true">
 
             <Column>
-                <a href="/everydayrecommend">
+
+                <NeteaseCloundMusicMobile.Client.Components.PermissionRequiredView Href="/everydayrecommend">
                     <Columns IsGapless="true" IsVcentered="true" IsCentered="true">
                         <Column IsNarrow="true">
                             <div class="@B.TextDangerDark @B.M2  @B.FlexDirectionColumn @B.Flex @B.AlignItemsCenter @B.JustifyContentCenter circle-button text-2em">
@@ -68,7 +72,8 @@
                             <div class="@B.HiddenMobile">根据你的口味生成</div>
                         </Column>
                     </Columns>
-                </a>
+                </NeteaseCloundMusicMobile.Client.Components.PermissionRequiredView>
+
             </Column>
             <Column IsNarrow="true">
                 <Divider IsVertical="true" class="h-100"></Divider>
@@ -108,7 +113,7 @@
             </IconText>
         </LevelLeft>
         <LevelRight>
-            <Button IsLight="true" Color="Color.Ghost"  href="/playlist/list">更多&lt;</Button>
+            <Button IsLight="true" Color="Color.Ghost" href="/playlist/list">更多&lt;</Button>
         </LevelRight>
     </Level>
 
@@ -116,9 +121,9 @@
         @foreach (var item in _recommendPlaylist)
         {
             <div class=" col-6 col-md-4 col-lg-3 col-xl-2 p-2">
-                <a href="/playlist/@item.id"  >
+                <a href="/playlist/@item.id">
                     <NeteaseCloundMusicMobile.Client.Components.PlayListCardItem PicUrl="@item.picUrl" CountIconClass="fa fa-headphones"
-                                                                                 Count="@item.playcount" FooterTitle="@item.name" FooterDescription="@item.copywriter">
+                                                                         Count="@item.playcount" FooterTitle="@item.name" FooterDescription="@item.copywriter">
 
                     </NeteaseCloundMusicMobile.Client.Components.PlayListCardItem>
                 </a>
@@ -231,10 +236,10 @@
 
 
                     <NeteaseCloundMusicMobile.Client.Components.PlayListCardItem Count="@item.playCount"
-                                                                                 PicUrl="@item.cover"
-                                                                                 FooterTitle="@item.name"
-                                                                                 FooterDescription="@item.artistName"
-                                                                                 CountIconClass="fa fa-video-camera">
+                                                                         PicUrl="@item.cover"
+                                                                         FooterTitle="@item.name"
+                                                                         FooterDescription="@item.artistName"
+                                                                         CountIconClass="fa fa-video-camera">
 
                     </NeteaseCloundMusicMobile.Client.Components.PlayListCardItem>
                 </a>
