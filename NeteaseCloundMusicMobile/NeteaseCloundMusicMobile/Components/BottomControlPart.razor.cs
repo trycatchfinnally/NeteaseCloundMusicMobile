@@ -21,7 +21,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
 
         //private ElementReference _layoutRef;
         private ElementReference _trackQuickBodyRoot;
-        private bool _opend = true;
+        private bool _opend = false;
         //private bool _openProgressing = false;
         private IDisposable _audioStateChangedSubscriber;
         private AudioPlayService AudioPlayService => PlayControlFlowService.AudioPlayService;
@@ -38,27 +38,18 @@ namespace NeteaseCloundMusicMobile.Client.Components
                     Observable.FromEventPattern<string>(ev => this.AudioPlayService.AudioStateChanged += ev,
                             ev => this.AudioPlayService.AudioStateChanged -= ev)
                         .Select(x => x.EventArgs)
-                        .Where(x => 
-                                       x == nameof(AudioPlayService.Pause) 
-                                    || x == nameof(AudioPlayService.PlayAsync) 
+                        .Where(x =>
+                                       x == nameof(AudioPlayService.Pause)
+                                    || x == nameof(AudioPlayService.PlayAsync)
                                     || x == nameof(AudioPlayService.Position))
                         .Where(x => _opend)//当关闭后，不予执行
-                        .Subscribe(x =>
-                        {
-                            if (x == nameof(AudioPlayService.PlayAsync))
-                            {
-                                //默认关闭，减少内存消耗
-                                _opend = false;
-                            }
-                            else if (x == nameof(AudioPlayService.Paused)) _opend = true;
-                            StateHasChanged();
-                        });
+                        .Subscribe(x => StateHasChanged());
             return base.OnInitializedAsync();
         }
 
-        private void OnPositionSliderValueChanged(double  value) =>
+        private void OnPositionSliderValueChanged(double value) =>
             AudioPlayService.Position = TimeSpan.FromSeconds(value);
-        private   Task HideOrShowAsync()
+        private Task HideOrShowAsync()
         {
             /*
             if (_openProgressing) return;
@@ -67,7 +58,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
             _openProgressing = false;
             */
             _opend = !_opend;
-            return  Task.CompletedTask;
+            return Task.CompletedTask;
         }
         private void AudioPlayService_AudioStateChanged(object sender, string e)
         {
@@ -104,7 +95,10 @@ namespace NeteaseCloundMusicMobile.Client.Components
             }
         }
 
-
+        private void SetVolumn(double value)
+        {
+            AudioPlayService.Volumn = value;
+        }
 
         private async Task ScrollToCurrentAsync()
         {

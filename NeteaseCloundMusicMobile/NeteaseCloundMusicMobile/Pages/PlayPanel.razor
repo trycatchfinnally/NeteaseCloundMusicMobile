@@ -1,9 +1,10 @@
 ﻿@page "/playpanel"
 @inherits Shared.RazorComponentBase
+@using NeteaseCloundMusicMobile.Client.Utitys
 @implements IDisposable
 @if (CurrentTrack != null)
 {
-    <div class="@B.M4">
+    <div class="m-4">
         <Columns>
             <Column IsNarrow="true">
                 <div>
@@ -100,10 +101,10 @@
                         </Columns>
                     </div>
                     <div class="w-100  text-overflow-ellipsis   @B.Join(B.MT4)">
-                        <ul class="lrc-panel" @onmouseover="()=>_ulPanelHover=true" @onmouseout="()=>_ulPanelHover=false">
+                        <ul class="lrc-panel" >
                             @foreach (var item in _lyricsKeyValuePair)
                             {
-                                <li data-position="@item.Key.TotalMilliseconds" @onclick="()=>LyricClick(item.Key)" class="cursor-pointer">@item.Value</li>
+                                <li data-position="@item.Key.TotalMilliseconds" onclick="audioPlayer.currentTime=@item.Key.TotalSeconds" class="cursor-pointer">@item.Value</li>
                             }
                         </ul>
                     </div>

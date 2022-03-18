@@ -63,6 +63,8 @@ namespace NeteaseCloundMusicMobile.Client.Components
             return this.PlayControlFlowService.AddRange2PlaySequenceAsync(rows.Select(StandardAdapter), clearCollection: true);
         }
 
+        
+
         private async Task JumpTheQueueAsync(SongsItem item)
         {
 
@@ -90,7 +92,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
             }
 
         }
-        private SimplePlayableItem StandardAdapter(SongsItem x)
+        private static SimplePlayableItem StandardAdapter(SongsItem x)
         {
             return new SimplePlayableItem
             {

@@ -1,18 +1,19 @@
 ﻿@using Newtonsoft.Json
+@using NeteaseCloundMusicMobile.Client.Utitys
 @inherits RazorComponentBase
 <div>
 
     <div class="@B.Join(B.Flex,B.AlignItemsCenter)">
         <div class="@B.Join(B.Flex,B.AlignItemsCenter,B.FlexGrow1,B.Fullwidth)">
-            <Button class="@B.Join(B.MR4,B.MB4)" IsSmall="true" Color="Color.Danger" @onclick="PlayAllAsync">
+            <Button class="@B.Join(B.MR4,B.MB4)" IsSmall="true" Color="Color.Danger" @onclick="EventUtil.AsNonRenderingEventHandler(PlayAllAsync)">
                 <Icon IconClass="fa fa-play-circle-o"></Icon>
                 <span>播放全部</span>
             </Button>
-            <Button class="@B.Join(B.MR4,B.MB4)" IsSmall="true" Color="Color.Success" @onclick="SkipTryAsync">
+            <Button class="@B.Join(B.MR4,B.MB4)" IsSmall="true" Color="Color.Success" @onclick="EventUtil.AsNonRenderingEventHandler(SkipTryAsync)">
                 <Icon IconClass="fa fa-handshake-o"></Icon>
                 <span>跳过试听</span>
             </Button>
-            <Button class="@B.Join(B.MR4,B.MB4)" IsSmall="true" Color="Color.Warning" @onclick="PlaySelectedAsync">
+            <Button class="@B.Join(B.MR4,B.MB4)" IsSmall="true" Color="Color.Warning" @onclick="EventUtil.AsNonRenderingEventHandler(PlaySelectedAsync)">
                 <Icon IconClass="iconfont icon-kongjian"></Icon>
                 <span>播放选中</span>
             </Button>

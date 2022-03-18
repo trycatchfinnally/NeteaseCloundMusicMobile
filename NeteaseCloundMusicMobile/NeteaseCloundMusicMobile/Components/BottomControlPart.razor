@@ -1,4 +1,5 @@
 ﻿@inherits Shared.RazorComponentBase
+@using NeteaseCloundMusicMobile.Client.Utitys
 @implements IDisposable
 <div class="@B.Join("fixed-bottom",B.BackgroundDark,_opend?"show-progress":"hide-progress")">
 
@@ -33,15 +34,16 @@
             </div>
         </div>
         <div class="column">
-            <Columns Gap="@Gap.Gap0" IsVcentered="true" IsMobile="true">
-                <Column IsNarrow="true" class="@B.Join(B.PR4)">
+
+            <div class="columns is-mobile is-vcentered is-variable is-0">
+                <div class="column pr-4 is-narrow">
                     <Image Size="Size.Square48" IsFullwidth="true">
                         <a @onclick="PlayAlbumClick">
                             <img src="@Nvl(AudioPlayService.CurrentPlayableItem?.Album?.picUrl,AudioPlayService.CurrentPlayableItem?.Album?.blurPicUrl,"asset/Vinyl_music_128px.png")" />
                         </a>
                     </Image>
-                </Column>
-                <Column class="@B.PR4">
+                </div>
+                <div class="column pr-4">
                     @if (AudioPlayService.CurrentPlayableItem != null)
                     {
 
@@ -61,22 +63,21 @@
                             }
                         </div>
                     }
-                    <Columns IsGapless="true">
-                        <Slider IsSmall="true" Value="@AudioPlayService.Position.TotalSeconds" class="@B.Join(B.MT0, B.MR2, B.MB2)"
+
+                    <div class="columns is-gapless">
+                        <Slider IsSmall="true" Value="@AudioPlayService.Position.TotalSeconds" class="mt-0 mr-2 mb-2"
                                 IsCircle="true"
                                 TValue="double"
                                 ValueChanged="OnPositionSliderValueChanged"
                                 max="@AudioPlayService.Duration.TotalSeconds"></Slider>
-                        <div class="@B.Join(B.HiddenMobile) ">
+                        <div class="is-hidden-mobile">
                             @(AudioPlayService.Position.ToString(@"mm\:ss") + "/" + AudioPlayService.Duration.ToString(@"mm\:ss"))
                         </div>
-                    </Columns>
-
-                </Column>
-
-                <Column IsNarrow="true" class="@B.Join(B.MR2,B.ML2,B.HiddenMobile)">
-                    <Columns IsVcentered="true" IsGapless="true" class="font-weight-light light-icons">
-                        <Column>
+                    </div>
+                </div>
+                <div class="column mr-2 ml-2 is-hidden-mobile is-narrow">
+                    <div class="columns font-weight-light light-icons is-gapless is-vcentered">
+                        <div class="column">
                             <a @onclick="OpenPlayList" class="js-openplaylist-a">
                                 <div class="position-relative">
                                     @if (PlayControlFlowService.Tracks.Count < 100)
@@ -91,19 +92,19 @@
                                 </div>
                                 <Icon IconClass="iconfont icon-list-01"></Icon>
                             </a>
-                        </Column>
-                        <Column>
+                        </div>
+                        <div class="column">
                             <a>
                                 <Icon IconClass="iconfont icon-folder-add"></Icon>
                             </a>
-                        </Column>
-                        <Column>
+                        </div>
+                        <div class="column">
                             <a data-tooltip="@PlayControlFlowService.PlayMode.Name" class="@B.TooltipArrow"
                                @onclick="PlayControlFlowService.ChangePlayModel" @onclick:stopPropagation>
                                 <Icon IconClass="@PlayControlFlowService.PlayMode.IconClass"></Icon>
                             </a>
-                        </Column>
-                        <Column>
+                        </div>
+                        <div class="column">
                             <a @onclick="()=> AudioPlayService.Muted= !AudioPlayService.Muted">
                                 @if (AudioPlayService.Muted)
                                 {
@@ -123,65 +124,68 @@
                                 }
 
                             </a>
-                        </Column>
-                    </Columns>
-                </Column>
-                <Column IsNarrow="true" class="@B.Join(B.M4,B.HiddenMobile)">
+                        </div>
+                    </div>
+                </div>
+                <div class="column m-4 is-hidden-mobile is-narrow">
                     <Slider TValue="double" IsSmall="true" Value="@AudioPlayService.Volumn" IsCircle="true"
                             data-tooltip="@AudioPlayService.Volumn.ToString("F0")"
                             class="@B.TooltipArrow"
-                            ValueChanged="x=>AudioPlayService.Volumn=x"
+                            ValueChanged="SetVolumn"
                             max="100"></Slider>
-                </Column>
-            </Columns>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-<Quickview @ref="_tracksQuickView" IsLeft="false" TriggerSelector=".js-openplaylist-a">
+<Quickview @ref="_tracksQuickView" IsLeft="false" TriggerSelector=".js-openplaylist-a"    >
     <HeaderSlot>
         播放列表
     </HeaderSlot>
     <BodySlot>
-        <div class="@B.M2 text-small" @ref="_trackQuickBodyRoot">
+        <div class="m-2 text-small" @ref="_trackQuickBodyRoot">
             <div class="position-fixed w-100  tracks-info-title ">
-                <Divider></Divider>
+                <div class="divider"></div>
                 <div class="p-2">
-
-                    <Level IsMobile>
-                        <LevelLeft>
-                            <p>共<span>@PlayControlFlowService.Tracks.Count</span>首</p>
-
-                        </LevelLeft>
-                        <LevelRight>
-                            <Columns IsMobile IsCentered>
-                                <Column>
+                    <nav class="level is-mobile">
+                        <div class="level-left"> <p>共<span>@PlayControlFlowService.Tracks.Count</span>首</p></div>
+                        <div class="level-right">
+                            <div class="columns is-mobile is-centered">
+                                <div class="column">
                                     <a>
                                         <Icon IconClass="iconfont icon-folder-add"></Icon>
                                     </a>
-                                </Column>
-                                <Column>
+                                </div>
+                                <div class="column">
                                     <a data-tooltip="@PlayControlFlowService.PlayMode.Name" class="@B.Join(B.TooltipArrow, B.TooltipBottom)"
                                        @onclick="PlayControlFlowService.ChangePlayModel" @onclick:stopPropagation>
                                         <Icon IconClass="@PlayControlFlowService.PlayMode.IconClass"></Icon>
                                     </a>
-
-                                </Column>
-                                <Column>
+                                </div>
+                                <div class="column">
+                                    <a data-tooltip="@PlayControlFlowService.PlayMode.Name" class="@B.Join(B.TooltipArrow, B.TooltipBottom)"
+                                       @onclick="PlayControlFlowService.ChangePlayModel" @onclick:stopPropagation>
+                                        <Icon IconClass="@PlayControlFlowService.PlayMode.IconClass"></Icon>
+                                    </a>
+                                </div>
+                                <div class="column">
                                     <a data-tooltip="定位到当前播放项" class="@B.Join(B.TooltipArrow, B.TooltipBottom)"
-                                       @onclick="ScrollToCurrentAsync" @onclick:stopPropagation>
+                                       @onclick="EventUtil.AsNonRenderingEventHandler(ScrollToCurrentAsync)" @onclick:stopPropagation>
                                         <Icon IconClass="fa fa-map-marker"></Icon>
                                     </a>
+                                </div>
+                            </div>
+                        </div>
 
-                                </Column>
-                            </Columns>
 
-                        </LevelRight>
-                    </Level>
+                    </nav>
 
                 </div>
-                <Divider></Divider>
+                <div class="divider"></div>
             </div>
-            <div>
+            @if (_tracksQuickView.IsActive)
+            {
+                 <div>
                 <DataTable Data="PlayControlFlowService.Tracks" IsNarrow="true" TItem="object"
                            IsHoverable
                            IsBordered="false" IsStriped IsFullwidth>
@@ -238,7 +242,7 @@
                                 </div>
                             </TdSlot>
                         </DataTableColumn>
-                        <DataTableColumn Label="操作" ThClass=" text-center text-nowrap ">
+                        <DataTableColumn Label="操作" ThClass=" text-center text-nowrap is-hidden-mobile" TdClass="is-hidden-mobile">
                             <TdSlot>
                                 @{
                                     var track = context as Models.PlayableItemBase;
@@ -266,6 +270,8 @@
 
                 </DataTable>
             </div>
+            }
+           
         </div>
 
     </BodySlot>

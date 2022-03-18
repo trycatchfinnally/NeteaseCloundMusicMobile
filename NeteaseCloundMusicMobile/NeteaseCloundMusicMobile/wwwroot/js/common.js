@@ -51,7 +51,58 @@ class AudioPlayer {
         this._audioElement.pause();
     }
 }
-window.audioPlayer = new AudioPlayer();
+const audioPlayer = new AudioPlayer();
+window.audioPlayer = audioPlayer;
+/**激活歌词显示 */
+let liPositionSubscribers = [];
+function startLrcScroll() {
+    stopLrcScroll();
+    const ulElement = document.querySelector(".lrc-panel");
+    if (ulElement == null)
+        return;
+    const mouseoverSymbol = "data-mouseover";
+    liPositionSubscribers =
+        [
+            rxjs.fromEvent(ulElement, 'mouseover')
+                .subscribe(x => ulElement.setAttribute(mouseoverSymbol, 'true')),
+            rxjs.fromEvent(ulElement, 'mouseout')
+                .subscribe(x => ulElement.removeAttribute(mouseoverSymbol)),
+            rxjs.interval(500)
+                .pipe(rxjs.operators.filter(x => !audioPlayer.paused))
+                .subscribe(x => {
+                let liPositions = [];
+                for (let i = 0; i < ulElement.children.length; i++) {
+                    const element = ulElement.children[i];
+                    liPositions.push(Number(element.getAttribute("data-position")));
+                }
+                let positionMillSeconds = audioPlayer.currentTime * 1000;
+                let activePositions = liPositions.filter(x => Math.abs(x - positionMillSeconds) <= 1000)
+                    .sort((a, b) => Math.abs(a - positionMillSeconds) - Math.abs(b - positionMillSeconds));
+                if (activePositions.length == 0)
+                    return;
+                let activePosition = activePositions[0];
+                let liElement = document.querySelector(`.lrc-panel  li[data-position].text-danger`);
+                if (liElement != null)
+                    liElement.classList.remove("text-danger");
+                liElement = document.querySelector(`.lrc-panel  li[data-position='${activePosition}']`);
+                if (liElement != null) {
+                    liElement.classList.add("text-danger");
+                    if (!ulElement.hasAttribute(mouseoverSymbol))
+                        scrollToCenter(ulElement, liElement);
+                }
+            })
+        ];
+}
+/**断开歌词显示的订阅 */
+function stopLrcScroll() {
+    if ((liPositionSubscribers === null || liPositionSubscribers === void 0 ? void 0 : liPositionSubscribers.length) > 0)
+        liPositionSubscribers.forEach(x => x.unsubscribe());
+}
+/**
+ * 已废弃，不在通过wasm调用
+ * @param position
+ * @param stopMove
+ */
 function activeLi(position, stopMove) {
     const liElement = document.querySelector(`.lrc-panel  li[data-position='${position}']`);
     const ulElement = liElement.parentElement;

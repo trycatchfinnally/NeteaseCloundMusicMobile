@@ -25,7 +25,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         private IReadOnlyList<Models.NewSongApiResultItem> _simiSongs = Array.Empty<Models.NewSongApiResultItem>();
         private long _trackId;//用以记录当前的歌词、相似音乐等对应的歌曲id
         //private IJSObjectReference _jsModule;
-        private bool _ulPanelHover = false;
+        //private bool _ulPanelHover = false;
         protected override async Task OnInitializedAsync()
         {
             if (PlayControlFlowService.CurrentPlayableItem == null)
@@ -36,7 +36,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             this.PlayControlFlowService.AudioPlayService.AudioStateChanged += AudioPlayService_AudioStateChanged;
 
             await InitWhenTrackChangedAsync();
-            await base.OnInitializedAsync();
+            await this.JSRuntime.InvokeVoidAsync("startLrcScroll");
         }
 
 
@@ -63,7 +63,11 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             else this._simiPlaylists = Array.Empty<Models.Playlist>();
             if (simiSongsResult.songs?.Count > 0) this._simiSongs = simiSongsResult.songs;
             else this._simiSongs = Array.Empty<NewSongApiResultItem>();
+
+
+
         }
+        [Obsolete("直接从js执行以提升性能")]
         private void LyricClick(TimeSpan lyricTime)
         {
             this.PlayControlFlowService.AudioPlayService.Position = lyricTime;
@@ -120,11 +124,11 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                     StateHasChanged();
                     break;
                 case nameof(AudioPlayService.Position):
-                    if (this._lyricsKeyValuePair.Count > 0)
-                    {
-                        var needShow = this._lyricsKeyValuePair.OrderBy(x => Math.Abs((x.Key - PlayControlFlowService.AudioPlayService.Position).TotalMilliseconds)).First();
-                        await this.JSRuntime.InvokeVoidAsync("activeLi", needShow.Key.TotalMilliseconds, this._ulPanelHover);
-                    }
+                    //if (this._lyricsKeyValuePair.Count > 0)
+                    //{
+                    //    var needShow = this._lyricsKeyValuePair.OrderBy(x => Math.Abs((x.Key - PlayControlFlowService.AudioPlayService.Position).TotalMilliseconds)).First();
+                    //    await this.JSRuntime.InvokeVoidAsync("activeLi", needShow.Key.TotalMilliseconds, this._ulPanelHover);
+                    //}
                     break;
             }
         }
@@ -135,6 +139,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         public void Dispose()
         {
             this.PlayControlFlowService.AudioPlayService.AudioStateChanged -= AudioPlayService_AudioStateChanged;
+            this.JSRuntime.InvokeVoidAsync("stopLrcScroll");
         }
     }
 }
