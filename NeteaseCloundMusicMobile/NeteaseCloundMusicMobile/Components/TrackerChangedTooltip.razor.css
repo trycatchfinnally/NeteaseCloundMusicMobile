@@ -1,0 +1,39 @@
+﻿.mask {
+    z-index: 1024;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0
+}
+
+.mask .hidden-css {
+    animation-name: hidden-keyframes;
+    animation-fill-mode: forwards;
+    animation-duration: 2s;
+}
+
+.mask .show-css {
+    animation-name: show-keyframes;
+    animation-duration: 0.25s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes show-keyframes {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes hidden-keyframes {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}

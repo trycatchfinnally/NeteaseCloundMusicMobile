@@ -1,17 +1,19 @@
-﻿.light-icons a{
-    color:gray!important;
+﻿.light-icons a {
+    color: gray !important;
+}
 
-}
-.light-icons a:hover {
-    color: white !important
-}
+    .light-icons a:hover {
+        color: white !important
+    }
+
 .right-nav {
-    position:fixed;
+    position: fixed;
     top: 40%;
     right: 5px;
-    font-size:1.2em;
-    color:#363636
+    font-size: 1.2em;
+    color: #363636
 }
+
 .playlist-tags {
     color: cornflowerblue;
 }
@@ -21,25 +23,27 @@
         color: black
     }
 
- .text-small{
-     font-size:.8em
- }
+.text-small {
+    font-size: .8em
+}
 
- .visible-symbol{
-     right:1rem;
-     top:-0.6rem;
-     width:2rem;
-     height:2rem;font-size:.5rem
-     
- }
+.visible-symbol {
+    right: 1rem;
+    top: -0.6rem;
+    width: 2rem;
+    height: 2rem;
+    font-size: .5rem
+}
+
 .tracks-info-title {
     top: 3.2rem;
     z-index: 2;
     background: white;
 }
-.tracks-info-title + div {
-    margin-top: 9rem
-}
+
+    .tracks-info-title + div {
+        margin-top: 9rem
+    }
 
 
 @media screen and (min-width:769px) {
@@ -52,8 +56,8 @@
         animation: show 1s;
         animation-fill-mode: forwards
     }
-
 }
+
 @media screen and (max-width:768px) {
     .hide-progress {
         animation: hide-mobile 1s;
@@ -65,6 +69,7 @@
         animation-fill-mode: forwards
     }
 }
+
 @keyframes hide {
     0% {
         bottom: 0
@@ -74,6 +79,7 @@
         bottom: -128px;
     }
 }
+
 @keyframes show {
 
     0% {
@@ -83,7 +89,6 @@
     100% {
         bottom: 0;
     }
-
 }
 
 @keyframes hide-mobile {
@@ -106,3 +111,5 @@
         bottom: 0;
     }
 }
+
+

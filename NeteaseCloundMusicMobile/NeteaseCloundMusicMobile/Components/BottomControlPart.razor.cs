@@ -24,6 +24,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
         private bool _opend = false;
         //private bool _openProgressing = false;
         private IDisposable _audioStateChangedSubscriber;
+       
         private AudioPlayService AudioPlayService => PlayControlFlowService.AudioPlayService;
         [Inject]
         private IJSRuntime JS { get; set; }
@@ -42,11 +43,14 @@ namespace NeteaseCloundMusicMobile.Client.Components
                                        x == nameof(AudioPlayService.Pause)
                                     || x == nameof(AudioPlayService.PlayAsync)
                                     || x == nameof(AudioPlayService.Position))
+                      
                         .Where(x => _opend)//当关闭后，不予执行
                         .Subscribe(x => StateHasChanged());
             return base.OnInitializedAsync();
         }
 
+
+    
         private void OnPositionSliderValueChanged(double value) =>
             AudioPlayService.Position = TimeSpan.FromSeconds(value);
         private Task HideOrShowAsync()
