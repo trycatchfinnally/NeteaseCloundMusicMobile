@@ -12,7 +12,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
     /// <summary>
     /// 通过直接继承的方式减少去编写代码
     /// </summary>
-    public class PersonalFmPlayControlFlowService : PlayControlFlowService
+    public class PersonalFmPlayControlFlowService : PlayControlFlowBase
     {
 
 
@@ -42,41 +42,15 @@ namespace NeteaseCloundMusicMobile.Client.Services
             base(audioPlayService, httpRequestService)
         {
 
-            this.SupportPlayModes = new[] { new PersonalFmSealedPlayModel() };
-            this.ChangePlayModel();
+            PlayMode=  new PersonalFmSealedPlayModel();
+
+
             InitComponentAsync().ToObservable().Subscribe(_=>Console.WriteLine(234),e=>Console.WriteLine(e.Message));
 
         }
 
-        public override IReadOnlyList<IPlayMode> SupportPlayModes { get; }
-        public override bool SupportPrev => false;
-        public override bool SupportShowTracks => false;
-        public override bool SupportPlayTrack => false;
 
-        /// <summary>
-        /// 通过异常的形式强制提示不绑定到该项
-        /// </summary>
-        public override List<PlayableItemBase> Tracks => throw new NotSupportedException("当前播放模式不支持显示");
-
-        public override Task<bool> PrevAsync()
-        {
-            throw new NotSupportedException("当前播放模式不支持上一个");
-        }
-
-        public override Task Add2PlaySequenceAsync(PlayableItemBase playableItem, bool autoPlay = true, bool clearCollection = false)
-        {
-            throw new NotSupportedException("当前播放模式添加到播放列表");
-        }
-
-        public override Task AddRange2PlaySequenceAsync(IEnumerable<PlayableItemBase> playableItems, bool autoPlay = true, bool clearCollection = false)
-        {
-            throw new NotSupportedException("当前播放模式添加到播放列表");
-        }
-
-        public override Task<bool> JumpTheQueueAsync(PlayableItemBase playableItem)
-        {
-            throw new NotSupportedException("当前播放模式不支持插队播放");
-        }
+        public override IPlayMode PlayMode { get; }
 
         public override async Task<bool> NextAsync()
         {
