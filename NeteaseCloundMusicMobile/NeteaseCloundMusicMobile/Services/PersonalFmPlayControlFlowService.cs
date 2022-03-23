@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 using BulmaRazor.Components;
 using Microsoft.Extensions.Logging;
 using NeteaseCloundMusicMobile.Client.Models;
+using NeteaseCloundMusicMobile.Client.Services.Features;
 
 namespace NeteaseCloundMusicMobile.Client.Services
 {
     /// <summary>
     /// 通过直接继承的方式减少去编写代码
     /// </summary>
-    public class PersonalFmPlayControlFlowService : PlayControlFlowBase
+    public class PersonalFmPlayControlFlowService : PlayControlFlowBase, 
+        ISupportGarbageFeature
     {
 
 
@@ -101,5 +103,14 @@ namespace NeteaseCloundMusicMobile.Client.Services
            
         }
 
+        public async Task<bool> GarbageTrackAsync(PlayableItemBase item)
+        {
+            var temp = await this.p_HttpRequestService
+                .MakePostRequestAsync<ApiResultModelRootBase>($"/fm_trash?id={item.Id}").ConfigureAwait(false);
+            var result= temp.code == 200;
+            if(result) { await NextAsync().ConfigureAwait(false); }
+            return result;
+
+        }
     }
 }

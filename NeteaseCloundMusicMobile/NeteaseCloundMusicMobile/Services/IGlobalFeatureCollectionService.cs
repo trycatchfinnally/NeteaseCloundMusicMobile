@@ -18,7 +18,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
         /// <summary>
         /// 表示播放控制流程
         /// </summary>
-        IPlayControlFlowService PlayControlFlowService { get; }
+        IBasicPlayControlFlowService PlayControlFlowService { get; }
 
         /// <summary>
         /// 切换播放控制流程
@@ -29,11 +29,11 @@ namespace NeteaseCloundMusicMobile.Client.Services
 
     public class GlobalFeatureCollectionService : IGlobalFeatureCollectionService
     {
-        private static readonly ConcurrentDictionary<int, IPlayControlFlowService> s_Cached =
-            new ConcurrentDictionary<int, IPlayControlFlowService>();
+        private static readonly ConcurrentDictionary<int, IBasicPlayControlFlowService> s_Cached =
+            new ConcurrentDictionary<int, IBasicPlayControlFlowService>();
 
         private readonly IServiceProvider _serviceProvider;
-        private IPlayControlFlowService _playControlFlowService;
+        private IBasicPlayControlFlowService _playControlFlowService;
 
         public GlobalFeatureCollectionService(IServiceProvider serviceProvider)
         {
@@ -43,7 +43,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
         }
         public event EventHandler PlayControlFlowChanged;
 
-        public IPlayControlFlowService PlayControlFlowService
+        public IBasicPlayControlFlowService PlayControlFlowService
         {
             get => _playControlFlowService;
             private set
@@ -67,12 +67,12 @@ namespace NeteaseCloundMusicMobile.Client.Services
             switch (code)
             {
                 case PlayControlFlowTypeCodes.DefaultPlayControlFlowTypeCode:
-                    playControlFlowService = typeof(PlayControlFlowService); break;
+                    playControlFlowService = typeof(DefaultPlayControlService); break;
                 case PlayControlFlowTypeCodes.PersonalFmPlayControlFlowTypeCode:
                     playControlFlowService = typeof(PersonalFmPlayControlFlowService); break;
                 default: throw new NotSupportedException("还未实现的播放控制流程");
             }
-            result = ActivatorUtilities.CreateInstance(this._serviceProvider, playControlFlowService) as IPlayControlFlowService;
+            result = ActivatorUtilities.CreateInstance(this._serviceProvider, playControlFlowService) as IBasicPlayControlFlowService;
             s_Cached.TryAdd(code, result);
             this.PlayControlFlowService = result;
         }

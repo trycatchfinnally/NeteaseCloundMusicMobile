@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using NeteaseCloundMusicMobile.Client.Services.Features;
 
 namespace NeteaseCloundMusicMobile.Client.Components
 {
@@ -24,7 +25,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
         private bool _opend = false;
         //private bool _openProgressing = false;
         private IDisposable _audioStateChangedSubscriber;
-       
+
         private AudioPlayService AudioPlayService => PlayControlFlowService.AudioPlayService;
         [Inject]
         private IJSRuntime JS { get; set; }
@@ -44,14 +45,14 @@ namespace NeteaseCloundMusicMobile.Client.Components
                                        x == nameof(AudioPlayService.Pause)
                                     || x == nameof(AudioPlayService.PlayAsync)
                                     || x == nameof(AudioPlayService.Position))
-                      
+
                         .Where(x => _opend)//当关闭后，不予执行
                         .Subscribe(x => StateHasChanged());
             return base.OnInitializedAsync();
         }
 
 
-    
+
         private void OnPositionSliderValueChanged(double value) =>
             AudioPlayService.Position = TimeSpan.FromSeconds(value);
         private Task HideOrShowAsync()
@@ -90,13 +91,14 @@ namespace NeteaseCloundMusicMobile.Client.Components
 
         private void DeleteTrack(PlayableItemBase item)
         {
+
             if (AudioPlayService.CurrentPlayableItem == item)
             {
                 this.ToastMessageService.ErrorAsync("歌曲正在播放，不能删除");
             }
-            else
+            else if (this.PlayControlFlowService is ISupportShowTracksFeature supportShowTracksFeature)
             {
-                this.PlayControlFlowService.Tracks.Remove(item);
+                supportShowTracksFeature.Tracks.Remove(item);
             }
         }
 

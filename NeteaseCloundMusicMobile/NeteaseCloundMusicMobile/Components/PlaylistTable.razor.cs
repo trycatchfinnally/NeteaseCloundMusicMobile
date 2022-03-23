@@ -85,7 +85,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
             return this.AddRange2PlaySequenceAsync(rows.Select(StandardAdapter), clearCollection: true);
         }
 
-
+        /*
 
         private async Task JumpTheQueueAsync(SongsItem item)
         {
@@ -98,6 +98,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
 
             await this.ToastMessageService.SuccessAsync("操作成功!");
         }
+        */
         private async Task LikeOrNotAsync(SongsItem item)
         {
             item.liked = await this.LikedProgressService.LikedOrNotAsync(item.id, !item.liked, CanLikedMediaType.Music) ? !item.liked : item.liked;

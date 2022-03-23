@@ -24,8 +24,9 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         private IReadOnlyList<Models.Playlist> _simiPlaylists = Array.Empty<Models.Playlist>();
         private IReadOnlyList<Models.NewSongApiResultItem> _simiSongs = Array.Empty<Models.NewSongApiResultItem>();
         private long _trackId;//用以记录当前的歌词、相似音乐等对应的歌曲id
-        //private IJSObjectReference _jsModule;
-        //private bool _ulPanelHover = false;
+
+
+        protected override bool SubscribePlayControlFlowChanged => true;
         protected override async Task OnInitializedAsync()
         {
             if (PlayControlFlowService.CurrentPlayableItem == null)
@@ -38,6 +39,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             await InitWhenTrackChangedAsync();
             await this.JSRuntime.InvokeVoidAsync("startLrcScroll");
         }
+
 
 
 

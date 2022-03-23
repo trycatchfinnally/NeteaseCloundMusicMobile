@@ -1,5 +1,6 @@
 ﻿@inherits Shared.RazorComponentBase
 @using NeteaseCloundMusicMobile.Client.Utitys
+@using NeteaseCloundMusicMobile.Client.Services.Features
 @implements IDisposable
 <div class="@B.Join("fixed-bottom",B.BackgroundDark,_opend?"show-progress":"hide-progress")">
 
@@ -10,10 +11,10 @@
     <div class="columns m-4 is-vcentered">
         <div class="column is-narrow-tablet">
             <div class="columns mr-4 is-mobile is-vcentered">
-                @if (PlayControlFlowService.SupportPrev)
+                @if (PlayControlFlowService is ISupportPrevFeature supportPrevFeature)
                 {
                     <div class="column has-text-centered">
-                        <div @onclick="PlayControlFlowService.PrevAsync" @onclick:stopPropagation>
+                        <div @onclick="supportPrevFeature.PrevAsync" @onclick:stopPropagation>
                             <Button IsRounded="true" class="circle-button">
                                 <Icon IconClass="fa fa-step-backward"></Icon>
                             </Button>
@@ -81,14 +82,14 @@
                 </div>
                 <div class="column mr-2 ml-2 is-hidden-mobile is-narrow">
                     <div class="columns font-weight-light light-icons is-gapless is-vcentered">
-                        @if (PlayControlFlowService.SupportShowTracks)
+                        @if (PlayControlFlowService is ISupportShowTracksFeature supportShowTracksFeature)
                         {
                             <div class="column">
                                 <a @onclick="OpenPlayList" class="js-openplaylist-a">
                                     <div class="position-relative">
-                                        @if (PlayControlFlowService.Tracks.Count < 100)
+                                        @if (supportShowTracksFeature.Tracks.Count < 100)
                                         {
-                                            <Badge Color="Color.Danger">@PlayControlFlowService.Tracks.Count</Badge>
+                                            <Badge Color="Color.Danger">@supportShowTracksFeature.Tracks.Count</Badge>
                                         }
                                         else
                                         {
@@ -105,12 +106,15 @@
                                 <Icon IconClass="iconfont icon-folder-add"></Icon>
                             </a>
                         </div>
-                        <div class="column">
-                            <a data-tooltip="@PlayControlFlowService.PlayMode.Name" class="@B.TooltipArrow"
-                               @onclick="PlayControlFlowService.ChangePlayModel" @onclick:stopPropagation>
-                                <Icon IconClass="@PlayControlFlowService.PlayMode.IconClass"></Icon>
-                            </a>
-                        </div>
+                      @if (PlayControlFlowService is ISupportPlayModeFeature supportPlayModeFeature)
+                      {
+                          <div class="column">
+                              <a data-tooltip="@supportPlayModeFeature.PlayMode.Name" class="@B.TooltipArrow"
+                                 @onclick="supportPlayModeFeature.ChangePlayModel" @onclick:stopPropagation>
+                                  <Icon IconClass="@supportPlayModeFeature.PlayMode.IconClass"></Icon>
+                              </a>
+                          </div>
+                      }
                         <div class="column">
                             <a @onclick="()=> AudioPlayService.Muted= !AudioPlayService.Muted">
                                 @if (AudioPlayService.Muted)
@@ -146,7 +150,7 @@
     </div>
 </div>
 
-@if (PlayControlFlowService.SupportShowTracks)
+@if (PlayControlFlowService is ISupportShowTracksFeature supportShowTracksFeature1)
 {
     <Quickview @ref="_tracksQuickView" IsLeft="false" TriggerSelector=".js-openplaylist-a">
         <HeaderSlot>
@@ -159,7 +163,7 @@
                     <div class="p-2">
                         <nav class="level is-mobile">
                             <div class="level-left">
-                                <p>共<span>@PlayControlFlowService.Tracks.Count</span>首</p>
+                                <p>共<span>@supportShowTracksFeature1.Tracks.Count</span>首</p>
                             </div>
                             <div class="level-right">
                                 <div class="columns is-mobile is-centered">
@@ -168,18 +172,21 @@
                                             <Icon IconClass="iconfont icon-folder-add"></Icon>
                                         </a>
                                     </div>
-                                    <div class="column">
-                                        <a data-tooltip="@PlayControlFlowService.PlayMode.Name" class="@B.Join(B.TooltipArrow, B.TooltipBottom)"
-                                       @onclick="PlayControlFlowService.ChangePlayModel" @onclick:stopPropagation>
-                                            <Icon IconClass="@PlayControlFlowService.PlayMode.IconClass"></Icon>
-                                        </a>
-                                    </div>
-                                    <div class="column">
-                                        <a data-tooltip="@PlayControlFlowService.PlayMode.Name" class="@B.Join(B.TooltipArrow, B.TooltipBottom)"
-                                       @onclick="PlayControlFlowService.ChangePlayModel" @onclick:stopPropagation>
-                                            <Icon IconClass="@PlayControlFlowService.PlayMode.IconClass"></Icon>
-                                        </a>
-                                    </div>
+                                    @if (PlayControlFlowService is ISupportPlayModeFeature supportPlayModeFeature1)
+                                    {
+                                        <div class="column">
+                                            <a data-tooltip="@supportPlayModeFeature1.PlayMode.Name" class="@B.Join(B.TooltipArrow, B.TooltipBottom)"
+                                               @onclick="supportPlayModeFeature1.ChangePlayModel" @onclick:stopPropagation>
+                                                <Icon IconClass="@supportPlayModeFeature1.PlayMode.IconClass"></Icon>
+                                            </a>
+                                        </div>
+                                        <div class="column">
+                                            <a data-tooltip="@supportPlayModeFeature1.PlayMode.Name" class="@B.Join(B.TooltipArrow, B.TooltipBottom)"
+                                               @onclick="supportPlayModeFeature1.ChangePlayModel" @onclick:stopPropagation>
+                                                <Icon IconClass="@supportPlayModeFeature1.PlayMode.IconClass"></Icon>
+                                            </a>
+                                        </div>
+                                    }
                                     <div class="column">
                                         <a data-tooltip="定位到当前播放项" class="@B.Join(B.TooltipArrow, B.TooltipBottom)"
                                        @onclick="EventUtil.AsNonRenderingEventHandler(ScrollToCurrentAsync)" @onclick:stopPropagation>
@@ -198,7 +205,7 @@
                 @if (_tracksQuickView.IsActive)
                 {
                     <div>
-                        <DataTable Data="PlayControlFlowService.Tracks" IsNarrow="true" TItem="object"
+                        <DataTable Data="supportShowTracksFeature1.Tracks" IsNarrow="true" TItem="object"
                            IsHoverable
                            IsBordered="false" IsStriped IsFullwidth>
 
@@ -265,7 +272,7 @@
                                                     <Icon IconClass="fa fa-trash"></Icon>
                                                 </div>
                                             </Column>
-                                            @if (PlayControlFlowService.PlayMode.SupportJumpTheQueue)
+                                          @*  @if (PlayControlFlowService is ISupportPlayModeFeature supportPlayModeFeature2&& supportPlayModeFeature2.PlayMode.SupportJumpTheQueue)
                                             {
                                                 <Column>
                                                     <div class="el-link @B.TooltipBottom @B.TooltipMultiline" data-tooltip="插队播放" @onclick="() => PlayControlFlowService.JumpTheQueueAsync(track)">
@@ -273,7 +280,7 @@
 
                                                     </div>
                                                 </Column>
-                                            }
+                                            }*@
                                         </Columns>
 
                                     </TdSlot>

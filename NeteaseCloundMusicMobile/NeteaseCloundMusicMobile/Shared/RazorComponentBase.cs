@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using BulmaRazor.Components;
 using Microsoft.Extensions.DependencyInjection;
 using NeteaseCloundMusicMobile.Client.Models;
+using NeteaseCloundMusicMobile.Client.Services.Features;
 using NeteaseCloundMusicMobile.Client.Utitys;
 
 namespace NeteaseCloundMusicMobile.Client.Shared
@@ -33,7 +34,7 @@ namespace NeteaseCloundMusicMobile.Client.Shared
         protected IGlobalFeatureCollectionService GlobalFeatureCollectionService { get; set; }
 
 
-        protected IPlayControlFlowService PlayControlFlowService =>
+        protected IBasicPlayControlFlowService PlayControlFlowService =>
             GlobalFeatureCollectionService.PlayControlFlowService;
 
         /// <summary>
@@ -66,17 +67,21 @@ namespace NeteaseCloundMusicMobile.Client.Shared
         protected Task Add2PlaySequenceAsync(PlayableItemBase playableItem, bool autoPlay = true,
             bool clearCollection = false)
         {
-            if (!this.PlayControlFlowService.SupportPlayTrack)
+           
+            if (!(this.PlayControlFlowService is ISupportManualAddTracksFeature ))
                 this.GlobalFeatureCollectionService.SwitchPlayControlFlow(PlayControlFlowTypeCodes.DefaultPlayControlFlowTypeCode);
-            return this.PlayControlFlowService.Add2PlaySequenceAsync(playableItem, autoPlay, clearCollection);
+            var supportManualAddTracksFeature=this.PlayControlFlowService as ISupportManualAddTracksFeature;
+            return supportManualAddTracksFeature?.Add2PlaySequenceAsync(playableItem, autoPlay, clearCollection) ?? Task.CompletedTask;
         }
 
         protected Task AddRange2PlaySequenceAsync(IEnumerable<PlayableItemBase> playableItems, bool autoPlay = true,
             bool clearCollection = false)
         {
-            if (!this.PlayControlFlowService.SupportPlayTrack)
+            if (!(this.PlayControlFlowService is ISupportManualAddTracksFeature))
                 this.GlobalFeatureCollectionService.SwitchPlayControlFlow(PlayControlFlowTypeCodes.DefaultPlayControlFlowTypeCode);
-            return this.PlayControlFlowService.AddRange2PlaySequenceAsync(playableItems, autoPlay, clearCollection);
+            var supportManualAddTracksFeature = this.PlayControlFlowService as ISupportManualAddTracksFeature;
+
+            return supportManualAddTracksFeature?.AddRange2PlaySequenceAsync(playableItems, autoPlay, clearCollection)??Task.CompletedTask;
         }
         /// <summary>
         /// 在一系列值中选取第一个不为空的字符串

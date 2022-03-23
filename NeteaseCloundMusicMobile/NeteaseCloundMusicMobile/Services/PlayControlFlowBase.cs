@@ -138,4 +138,16 @@ namespace NeteaseCloundMusicMobile.Client.Services
         /// </summary>
         protected virtual void DisposeImpl(){}
     }
+
+
+
+    public interface IPlayMode
+    {
+        int Sort => 0;
+        bool SupportJumpTheQueue => false;
+        string Name { get; }
+        string IconClass { get; }
+        int? OnNext(int index, int count);
+        int? OnPrev(int index, int count);
+    }
 }
