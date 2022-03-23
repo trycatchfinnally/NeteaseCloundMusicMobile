@@ -1,6 +1,6 @@
 ﻿@page "/playpanel"
+ 
 @inherits Shared.RazorComponentBase
-@using NeteaseCloundMusicMobile.Client.Utitys
 @implements IDisposable
 @if (CurrentTrack != null)
 {
@@ -66,7 +66,7 @@
             </Column>
             <Column>
                 <div>
-                    <div class="@B.Join(B.Flex,B.AlignItemsCenter)">
+                    <div class="d-flex align-items-center">
                         <p class="@B.Join(B.MR2,B.TextBlack,B.TextWeightBold)">@PlayControlFlowService.AudioPlayService.CurrentPlayableItem.Title</p>
                         @if (CurrentTrack.MvId > 0)
                         {<a href="/mv/@CurrentTrack.MvId" class="count-desc">

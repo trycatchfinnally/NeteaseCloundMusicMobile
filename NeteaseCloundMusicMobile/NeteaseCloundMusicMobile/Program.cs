@@ -21,7 +21,7 @@ namespace NeteaseCloundMusicMobile
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
           
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             ConfigureService(builder.Services);
             return builder.Build().RunAsync();
         }
@@ -38,9 +38,10 @@ namespace NeteaseCloundMusicMobile
             //    return httpClient;
             //});
 
-            services.AddScoped<IHttpRequestService, HttpRequestService>();
+            services.AddSingleton<IHttpRequestService, HttpRequestService>();
             services.AddSingleton<AudioPlayService>();
-            services.AddScoped<PlayControlFlowService>();
+            services.AddSingleton<IGlobalFeatureCollectionService, GlobalFeatureCollectionService>();
+            //services.AddScoped<PlayControlFlowService>();
             services.AddScoped(typeof(LikedProgressService));
             services.AddAuthorizationCore();
             services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();

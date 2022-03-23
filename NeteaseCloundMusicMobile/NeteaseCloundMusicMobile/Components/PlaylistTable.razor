@@ -1,6 +1,7 @@
 ﻿@using Newtonsoft.Json
 @using NeteaseCloundMusicMobile.Client.Utitys
 @inherits RazorComponentBase
+@implements IDisposable
 <div>
 
     <div class="@B.Join(B.Flex,B.AlignItemsCenter)">
@@ -22,7 +23,7 @@
         {
             <div class="float-right @B.HiddenMobile">
                 <Control HasIconsRight>
-                    <Input IsRounded="true" IsSmall="true" placeholder="搜索歌单歌曲" @bind-Value="_searchKeyWord" @onkeyup="OnSearchBoxKeyDownAsync" />
+                    <input class="input is-small is-rounded" placeholder="搜索歌单歌曲"   @ref="_searchElement" />
                     <Icon IsRight IsSmall IconClass="fa fa-search"></Icon>
                 </Control>
             </div>

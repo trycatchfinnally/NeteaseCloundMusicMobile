@@ -10,21 +10,25 @@
     <div class="columns m-4 is-vcentered">
         <div class="column is-narrow-tablet">
             <div class="columns mr-4 is-mobile is-vcentered">
-                <div class="column has-text-centered is-one-third">
-                    <div @onclick="PlayControlFlowService.PrevAsync" @onclick:stopPropagation>
-                        <Button IsRounded="true" class="circle-button">
-                            <Icon IconClass="fa fa-step-backward"></Icon>
-                        </Button>
+                @if (PlayControlFlowService.SupportPrev)
+                {
+                    <div class="column has-text-centered">
+                        <div @onclick="PlayControlFlowService.PrevAsync" @onclick:stopPropagation>
+                            <Button IsRounded="true" class="circle-button">
+                                <Icon IconClass="fa fa-step-backward"></Icon>
+                            </Button>
+                        </div>
                     </div>
-                </div>
-                <div class="column has-text-centered is-one-third">
+                }
+
+                <div class="column has-text-centered">
                     <div @onclick="OnPlayOrResumeClickAsync" @onclick:stopPropagation>
                         <Button IsRounded class="circle-button ">
-                            <Icon IconClass="@(AudioPlayService.Paused?"fa fa-play":"fa fa-pause")"></Icon>
+                            <Icon IconClass="@(AudioPlayService.Paused ? "fa fa-play" : "fa fa-pause")"></Icon>
                         </Button>
                     </div>
                 </div>
-                <div class="column has-text-centered is-one-third">
+                <div class="column has-text-centered">
                     <div @onclick="PlayControlFlowService.NextAsync" @onclick:stopPropagation>
                         <Button IsRounded class="circle-button">
                             <Icon IconClass="fa fa-step-forward"></Icon>
@@ -77,22 +81,25 @@
                 </div>
                 <div class="column mr-2 ml-2 is-hidden-mobile is-narrow">
                     <div class="columns font-weight-light light-icons is-gapless is-vcentered">
-                        <div class="column">
-                            <a @onclick="OpenPlayList" class="js-openplaylist-a">
-                                <div class="position-relative">
-                                    @if (PlayControlFlowService.Tracks.Count < 100)
-                                    {
-                                        <Badge Color="Color.Danger">@PlayControlFlowService.Tracks.Count</Badge>
-                                    }
-                                    else
-                                    {
-                                        <Badge Color="Color.Danger">99+</Badge>
-                                    }
+                        @if (PlayControlFlowService.SupportShowTracks)
+                        {
+                            <div class="column">
+                                <a @onclick="OpenPlayList" class="js-openplaylist-a">
+                                    <div class="position-relative">
+                                        @if (PlayControlFlowService.Tracks.Count < 100)
+                                        {
+                                            <Badge Color="Color.Danger">@PlayControlFlowService.Tracks.Count</Badge>
+                                        }
+                                        else
+                                        {
+                                            <Badge Color="Color.Danger">99+</Badge>
+                                        }
 
-                                </div>
-                                <Icon IconClass="iconfont icon-list-01"></Icon>
-                            </a>
-                        </div>
+                                    </div>
+                                    <Icon IconClass="iconfont icon-list-01"></Icon>
+                                </a>
+                            </div>
+                        }
                         <div class="column">
                             <a>
                                 <Icon IconClass="iconfont icon-folder-add"></Icon>
@@ -138,149 +145,154 @@
         </div>
     </div>
 </div>
-<Quickview @ref="_tracksQuickView" IsLeft="false" TriggerSelector=".js-openplaylist-a"    >
-    <HeaderSlot>
-        播放列表
-    </HeaderSlot>
-    <BodySlot>
-        <div class="m-2 text-small" @ref="_trackQuickBodyRoot">
-            <div class="position-fixed w-100  tracks-info-title ">
-                <div class="divider"></div>
-                <div class="p-2">
-                    <nav class="level is-mobile">
-                        <div class="level-left"> <p>共<span>@PlayControlFlowService.Tracks.Count</span>首</p></div>
-                        <div class="level-right">
-                            <div class="columns is-mobile is-centered">
-                                <div class="column">
-                                    <a>
-                                        <Icon IconClass="iconfont icon-folder-add"></Icon>
-                                    </a>
-                                </div>
-                                <div class="column">
-                                    <a data-tooltip="@PlayControlFlowService.PlayMode.Name" class="@B.Join(B.TooltipArrow, B.TooltipBottom)"
+
+@if (PlayControlFlowService.SupportShowTracks)
+{
+    <Quickview @ref="_tracksQuickView" IsLeft="false" TriggerSelector=".js-openplaylist-a">
+        <HeaderSlot>
+            播放列表
+        </HeaderSlot>
+        <BodySlot>
+            <div class="m-2 text-small" @ref="_trackQuickBodyRoot">
+                <div class="position-fixed w-100  tracks-info-title ">
+                    <div class="divider"></div>
+                    <div class="p-2">
+                        <nav class="level is-mobile">
+                            <div class="level-left">
+                                <p>共<span>@PlayControlFlowService.Tracks.Count</span>首</p>
+                            </div>
+                            <div class="level-right">
+                                <div class="columns is-mobile is-centered">
+                                    <div class="column">
+                                        <a>
+                                            <Icon IconClass="iconfont icon-folder-add"></Icon>
+                                        </a>
+                                    </div>
+                                    <div class="column">
+                                        <a data-tooltip="@PlayControlFlowService.PlayMode.Name" class="@B.Join(B.TooltipArrow, B.TooltipBottom)"
                                        @onclick="PlayControlFlowService.ChangePlayModel" @onclick:stopPropagation>
-                                        <Icon IconClass="@PlayControlFlowService.PlayMode.IconClass"></Icon>
-                                    </a>
-                                </div>
-                                <div class="column">
-                                    <a data-tooltip="@PlayControlFlowService.PlayMode.Name" class="@B.Join(B.TooltipArrow, B.TooltipBottom)"
+                                            <Icon IconClass="@PlayControlFlowService.PlayMode.IconClass"></Icon>
+                                        </a>
+                                    </div>
+                                    <div class="column">
+                                        <a data-tooltip="@PlayControlFlowService.PlayMode.Name" class="@B.Join(B.TooltipArrow, B.TooltipBottom)"
                                        @onclick="PlayControlFlowService.ChangePlayModel" @onclick:stopPropagation>
-                                        <Icon IconClass="@PlayControlFlowService.PlayMode.IconClass"></Icon>
-                                    </a>
-                                </div>
-                                <div class="column">
-                                    <a data-tooltip="定位到当前播放项" class="@B.Join(B.TooltipArrow, B.TooltipBottom)"
+                                            <Icon IconClass="@PlayControlFlowService.PlayMode.IconClass"></Icon>
+                                        </a>
+                                    </div>
+                                    <div class="column">
+                                        <a data-tooltip="定位到当前播放项" class="@B.Join(B.TooltipArrow, B.TooltipBottom)"
                                        @onclick="EventUtil.AsNonRenderingEventHandler(ScrollToCurrentAsync)" @onclick:stopPropagation>
-                                        <Icon IconClass="fa fa-map-marker"></Icon>
-                                    </a>
+                                            <Icon IconClass="fa fa-map-marker"></Icon>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
 
-                    </nav>
+                        </nav>
 
+                    </div>
+                    <div class="divider"></div>
                 </div>
-                <div class="divider"></div>
-            </div>
-            @if (_tracksQuickView.IsActive)
-            {
-                 <div>
-                <DataTable Data="PlayControlFlowService.Tracks" IsNarrow="true" TItem="object"
+                @if (_tracksQuickView.IsActive)
+                {
+                    <div>
+                        <DataTable Data="PlayControlFlowService.Tracks" IsNarrow="true" TItem="object"
                            IsHoverable
                            IsBordered="false" IsStriped IsFullwidth>
 
-                    <EmptySlot>
-                        <div>暂无内容</div>
-                    </EmptySlot>
-                    <ColumnsSlot>
-                        <DataTableColumn Label="音乐标题">
-                            <TdSlot>
-                                @{
-                                    var track = context as Models.PlayableItemBase;
-                                }
-                                <div class="@B.Flex @B.AlignItemsCenter " data-track-id="@track.Id">
-                                    <div class="el-link text-wrap @(track.Equals(PlayControlFlowService.CurrentPlayableItem)?"text-danger":String.Empty)" @onclick="()=>PlayAsync(track)">
-                                        <Icon IconClass="fa fa-play-circle"></Icon>
-                                        <span>@track.Title</span>
-                                    </div>
-
-
-                                    @if (track.MvId > 0)
-                                    {
-                                        <a href="/mv/@track.MvId" class="mv-link">
-                                            <Icon IconClass="fa fa-youtube-play" Color="Color.Danger"></Icon>
-                                        </a>
-                                    }
-                                </div>
-                            </TdSlot>
-                        </DataTableColumn>
-                        <DataTableColumn Label="歌手" TdClass="@B.HiddenMobile" ThClass="@B.HiddenMobile">
-
-                            <TdSlot>
-                                @{
-                                    var track = context as Models.PlayableItemBase;
-                                }
-
-                                <div class="@B.Flex @B.AlignItemsCenter count-desc " style="max-width:5em">
-                                    @foreach (var item in track.Artists.Take(5))
-                                    {
-                                        <a class="el-link playlist-tags text-truncate" href="/artist/@item.id">@item.name</a>
-                                    }
-                                </div>
-
-
-                            </TdSlot>
-                        </DataTableColumn>
-                        <DataTableColumn Label="时长">
-                            <TdSlot>
-                                @{
-                                    var track = context as Models.PlayableItemBase;
-                                }
-                                <div class="overflow-hidden text-nowrap text-overflow-ellipsis count-desc">
-                                    @track.Duration.ToDateTime().ToString(@"mm\:ss")
-                                </div>
-                            </TdSlot>
-                        </DataTableColumn>
-                        <DataTableColumn Label="操作" ThClass=" text-center text-nowrap is-hidden-mobile" TdClass="is-hidden-mobile">
-                            <TdSlot>
-                                @{
-                                    var track = context as Models.PlayableItemBase;
-                                }
-                                <Columns class="text-center count-desc" IsGapless="true" IsMobile="true">
-                                    <Column>
-                                        <div class=" el-link  " @onclick="()=>DeleteTrack(track)">
-                                            <Icon IconClass="fa fa-trash"></Icon>
-                                        </div>
-                                    </Column>
-                                    @if (PlayControlFlowService.PlayMode.SupportJumpTheQueue)
-                                    {
-                                        <Column>
-                                            <div class="el-link @B.TooltipBottom @B.TooltipMultiline" data-tooltip="插队播放" @onclick="()=>PlayControlFlowService.JumpTheQueueAsync(track)">
-                                                <Icon IconClass="fa fa-arrow-up"></Icon>
-
+                            <EmptySlot>
+                                <div>暂无内容</div>
+                            </EmptySlot>
+                            <ColumnsSlot>
+                                <DataTableColumn Label="音乐标题">
+                                    <TdSlot>
+                                        @{
+                                            var track = context as Models.PlayableItemBase;
+                                        }
+                                        <div class="@B.Flex @B.AlignItemsCenter " data-track-id="@track.Id">
+                                            <div class="el-link text-wrap @(track.Equals(PlayControlFlowService.CurrentPlayableItem) ? "text-danger" : String.Empty)" @onclick="() => PlayAsync(track)">
+                                                <Icon IconClass="fa fa-play-circle"></Icon>
+                                                <span>@track.Title</span>
                                             </div>
-                                        </Column>
-                                    }
-                                </Columns>
 
-                            </TdSlot>
-                        </DataTableColumn>
-                    </ColumnsSlot>
 
-                </DataTable>
+                                            @if (track.MvId > 0)
+                                            {
+                                                <a href="/mv/@track.MvId" class="mv-link">
+                                                    <Icon IconClass="fa fa-youtube-play" Color="Color.Danger"></Icon>
+                                                </a>
+                                            }
+                                        </div>
+                                    </TdSlot>
+                                </DataTableColumn>
+                                <DataTableColumn Label="歌手" TdClass="@B.HiddenMobile" ThClass="@B.HiddenMobile">
+
+                                    <TdSlot>
+                                        @{
+                                            var track = context as Models.PlayableItemBase;
+                                        }
+
+                                        <div class="@B.Flex @B.AlignItemsCenter count-desc " style="max-width: 5em">
+                                            @foreach (var item in track.Artists.Take(5))
+                                            {
+                                                <a class="el-link playlist-tags text-truncate" href="/artist/@item.id">@item.name</a>
+                                            }
+                                        </div>
+
+
+                                    </TdSlot>
+                                </DataTableColumn>
+                                <DataTableColumn Label="时长">
+                                    <TdSlot>
+                                        @{
+                                            var track = context as Models.PlayableItemBase;
+                                        }
+                                        <div class="overflow-hidden text-nowrap text-overflow-ellipsis count-desc">
+                                            @track.Duration.ToDateTime().ToString(@"mm\:ss")
+                                        </div>
+                                    </TdSlot>
+                                </DataTableColumn>
+                                <DataTableColumn Label="操作" ThClass=" text-center text-nowrap is-hidden-mobile" TdClass="is-hidden-mobile">
+                                    <TdSlot>
+                                        @{
+                                            var track = context as Models.PlayableItemBase;
+                                        }
+                                        <Columns class="text-center count-desc" IsGapless="true" IsMobile="true">
+                                            <Column>
+                                                <div class=" el-link  " @onclick="() => DeleteTrack(track)">
+                                                    <Icon IconClass="fa fa-trash"></Icon>
+                                                </div>
+                                            </Column>
+                                            @if (PlayControlFlowService.PlayMode.SupportJumpTheQueue)
+                                            {
+                                                <Column>
+                                                    <div class="el-link @B.TooltipBottom @B.TooltipMultiline" data-tooltip="插队播放" @onclick="() => PlayControlFlowService.JumpTheQueueAsync(track)">
+                                                        <Icon IconClass="fa fa-arrow-up"></Icon>
+
+                                                    </div>
+                                                </Column>
+                                            }
+                                        </Columns>
+
+                                    </TdSlot>
+                                </DataTableColumn>
+                            </ColumnsSlot>
+
+                        </DataTable>
+                    </div>
+                }
+
             </div>
-            }
-           
-        </div>
 
-    </BodySlot>
-</Quickview>
-<div class="right-nav font-weight-bold @B.HiddenTablet">
-    <a @onclick="OpenPlayList" class="js-openplaylist-a">
-        &lt;
+        </BodySlot>
+    </Quickview>
+    <div class="right-nav font-weight-bold @B.HiddenTablet">
+        <a @onclick="OpenPlayList" class="js-openplaylist-a">
+            &lt;
 
-    </a>
+        </a>
 
-</div>
- 
+    </div>
+}

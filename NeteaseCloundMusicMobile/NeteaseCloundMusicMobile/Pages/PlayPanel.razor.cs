@@ -111,7 +111,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 
             };
 
-            return this.PlayControlFlowService.Add2PlaySequenceAsync(temp);
+            return this.Add2PlaySequenceAsync(temp);
         }
 
         private async Task OnAudioPlayServiceAudioStateChangedAsync(string e)

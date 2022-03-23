@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
+using NeteaseCloundMusicMobile.Client.Utitys;
 
 namespace NeteaseCloundMusicMobile.Client.Pages
 {
@@ -93,11 +94,11 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 
         }
 
-        private async Task PersonalFmClickAsync()
+        private Task PersonalFmClickAsync()
         {
 
-          var json=await  HttpRequestService.MakePostRequestAsync("/personal_fm");
-          Console.WriteLine(json);
+            this.GlobalFeatureCollectionService.SwitchPlayControlFlow(PlayControlFlowTypeCodes.PersonalFmPlayControlFlowTypeCode);
+            return Task.CompletedTask;
         }
         private void AuthenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> task)
         {
@@ -119,11 +120,12 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                 Duration = item.duration
 
             };
-
-            await this.PlayControlFlowService.Add2PlaySequenceAsync(temp);
+           
+          
+            await this.Add2PlaySequenceAsync(temp);
         }
 
-        
+
         protected override async Task OnInitializedAsync()
         {
 
@@ -138,10 +140,10 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 
             this.AuthenticationStateProvider.AuthenticationStateChanged += AuthenticationStateProvider_AuthenticationStateChanged;
             _pageLoading = false;
-           
+
         }
 
-      
+
 
         public void Dispose()
         {

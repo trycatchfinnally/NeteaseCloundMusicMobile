@@ -92,10 +92,16 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             return _playlistTable.PlayAllAsync();
         }
 
-        protected override void OnAfterRender(bool firstRender)
+        /// <summary>
+        /// 进行指定类型的转换，
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        private static T ToDto<T>(object source)
         {
-            base.OnAfterRender(firstRender);
-            
+            var json = System.Text.Json.JsonSerializer.Serialize(source);
+            return System.Text.Json.JsonSerializer.Deserialize<T>(json);
         }
     }
 }

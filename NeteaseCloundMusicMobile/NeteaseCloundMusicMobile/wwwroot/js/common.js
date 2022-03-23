@@ -206,10 +206,11 @@ class searchProgress {
         // this._dotNetObjectReference = dotNetObjectReference;
         rxjs.fromEvent(input, "input").pipe(rxjs.operators.debounceTime(200), rxjs.operators.distinctUntilChanged())
             .subscribe((value) => {
-            const keyword = value.target.value;
-            if ((keyword === null || keyword === void 0 ? void 0 : keyword.length) > 0) {
-                dotNetObjectReference.invokeMethodAsync("DoSearchAsync", keyword);
+            let keyword = value.target.value;
+            if (!keyword) {
+                keyword = "";
             }
+            dotNetObjectReference.invokeMethodAsync("DoSearchAsync", keyword);
         });
     }
 }

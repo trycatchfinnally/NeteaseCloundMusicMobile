@@ -412,10 +412,7 @@ namespace NeteaseCloundMusicMobile.Client.Models
         /// 
         /// </summary>
         public string mp3Url { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string rtUrls { get; set; }
+    
         /// <summary>
         /// 
         /// </summary>

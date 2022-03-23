@@ -16,7 +16,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
     /// <summary>
     /// 用来表示音乐播放的控制
     /// </summary>
-    public class PlayControlFlowService : IDisposable
+    public class PlayControlFlowService : IDisposable, IPlayControlFlowService
     {
 
         private enum PlayStatus
@@ -113,23 +113,44 @@ namespace NeteaseCloundMusicMobile.Client.Services
         new RepeateAllPlayMode()
         }.OrderBy(x => x.Sort).ToArray();
 
-        private IPlayMode _playMode = s_support[0];
-        private bool m_Loading = false;//用来标识是否加载中
-        private readonly ILogger<PlayControlFlowService> _logger;
+        //private IPlayMode _playMode = s_support[0];
+
+
         private readonly IDisposable _positionChangedSubscriber;
         private readonly AudioPlayService _audioPlayService;
-        private readonly IHttpRequestService _httpRequestService;
-        private readonly ToastService _toastService;
-        private readonly List<PlayableItemBase> _tracksCollection = new List<PlayableItemBase>();
+
+
+        /// <summary>
+        /// 设置为protected是为了方便在私人fm模型中直接复用同时不暴露公共属性
+        /// </summary>
+        protected bool p_Loading = false;//
+        /// <summary>
+        /// 设置protected是为了方便在私人fm模型中直接复用
+        /// </summary>
+
+        protected readonly IHttpRequestService p_HttpRequestService;
+        /// <summary>
+        /// 设置为protected是为了方便在私人fm模型中直接复用同时不暴露公共属性
+        /// </summary>
+
+        protected readonly List<PlayableItemBase> p_TracksCollection = new List<PlayableItemBase>();
         /// <summary>
         /// 当成功切换到下一首的时候执行
         /// </summary>
         public event EventHandler SuccessfulNextExecute;
 
+
+
+        public bool Loading => p_Loading;
         /// <summary>
         /// 表示支持的播放循环模式
         /// </summary>
-        public IReadOnlyList<IPlayMode> SupportPlayModes => s_support;
+        public virtual IReadOnlyList<IPlayMode> SupportPlayModes => s_support;
+
+
+        public virtual bool SupportShowTracks => true;
+        public virtual bool SupportPrev => true;
+        public virtual bool SupportPlayTrack => true;
         /// <summary>
         /// 表示当前播放项
         /// </summary>
@@ -138,26 +159,28 @@ namespace NeteaseCloundMusicMobile.Client.Services
         /// <summary>
         /// 用来表示当前的播放列表
         /// </summary>
-        public List<PlayableItemBase> Tracks => _tracksCollection;
+        public virtual List<PlayableItemBase> Tracks => p_TracksCollection;
+
         /// <summary>
         /// 表示当前的循环模式
         /// </summary>
         public IPlayMode PlayMode
         {
-            get => _playMode;
+            get;
+            private set;
 
-        }
+        } = s_support[0];
 
         private async ValueTask<PlayStatus> SafePlayAsync(OneOf<int, PlayableItemBase> indexOrItem)
         {
-            if (m_Loading) return PlayStatus.Pending;
-            m_Loading = true;
+            if (p_Loading) return PlayStatus.Pending;
+            p_Loading = true;
             try
             {
-                var item = indexOrItem.IsT0 ? this._tracksCollection[indexOrItem.AsT0] : indexOrItem.AsT1;
-                if (!await item.EnsureUrlAsync(this._httpRequestService))
+                var item = indexOrItem.IsT0 ? this.p_TracksCollection[indexOrItem.AsT0] : indexOrItem.AsT1;
+                if (!await item.EnsureUrlAsync(this.p_HttpRequestService))
                 {
-                    await this._toastService.ErrorAsync("亲爱的，暂无版权");
+
                     return PlayStatus.AccessDenied;
                 }
                 await this._audioPlayService.PlayAsync(item);
@@ -165,7 +188,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
             }
             finally
             {
-                m_Loading = false;
+                p_Loading = false;
             }
         }
 
@@ -173,23 +196,21 @@ namespace NeteaseCloundMusicMobile.Client.Services
 
         private async Task PositionEndedNextAsync()
         {
-            if (m_Loading) return;//加载完了自己会走下一个流程
+            if (p_Loading) return;//加载完了自己会走下一个流程
             var bNext = await this.NextAsync();
             var maxCount = 0;
-            while (!bNext && maxCount++ < this._tracksCollection.Count)
+            while (!bNext && maxCount++ < this.p_TracksCollection.Count)
             {
                 bNext = await this.NextAsync();
 
             }
         }
         public PlayControlFlowService(AudioPlayService audioPlayService,
-            IHttpRequestService httpRequestService,
-            ToastService toastService, ILogger<PlayControlFlowService> logger)
+            IHttpRequestService httpRequestService
+           )
         {
             _audioPlayService = audioPlayService;
-            this._httpRequestService = httpRequestService;
-            this._toastService = toastService;
-            _logger = logger;
+            this.p_HttpRequestService = httpRequestService;
 
 
             this._positionChangedSubscriber =
@@ -211,13 +232,13 @@ namespace NeteaseCloundMusicMobile.Client.Services
         /// 添加到播放列表
         /// </summary>
         /// <returns></returns>
-        public async Task Add2PlaySequenceAsync(PlayableItemBase playableItem, bool autoPlay = true, bool clearCollection = false)
+        public virtual async Task Add2PlaySequenceAsync(PlayableItemBase playableItem, bool autoPlay = true, bool clearCollection = false)
         {
-            if (clearCollection) this._tracksCollection.Clear();
-            var existsItem = this._tracksCollection.Find(x => x.Equals(playableItem));
+            if (clearCollection) this.p_TracksCollection.Clear();
+            var existsItem = this.p_TracksCollection.Find(x => x.Equals(playableItem));
             if (existsItem == null)
             {
-                this._tracksCollection.Add(playableItem);
+                this.p_TracksCollection.Add(playableItem);
                 existsItem = playableItem;
             }
             if (autoPlay)
@@ -225,19 +246,19 @@ namespace NeteaseCloundMusicMobile.Client.Services
                 await SafePlayAsync(existsItem);
             }
         }
-        public async Task AddRange2PlaySequenceAsync(IEnumerable<PlayableItemBase> playableItems, bool autoPlay = true, bool clearCollection = false)
+        public virtual async Task AddRange2PlaySequenceAsync(IEnumerable<PlayableItemBase> playableItems, bool autoPlay = true, bool clearCollection = false)
         {
-            if (clearCollection) this._tracksCollection.Clear();
-            this._tracksCollection.AddRange(playableItems);
-            if (autoPlay && this._tracksCollection.Count > 0)
+            if (clearCollection) this.p_TracksCollection.Clear();
+            this.p_TracksCollection.AddRange(playableItems);
+            if (autoPlay && this.p_TracksCollection.Count > 0)
             {
-                await SafePlayAsync(this._tracksCollection[0]);
+                await SafePlayAsync(this.p_TracksCollection[0]);
 
             }
         }
 
 
-        public async Task<bool> JumpTheQueueAsync(PlayableItemBase playableItem)
+        public virtual async Task<bool> JumpTheQueueAsync(PlayableItemBase playableItem)
         {
             if (!this.PlayMode.SupportJumpTheQueue) return false;
 
@@ -245,10 +266,10 @@ namespace NeteaseCloundMusicMobile.Client.Services
             if (this.CurrentPlayableItem == null) return await Add2PlaySequenceAsync(playableItem).ContinueWith(x => x.IsCompletedSuccessfully);
             if (CurrentPlayableItem.Equals(playableItem)) return false;
 
-            var existIndex = this._tracksCollection.FindIndex(x => x.Equals(playableItem));
-            if (existIndex >= 0) this._tracksCollection.RemoveAt(existIndex);
-            var index = this._tracksCollection.IndexOf(CurrentPlayableItem);
-            this._tracksCollection.Insert(index + 1, playableItem);
+            var existIndex = this.p_TracksCollection.FindIndex(x => x.Equals(playableItem));
+            if (existIndex >= 0) this.p_TracksCollection.RemoveAt(existIndex);
+            var index = this.p_TracksCollection.IndexOf(CurrentPlayableItem);
+            this.p_TracksCollection.Insert(index + 1, playableItem);
             return true;
         }
         /// <summary>
@@ -256,25 +277,29 @@ namespace NeteaseCloundMusicMobile.Client.Services
         /// </summary>
         public void ChangePlayModel()
         {
-            var index = Array.IndexOf(s_support, this._playMode) + 1;
-            if (index >= s_support.Length) index = 0;
-            this._playMode = s_support[index];
+             
+            var index = IndexOf(SupportPlayModes, this.PlayMode) + 1;
+            if (index >= SupportPlayModes.Count) index = 0;
+            this.PlayMode = SupportPlayModes[index];
         }
 
 
-        public async Task<bool> NextAsync()
+        public virtual async Task<bool> NextAsync()
         {
             var temp = await NextImplAsync(null).ConfigureAwait(false);
             if (temp && SuccessfulNextExecute != null) SuccessfulNextExecute.Invoke(this, EventArgs.Empty);
             return temp;
         }
-        public Task<bool> PrevAsync() => PrevImplAsync(null);
+        public virtual Task<bool> PrevAsync() => PrevImplAsync(null);
         private async Task<bool> NextImplAsync(int? currentIndex)
         {
 
-            if (this._tracksCollection.Count == 0) return false;
-            currentIndex ??= this._tracksCollection.IndexOf(CurrentPlayableItem);
-            var index = this._playMode.OnNext(currentIndex.Value, this._tracksCollection.Count);
+            if (this.p_TracksCollection.Count == 0) return false;
+            currentIndex ??= this.p_TracksCollection.IndexOf(CurrentPlayableItem);
+
+           
+            var index = this.PlayMode.OnNext(currentIndex.Value, this.p_TracksCollection.Count);
+           
             if (!index.HasValue) return false;
             var temp = await this.SafePlayAsync(index.Value).ConfigureAwait(false);
             if (temp == PlayStatus.AccessDenied)
@@ -285,12 +310,20 @@ namespace NeteaseCloundMusicMobile.Client.Services
         }
 
 
+        private static int IndexOf<T>(IReadOnlyList<T> lst, T item)
+        {
+            for (int i = 0; i < lst.Count; i++)
+            {
+                if(lst[i].Equals(item)) return i;
+            }
 
+            return -1;
+        }
         private async Task<bool> PrevImplAsync(int? currentIndex)
         {
-            if (this._tracksCollection.Count == 0) return false;
-            currentIndex ??= this._tracksCollection.IndexOf(CurrentPlayableItem);
-            var index = this._playMode.OnPrev(currentIndex.Value, this._tracksCollection.Count);
+            if (this.p_TracksCollection.Count == 0) return false;
+            currentIndex ??= this.p_TracksCollection.IndexOf(CurrentPlayableItem);
+            var index = this.PlayMode.OnPrev(currentIndex.Value, this.p_TracksCollection.Count);
             if (!index.HasValue) return false;
             var temp = await this.SafePlayAsync(index.Value).ConfigureAwait(false);
             if (temp == PlayStatus.AccessDenied)
@@ -309,30 +342,4 @@ namespace NeteaseCloundMusicMobile.Client.Services
     }
 
 
-    /// <summary>
-    /// 表示一系列播放模式
-    /// </summary>
-    public interface IPlayMode
-    {
-        /// <summary>
-        /// 该播放模式是否支持插队播放
-        /// </summary>
-        bool SupportJumpTheQueue => false;
-        /// <summary>
-        /// 表示显示顺序
-        /// </summary>
-        int Sort => 0;
-        /// <summary>
-        /// 表示播放模式的名称
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
-        /// 表示模式的图标类名
-        /// </summary>
-        string IconClass { get; }
-        int? OnNext(int index, int count);
-        int? OnPrev(int index, int count);
-
-    }
 }

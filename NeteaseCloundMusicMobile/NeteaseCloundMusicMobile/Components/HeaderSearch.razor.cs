@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NeteaseCloundMusicMobile.Client.Utitys;
 
 namespace NeteaseCloundMusicMobile.Client.Components
 {
@@ -54,7 +55,9 @@ namespace NeteaseCloundMusicMobile.Client.Components
                         await this.HttpRequestService.MakePostRequestAsync<GetSongDetailResultModel>("/song/detail",
                             new { ids = item.id });
                     if (temp.songs?.Count > 0)
-                        await this.PlayControlFlowService.Add2PlaySequenceAsync(StandardAdapter(temp.songs[0]), clearCollection: false);
+
+                        await this.Add2PlaySequenceAsync(StandardAdapter(temp.songs[0]), clearCollection: false);
+
 
                 }
             }

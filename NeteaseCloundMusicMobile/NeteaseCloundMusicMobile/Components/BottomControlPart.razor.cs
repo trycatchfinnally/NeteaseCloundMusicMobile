@@ -30,6 +30,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
         private IJSRuntime JS { get; set; }
 
 
+        protected override bool SubscribePlayControlFlowChanged => true;
 
         protected override Task OnInitializedAsync()
         {
@@ -114,7 +115,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
         }
         public Task PlayAsync(PlayableItemBase item)
         {
-            var result = this.PlayControlFlowService.Add2PlaySequenceAsync(item, clearCollection: false);
+            var result = this.Add2PlaySequenceAsync(item, clearCollection: false);
             if (_opend) result = Task.WhenAll(result, HideOrShowAsync());
             return result;
 
