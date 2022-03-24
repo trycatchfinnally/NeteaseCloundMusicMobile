@@ -1,8 +1,9 @@
 ﻿@inherits RazorComponentBase
+@using NeteaseCloundMusicMobile.Client.Utitys
 @implements IDisposable
 <Field HasAddons="true" IsExpanded="true">
     <Control IsExpanded="true">
-        <input class="input" placeholder="搜索音乐、歌手、歌词、用户" @ref="_searchElement"  @onfocusout="OnLeaveInputAsync" @onfocus="()=>_focus=true"/>
+        <input class="input" placeholder="搜索音乐、歌手、歌词、用户" @ref="_searchElement"  @onfocusout="OnLeaveInputAsync" @onfocus="EventUtil.AsNonRenderingEventHandler(()=>_focus=true)"/>
     </Control>
     <Control>
         <Button>

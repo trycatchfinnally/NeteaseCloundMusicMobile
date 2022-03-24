@@ -1,0 +1,98 @@
+﻿@using NeteaseCloundMusicMobile.Client.Utitys
+@using NeteaseCloundMusicMobile.Client.Models
+@inherits RazorComponentBase
+
+@implements IDisposable
+<div>
+    <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center flex-grow-1 w-100">
+            <button type="button" class="button mr-4 mb-4 is-danger is-small" @onclick="EventUtil.AsNonRenderingEventHandler(PlayAllAsync)">
+                <Icon IconClass="fa fa-play-circle-o"></Icon>
+                <span>播放全部</span>
+            </button>
+            <button type="button" class="button mr-4 mb-4 is-success is-small" @onclick="EventUtil.AsNonRenderingEventHandler(SkipTryAsync)">
+                <Icon IconClass="fa fa-handshake-o"></Icon>
+                <span>跳过试听</span>
+            </button>
+            <button type="button" class="button mr-4 mb-4 is-warning is-small" @onclick="EventUtil.AsNonRenderingEventHandler(PlaySelectedAsync)">
+                <Icon IconClass="iconfont icon-kongjian"></Icon>
+                <span>播放选中</span>
+            </button>
+        </div>
+        @if (EnableSearch)
+        {
+            <div class="float-right is-hidden-mobile">
+                <Control HasIconsRight>
+                    <input class="input is-small is-rounded" placeholder="搜索歌单歌曲" @ref="_searchElement" />
+                    <Icon IsRight IsSmall IconClass="fa fa-search"></Icon>
+                </Control>
+            </div>
+        }
+    </div>
+
+    <div class="is-hidden-mobile">
+        <div class="d-flex align-items-center text-dark text-center">
+            <div class="border-left border-top border-bottom checkbox-col text-center">
+                <CheckBox TValue="string" IsSmall Checked="AllChecked"  CheckedChanged="AllCheckedChanged">
+
+                </CheckBox>
+            </div>
+            <div class="border-left border-top border-bottom flex-grow-1">
+                歌曲标题
+            </div>
+            <div class="border-left border-top border-bottom col-1">时长</div>
+            <div class="border-left border-top border-bottom col-3">歌手</div>
+            <div class="border col-2">专辑</div>
+        </div>
+        <div>
+            <Virtualize Items="_displayTracks" TItem="SongsItem">
+                <div class="d-flex align-items-center text-secondary text-left text-body">
+                    <div class="border-left border-bottom checkbox-col text-center">
+                        <CheckBox TValue="string" IsSmall @bind-Checked="@_checkedSongsInfoDictionary[context]">
+
+                        </CheckBox>
+                    </div>
+                    <div class="border-left border-bottom flex-grow-1">
+                        
+                        <div class="d-flex align-items-center">
+                            <div class="text-dark" @onclick="()=>PlayAsync(context)">
+                                <Icon IconClass="fa fa-play-circle"></Icon>
+                                <span>@context.name</span>
+                            </div>
+
+                            @if (context.h?.br >= 320000)
+                            {
+                                <Tag IsLight="true" Color="Color.Danger" class="@B.M1">SQ</Tag>
+                            }
+                            @if (context.mv > 0)
+                            {
+                                <a href="/mv/@context.mv" class="mv-link">
+                                    <Icon IconClass="fa fa-youtube-play" Color="Color.Danger"></Icon>
+                                </a>
+                            }
+                            @if (context.privilege!=null&&context.privilege.fl * context.privilege.pl == 0)
+                            {
+                                <Tag IsLight="true" Color="Color.Danger" class="@B.M1">试听</Tag>
+                            }
+                        </div>
+                    </div>
+                    <div class="border-left border-bottom col-1">
+                        @TimeSpan.FromMilliseconds(context.dt).ToString(@"mm\:ss")
+                    </div>
+                    <div class="border-left border-bottom col-3">
+                        <div class="d-flex align-items-center text-truncate overflow-hidden">
+                            @foreach (var item in context.ar.Take(5))
+                            {
+                                <a class="text-black-50 font-weight-light playlist-tags" href="/artist/@item.id">@item.name</a>
+                            }
+                        </div>
+                    </div>
+                    <div class="border-left border-right border-bottom col-2 text-truncate">
+                        <a class="text-black-50 font-weight-light" href="/album/@context.al.id">@context.al.name</a>
+                    </div>
+                </div>
+            </Virtualize>
+        </div>
+    </div>
+    <div class="is-hidden-tablet">稍后完成</div>
+</div>

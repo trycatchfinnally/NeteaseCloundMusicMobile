@@ -8,12 +8,14 @@ using NeteaseCloundMusicMobile.Client.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.Logging;
 using NeteaseCloundMusicMobile.Client.Utitys;
 
 namespace NeteaseCloundMusicMobile.Client.Pages
@@ -45,8 +47,8 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 
         [Inject]
         private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
-
-
+        [Inject]
+        private  ILogger<Index> Logger { get; set; }
         private async Task FetchCarouseAsync()
         {
             var bannerModel = await HttpRequestService.MakePostRequestAsync<BannerApiResult>("/banner", new { type = 0 }, false);
@@ -94,12 +96,24 @@ namespace NeteaseCloundMusicMobile.Client.Pages
 
         }
 
-        private Task PersonalFmClickAsync()
+        private async Task PersonalFmClickAsync()
         {
 
             this.GlobalFeatureCollectionService.SwitchPlayControlFlow(PlayControlFlowTypeCodes.PersonalFmPlayControlFlowTypeCode);
-            return Task.CompletedTask;
+            var retryCount = 0;
+            while (retryCount++ < 10)
+            {
+                if (!PlayControlFlowService.AudioPlayService.Paused)
+                {
+                    NavigationManager.NavigateTo("/playpanel"); return;
+                }
+                await Task.Delay(100).ConfigureAwait(false);
+
+            }
+            this.Logger.LogWarning("自动切换到播放页面失败");
         }
+
+
         private void AuthenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> task)
         {
             using (FetchEverydayRecommendPlaylistAsync().ToObservable()
@@ -120,8 +134,8 @@ namespace NeteaseCloundMusicMobile.Client.Pages
                 Duration = item.duration
 
             };
-           
-          
+
+
             await this.Add2PlaySequenceAsync(temp);
         }
 

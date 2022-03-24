@@ -20,7 +20,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
             public long id { get; set; }
         }
         private Models.Playlist _playlist;
-        private Components.PlaylistTable _playlistTable;
+        private Components.PlaylistVirtualize _playlistTable;
         private SubScribersQuery _subScribersQuery;
         private PlaylistSubscribersApiResultModel _subscribers;
         

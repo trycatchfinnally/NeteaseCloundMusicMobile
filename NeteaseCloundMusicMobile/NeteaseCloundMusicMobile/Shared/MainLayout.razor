@@ -6,75 +6,73 @@
 @implements IDisposable
 @using Microsoft.AspNetCore.Components.Authorization
 <div>
-    <div class="@B.P2 @B.BackgroundDark @B.TextWhite">
-        <Columns IsMobile="true" IsVcentered="true" Gap="@Gap.Gap1" class="p-2">
-            <BulmaRazor.Components.Column IsNarrow="true">
-                <a class="js-user-quick-show" @onclick="ShowUserQuickView">  <Icon IconClass="fa fa-bars"></Icon></a>
-            </BulmaRazor.Components.Column>
-            <BulmaRazor.Components.Column IsNarrow="true">
+    <div class="p-2 bg-dark text-white">
+        <div class="columns p-2 is-mobile is-vcentered is-variable is-1">
+            <div class="column is-narrow"> <a class="js-user-quick-show" @onclick="ShowUserQuickView"> <Icon IconClass="fa fa-bars"></Icon></a></div>
+            <div class="column is-narrow">
                 <a href="/">
-                    <Columns Gap="@Gap.Gap1" IsVcentered="true">
-                        <Column IsNarrow="true">
+                    <div class="columns is-vcentered is-variable is-1">
+                        <div class="column is-narrow">
                             <Image Size="@Size.Square32">
                                 <img src="/asset/Icon.png" />
                             </Image>
-                        </Column>
-                        <Column class="@B.HiddenMobile">
+                        </div>
+                        <div class="column is-hidden-mobile">
+                            <h3 class="title has-text-white-bis is-3">网易云音乐</h3>
+                        </div>
 
-                            <Title class="@B.TextWhiteBis">网易云音乐</Title>
+                    </div>
 
-                        </Column>
-                    </Columns>
                 </a>
-            </BulmaRazor.Components.Column>
-            <BulmaRazor.Components.Column>
-                <NeteaseCloundMusicMobile.Client.Components.HeaderSearch></NeteaseCloundMusicMobile.Client.Components.HeaderSearch>
-            </BulmaRazor.Components.Column>
-            <BulmaRazor.Components.Column IsNarrow="true">
-                <Columns IsMobile="true" IsVcentered="true" Gap="@Gap.Gap1">
-                    <Column IsNarrow="true">
+            </div>
 
+
+            <div class="column">  <NeteaseCloundMusicMobile.Client.Components.HeaderSearch></NeteaseCloundMusicMobile.Client.Components.HeaderSearch></div>
+            <div class="column is-narrow m-2">
+
+                <div class="columns is-mobile is-vcentered is-variable is-1">
+                    <div class="column is-narrow">
                         <AuthorizeView>
 
                             <Authorized>
                                 <CascadingValue Value="@context" Name="AuthenticationState">
-                                    <Columns IsMobile="true" Gap="@Gap.Gap1" class="@B.AlignItemsCenter">
-                                        <Column>
+                                 
+                                    <div class="d-flex align-items-center" >
+                                        <div>
                                             <Image Size="Size.Square32">
-                                                <img class="@B.Join(B.Rounded,B.TooltipBottom)"
+                                                <img class="@B.Join(B.Rounded, B.TooltipBottom)"
                                                      data-tooltip="@context.User.FindFirst(System.Security.Claims.ClaimTypes.Name).Value"
-                                                     src="@context.User.FindFirst(System.Security.Claims.ClaimTypes.Uri).Value" />
+                                                     src="@context.User.FindFirst(System.Security.Claims.ClaimTypes.Uri).Value"/>
                                             </Image>
-                                        </Column>
-                                        <Column>
-                                            <a @onclick="LoginOutAsync">退出</a>
-                                        </Column>
-                                    </Columns>
+                                        </div>
+                                        <a  class="text-center m-2" @onclick="LoginOutAsync">退出</a>
+                                    </div>
                                 </CascadingValue>
                             </Authorized>
                             <NotAuthorized>
-                                <Columns IsMobile="true" Gap="@Gap.Gap1">
-
-                                    <Column> <a>注册</a></Column>
-                                    <Column>   <a @onclick="ShowLoginModal">登录</a></Column>
-                                </Columns>
+                                <div class="columns is-mobile is-variable is-1">
+                                    <div class="column"><a>注册</a></div>
+                                    <div class="column"> <a @onclick="ShowLoginModal">登录</a></div>
+                                </div>
+                               
                             </NotAuthorized>
 
                         </AuthorizeView>
+                    </div>
+                    <div class="column is-hidden-mobile">
+                        <div class="d-flex align-items-center">
+                            <div class="w-50 text-nowrap"><a href="mailto:t1246539858@outlook.com">建议</a></div>
+                            <div class="w-50 text-nowrap"> <a href="https://github.com/trycatchfinnally/NeteaseCloundMusicMobile" target="_blank">查看源</a></div>
+                        </div>
+                    </div>
+                   
+                </div>
 
-                    </Column>
-                    <Column class="@B.HiddenMobile">
-                        <Columns IsMobile="true" Gap="@Gap.Gap1">
-                            <Column> <a href="mailto:t1246539858@outlook.com">建议</a></Column>
-                            <Column>   <a>反馈</a></Column>
 
-                        </Columns>
-                    </Column>
-                </Columns>
+            </div>
 
-            </BulmaRazor.Components.Column>
-        </Columns>
 
+        </div>
 
     </div>
 
@@ -83,18 +81,18 @@
 
     </CascadingValue>
 
-    <div class="@B.P2">
-        <Footer>
-            <Content class="@B.TextCentered">
-                <strong>网易云音乐网页版</strong>使用Blazor WebAssemly开发，欢迎使用
-            </Content>
-        </Footer>
+    <div class="p-2">
+        <footer class="footer">
+
+            <div class="content text-center"> <strong>网易云音乐网页版</strong>使用Blazor WebAssemly开发，欢迎使用</div>
+
+        </footer>
     </div>
     <NeteaseCloundMusicMobile.Client.Components.BottomControlPart></NeteaseCloundMusicMobile.Client.Components.BottomControlPart>
 </div>
 <div class="login-modal-root">
     <Modal IsActive="_loginModalShow" ShowClose="false">
-        <div class="@B.P4">
+        <div class="p-4">
             <Level>
                 <LevelLeft><div></div></LevelLeft>
                 <LevelRight>
@@ -122,7 +120,7 @@
                 </Field>
                 <Field>
                     <Control HasIconsLeft="true">
-                        <Input placeholder="请输入密码" @bind-Value="_loginForm.PassWord" type="password" />
+                        <Input placeholder="请输入密码" @bind-Value="_loginForm.PassWord" type="password" autocomplete="on" />
                         <Icon IsLeft="true" IconClass="fa fa-lock"></Icon>
                     </Control>
                     <Help>

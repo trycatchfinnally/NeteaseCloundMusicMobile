@@ -84,10 +84,13 @@
 
             <Tabs>
                 <TabItem Label="歌曲列表">
-                    <NeteaseCloundMusicMobile.Client.Components.PlaylistTable @ref="_playlistTable"
+                    @*  <NeteaseCloundMusicMobile.Client.Components.PlaylistTable @ref="_playlistTable"
                                                                               EnableSearch="true"
-                                                                              Tracks="ToDto<List<Models.SongsItem>>(_playlist.tracks)"></NeteaseCloundMusicMobile.Client.Components.PlaylistTable>
+                                                                              Tracks="ToDto<List<Models.SongsItem>>(_playlist.tracks)"></NeteaseCloundMusicMobile.Client.Components.PlaylistTable>*@
 
+                    <NeteaseCloundMusicMobile.Client.Components.PlaylistVirtualize @ref="_playlistTable"
+                                                                              EnableSearch="true"
+                                                                              Tracks="ToDto<List<Models.SongsItem>>(_playlist.tracks)"></NeteaseCloundMusicMobile.Client.Components.PlaylistVirtualize>
                 </TabItem>
                 <TabItem Label="@($"评论（{_playlist.commentCount.ToCountString()}）")">
                     <NeteaseCloundMusicMobile.Client.Components.Comment CommentThreadId="@_playlist.commentThreadId"></NeteaseCloundMusicMobile.Client.Components.Comment>
