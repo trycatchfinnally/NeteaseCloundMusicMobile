@@ -37,7 +37,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
         }
 
 
-        private readonly int M_Max_CachedTracksCount = 10;
+        private readonly int M_Max_CachedTracksCount = 7;
         public PersonalFmPlayControlFlowService(AudioPlayService audioPlayService,
             IHttpRequestService httpRequestService
            ) :
@@ -56,14 +56,14 @@ namespace NeteaseCloundMusicMobile.Client.Services
 
         public override async Task<bool> NextAsync()
         {
-            var result = await base.NextAsync();
+            var result = await base.NextAsync().ConfigureAwait(false);
            
             if (result)
             {
                 var index = p_TracksCollection.IndexOf(CurrentPlayableItem);
                 if (index >= p_TracksCollection.Count - 2)
                 {
-                    await EnsureNextBatchPersonalFmAsync();
+                    await EnsureNextBatchPersonalFmAsync().ConfigureAwait(false);
                 }
                 if (p_TracksCollection.Count >= M_Max_CachedTracksCount)
                 {

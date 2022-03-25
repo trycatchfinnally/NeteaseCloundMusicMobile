@@ -18,7 +18,7 @@ namespace NeteaseCloundMusicMobile.Client.Components
         private DotNetObjectReference<PlaylistVirtualize> _objRef;
         private ElementReference _searchElement;
         //定义一个随机名，用以创建随机的js对象名
-        private readonly string r_RandomJsObjectName = Path.GetRandomFileName().Substring(0, 8);
+        private readonly string r_RandomJsObjectName = String.Concat("blazor_",Path.GetRandomFileName().Substring(0, 8));
 
 
         /// <summary>
@@ -55,13 +55,13 @@ namespace NeteaseCloundMusicMobile.Client.Components
         protected override async Task OnParametersSetAsync()
         {
             if (Tracks == null) throw new NotSupportedException();
-            await base.OnParametersSetAsync();
+            await base.OnParametersSetAsync().ConfigureAwait(false);
         
-            var likedIds = await this.LikedProgressService.EnsureLikedMusicIdsAsync();
-            foreach (var item in Tracks)
-            {
-                item.liked = likedIds.Contains(item.id);
-            }
+            //var likedIds = await this.LikedProgressService.EnsureLikedMusicIdsAsync();
+            //foreach (var item in Tracks)
+            //{
+            //    item.liked = likedIds.Contains(item.id);
+            //}
 
             this._displayTracks = Tracks;
             _checkedSongsInfoDictionary = Tracks.ToDictionary(x => x, x => false);

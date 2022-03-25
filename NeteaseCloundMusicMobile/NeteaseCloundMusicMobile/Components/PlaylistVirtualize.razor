@@ -55,10 +55,10 @@
                     <div class="border-left border-bottom flex-grow-1">
                         
                         <div class="d-flex align-items-center">
-                            <div class="text-dark" @onclick="()=>PlayAsync(context)">
+                            <a href="javascript:;" class="text-dark" @onclick="()=>PlayAsync(context)">
                                 <Icon IconClass="fa fa-play-circle"></Icon>
                                 <span>@context.name</span>
-                            </div>
+                            </a>
 
                             @if (context.h?.br >= 320000)
                             {
@@ -94,5 +94,27 @@
             </Virtualize>
         </div>
     </div>
-    <div class="is-hidden-tablet">稍后完成</div>
+    <div class="is-hidden-tablet border ">
+        <Virtualize Items="_displayTracks" TItem="SongsItem"  >
+            <div class="d-flex align-items-center border-bottom">
+                <div class="checkbox-col d-flex align-items-center justify-content-center">
+                    <CheckBox TValue="string" IsSmall @bind-Checked="@_checkedSongsInfoDictionary[context]">
+
+                    </CheckBox>
+                </div>
+                <div class="flex-grow-1 flex-shrink-1 d-flex align-items-center" @onclick="()=>PlayAsync(context)">
+                    <div class=" flex-shrink-1 flex-grow-1 flex-row pt-1 pb-1 w-0">
+                        <div class="text-dark text-truncate   ">@context.name</div>
+                        <div class="text-black-50 text-truncate">
+                            @string.Join("/",context.ar.Select(x=>x.name))
+                            
+                        </div>
+                    </div>
+                    <div class="checkbox-col d-flex pr-1 pl-1 text-black-50">   <Icon IconClass="fa fa-play-circle"></Icon></div>
+                </div>
+            
+            </div>
+        </Virtualize>
+      
+    </div>
 </div>

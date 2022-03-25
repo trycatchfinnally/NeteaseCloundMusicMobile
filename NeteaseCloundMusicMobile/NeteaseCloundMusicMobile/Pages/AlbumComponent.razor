@@ -52,9 +52,9 @@
         <div class="@B.MT6">
             <Tabs>
                 <TabItem Label="歌曲详情">
-                    <NeteaseCloundMusicMobile.Client.Components.PlaylistTable @ref="_playlistTable"
+                    <NeteaseCloundMusicMobile.Client.Components.PlaylistVirtualize @ref="_playlistTable"
                                                                               EnableSearch="true"
-                                                                              Tracks="_albumDetailApiResultModel.songs"></NeteaseCloundMusicMobile.Client.Components.PlaylistTable>
+                                                                              Tracks="_albumDetailApiResultModel.songs"></NeteaseCloundMusicMobile.Client.Components.PlaylistVirtualize>
 
                 </TabItem>
                 <TabItem Label="评论">

@@ -11,7 +11,7 @@ namespace NeteaseCloundMusicMobile.Client.Pages
     {
 
         private AlbumDetailApiResultModel _albumDetailApiResultModel;
-        private Components.PlaylistTable _playlistTable;
+        private Components.PlaylistVirtualize _playlistTable;
 
         [Parameter]
         public long Id { get; set; }
