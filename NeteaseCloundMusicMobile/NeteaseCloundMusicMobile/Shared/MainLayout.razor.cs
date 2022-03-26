@@ -8,6 +8,10 @@ using System.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using NeteaseCloundMusicMobile.Client.Services;
+using NeteaseCloundMusicMobile.Client.Utitys;
+using Index = NeteaseCloundMusicMobile.Client.Pages.Index;
 
 namespace NeteaseCloundMusicMobile.Client.Shared
 {
@@ -30,6 +34,12 @@ namespace NeteaseCloundMusicMobile.Client.Shared
         private IReadOnlyList<Playlist> _userPlaylist = Array.Empty<Playlist>();
 
         private Action _showLoginModalAction;
+        [Inject]
+        private IGlobalFeatureCollectionService GlobalFeatureCollectionService { get; set; }
+        [Inject]
+        private ILogger<MainLayout> Logger { get; set; }
+        [Inject]
+        private NavigationManager NavigationManager { get; set; }
         private void ShowUserQuickView() => _userQuickview.Show();
         private async Task LoginAsync()
         {
@@ -70,7 +80,22 @@ namespace NeteaseCloundMusicMobile.Client.Shared
         {
             FetchUserListAsync().ToObservable().Subscribe();
         }
+        private async Task PersonalFmClickAsync()
+        {
 
+            this.GlobalFeatureCollectionService.SwitchPlayControlFlow(PlayControlFlowTypeCodes.PersonalFmPlayControlFlowTypeCode);
+            var retryCount = 0;
+            while (retryCount++ < 10)
+            {
+                if (!GlobalFeatureCollectionService.PlayControlFlowService.AudioPlayService.Paused)
+                {
+                    NavigationManager.NavigateTo("/playpanel"); return;
+                }
+                await Task.Delay(100).ConfigureAwait(false);
+
+            }
+            this.Logger.LogWarning("自动切换到播放页面失败");
+        }
 
         private async Task FetchUserListAsync()
         {

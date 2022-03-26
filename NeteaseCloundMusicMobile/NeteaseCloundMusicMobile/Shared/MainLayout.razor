@@ -5,6 +5,7 @@
 @inject ToastService ToastService
 @implements IDisposable
 @using Microsoft.AspNetCore.Components.Authorization
+@using NeteaseCloundMusicMobile.Client.Utitys
 <div>
     <div class="p-2 bg-dark text-white">
         <div class="columns p-2 is-mobile is-vcentered is-variable is-1">
@@ -147,7 +148,7 @@
 <div class="user-quick-root">
     <Quickview IsLeft @ref="_userQuickview" TriggerSelector=".js-user-quick-show" HeaderText="菜单项">
         <BodySlot>
-            <div class="@B.M2">
+            <div class="m-2">
                 <Menu>
                     <MenuLabel>推荐</MenuLabel>
                     <MenuList>
@@ -158,9 +159,9 @@
                             </MenuLink>
                         </MenuItem>
                         <MenuItem>
-                            <MenuLink href="/">
-                                <Icon IconClass="iconfont icon-shouyinji-xian"></Icon>
-                                私人FM
+                            <MenuLink  >
+                              <div @onclick="EventUtil.AsNonRenderingEventHandler(PersonalFmClickAsync)">  <Icon IconClass="iconfont icon-shouyinji-xian"></Icon>
+                                  私人FM</div>
                             </MenuLink>
                         </MenuItem>
                         <MenuItem>

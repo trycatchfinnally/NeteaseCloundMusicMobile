@@ -13,8 +13,8 @@ namespace NeteaseCloundMusicMobile.Client.Pages
     [Authorize]
     public partial class EverydayRecommend
     {
-        private IReadOnlyList<DailySongsItem> _dailySongs;
-        private Components.PlaylistTable _playlistTable;
+        private ICollection<SongsItem> _dailySongs;
+        private Components.PlaylistVirtualize _playlistTable;
        
         
         private Task PlayAllAsync()
@@ -28,16 +28,16 @@ namespace NeteaseCloundMusicMobile.Client.Pages
         protected override async Task OnInitializedAsync()
         {
 
-            var temp = await this.HttpRequestService.MakePostRequestAsync<EverydayRecommendApiResultModel>("/recommend/songs");
+            var temp = await this.HttpRequestService.MakePostRequestAsync<EverydayRecommendApiResultModel>("/recommend/songs").ConfigureAwait(false);
             if (temp.data?.dailySongs?.Count > 0)
             {
               
-                this._dailySongs = temp.data.dailySongs;
+                this._dailySongs = temp.data.dailySongs.Select(x=>x as SongsItem).ToArray();
                
             }
             else
             {
-                this._dailySongs = Array.Empty<DailySongsItem>();
+                this._dailySongs = Array.Empty<SongsItem>();
                 
             }
             await base.OnInitializedAsync();
