@@ -119,3 +119,8 @@ a, .btn-link {
 .font-size-80 {
     font-size: 0.8em
 }
+
+
+.overflow-overlay {
+    overflow: overlay !important;
+}
