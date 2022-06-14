@@ -111,7 +111,7 @@ namespace NeteaseCloundMusicMobile.Client.Services
             if (this.CurrentPlayableItem == null) return;
             await this._jSRuntime.InvokeVoidAsync("audioPlayer.play", item?.Url ?? string.Empty);
             InvokeEvent();
-
+             
 
             if (this._positionSubscribe == null)
                 this._positionSubscribe = Observable.Interval(TimeSpan.FromSeconds(0.5),ThreadPoolScheduler.Instance)
