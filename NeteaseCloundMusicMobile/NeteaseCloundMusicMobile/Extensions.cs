@@ -1,3 +1,6 @@
+using NeteaseCloundMusicMobile.Client.Models;
+using NeteaseCloundMusicMobile.Client.Services;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +31,22 @@ namespace NeteaseCloundMusicMobile.Client
           return UnixEpoch.AddMilliseconds(timeStamp);
         }
 
+        public static async Task<bool> EnsureUrlAsync(this PlayableItemBase playableItemBase, IHttpRequestService httpRequestService)
+        {
+            if (playableItemBase.Id <= 0) return false;
+            //if (!string.IsNullOrWhiteSpace(Url)) return true;
+            var temp = await httpRequestService.MakePostRequestAsync<GetSongUrlResultModel>("/song/url", new { id = playableItemBase.Id },
+                    false);
+            var songUrl = temp.data?.FirstOrDefault()?.url;
+            if (string.IsNullOrEmpty(songUrl))
+            {
 
-       
+                return false;
+            }
+            playableItemBase.Url = songUrl;
+            return true;
+        }
+
+
     }
 }

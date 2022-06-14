@@ -1,4 +1,4 @@
-using NeteaseCloundMusicMobile.Client.Services;
+ 
 
 using System;
 using System.Collections.Generic;
@@ -38,11 +38,8 @@ namespace NeteaseCloundMusicMobile.Client.Models
 
 
         public long Duration { get; set; }
-        /// <summary>
-        /// 获取对应的地址
-        /// </summary>
-        /// <returns></returns>
-        public abstract Task<bool> EnsureUrlAsync(IHttpRequestService httpRequestService);
+      
+        //public abstract Task<bool> EnsureUrlAsync(IHttpRequestService httpRequestService);
 
         public override bool Equals(object obj)
         {

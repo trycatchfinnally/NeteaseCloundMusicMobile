@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeteaseCloundMusicMobile.Cl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeteaseCloundMusicMobile.Server", "NeteaseCloundMusicMobile.Server\NeteaseCloundMusicMobile.Server.csproj", "{3997B8AC-192B-41CF-937E-849EF48CE438}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeteaseCloundMusicMobile.Common", "NeteaseCloundMusicMobile.Common\NeteaseCloundMusicMobile.Common.csproj", "{C5D4613E-9BB2-4AA6-95F2-192F976B9C90}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{3997B8AC-192B-41CF-937E-849EF48CE438}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3997B8AC-192B-41CF-937E-849EF48CE438}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3997B8AC-192B-41CF-937E-849EF48CE438}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5D4613E-9BB2-4AA6-95F2-192F976B9C90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5D4613E-9BB2-4AA6-95F2-192F976B9C90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5D4613E-9BB2-4AA6-95F2-192F976B9C90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5D4613E-9BB2-4AA6-95F2-192F976B9C90}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
