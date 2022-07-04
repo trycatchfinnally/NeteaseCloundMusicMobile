@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
 
 namespace NeteaseCloundMusicMobile.Server.Middlewares
 {
@@ -44,7 +45,12 @@ namespace NeteaseCloundMusicMobile.Server.Middlewares
                             )
                         {
                             var streamContent = new StreamContent(httpContext.Request.Body);
-                            var path = string.Concat("http://", service.ServiceAddress, ":", service.ServicePort, httpContext.Request.Path.ToString(), httpContext.Request.QueryString);
+                            var path = string.Concat("http://", 
+                                service.ServiceAddress, ":", 
+                                service.ServicePort, 
+                                httpContext.Request.Path.ToString(), 
+                                httpContext.Request.QueryString.Add("realIP", EnsureIpAddress(httpContext))                                
+                                );
                             var response = await httpClient.PostAsync(path, streamContent);
                             var buffer = await response.Content.ReadAsByteArrayAsync();
                             httpContext.Response.StatusCode = (int)HttpStatusCode.OK;
@@ -63,6 +69,16 @@ namespace NeteaseCloundMusicMobile.Server.Middlewares
 
             }
             await this._next.Invoke(httpContext);
+        }
+
+
+
+        private static string EnsureIpAddress(HttpContext httpContext)
+        {
+           
+            if (httpContext.Request.Headers.ContainsKey("X-Real-IP")) return httpContext.Request.Headers["X-Real-IP"];
+            if (httpContext.Request.Headers.ContainsKey("X-Forwarded-For")) return httpContext.Request.Headers["X-Forwarded-For"];
+            return httpContext.Connection.RemoteIpAddress.ToString();
         }
     }
 }
